@@ -10,4 +10,7 @@
     <string name="bottom_nav_item_main">Главная</string>
     <string name="bottom_nav_item_favorites">Избранное</string>
     <string name="bottom_nav_item_team">Команда</string>
+    <string name="vacancy">Вакансия</string>
+    <string name="required_experience">Требуемый опыт</string>
+    <string name="vacancy_description">Описание вакансии</string>
 </resources>
