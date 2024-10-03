@@ -15,4 +15,6 @@
     <string name="No_list">Не удалось получить список вакансий</string>
     <string name="found_vacancies_count">Найдено %1$d вакансий</string>
     <string name="no_vacancies_text">Таких вакансий нет</string>
+    <string name="no_internet_toast">Проверьте подключение к интернету</string>
+    <string name="error_toast">Произошла ошибка</string>
 </resources>
