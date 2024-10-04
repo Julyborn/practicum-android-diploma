@@ -102,7 +102,7 @@ class VacanciesFragment : Fragment() {
                 RoundedCorners(
                     TypedValue.applyDimension(
                         TypedValue.COMPLEX_UNIT_DIP,
-                        12F,
+                        RADIUS,
                         resources.displayMetrics
                     ).toInt()
                 )
@@ -125,6 +125,7 @@ class VacanciesFragment : Fragment() {
     }
 
     companion object {
+        const val RADIUS = 12F
         const val KEY_VACANCY = "vacancyId"
     }
 }

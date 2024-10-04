@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.vacancies.domain.api.VacanciesInteractor
+import java.io.IOException
 
 class VacanciesViewModel(private val vacanciesInteractor: VacanciesInteractor) : ViewModel() {
     private val _screenState = MutableLiveData<VacancyScreenState>()
@@ -17,11 +18,10 @@ class VacanciesViewModel(private val vacanciesInteractor: VacanciesInteractor) :
             try {
                 val details = vacanciesInteractor.getVacancyDetails(vacancyId)
                 _screenState.value = VacancyScreenState.Success(details)
-            } catch (e: Exception) {
+            } catch (e: IOException) {
                 _screenState.value = VacancyScreenState.Error
+                throw e
             }
         }
     }
 }
-
-
