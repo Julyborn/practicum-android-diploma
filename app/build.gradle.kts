@@ -63,11 +63,6 @@ dependencies {
     implementation(libs.glide)
     kapt(libs.compiler)
 
-    // Room
-    implementation(libs.room.runtime)
-    kapt(libs.room.compiler)
-    implementation(libs.room.ktx)
-
     // region Unit tests
     testImplementation(libs.unitTests.junit)
     // endregion
@@ -81,4 +76,9 @@ dependencies {
     implementation("androidx.navigation:navigation-fragment:$navVersion")
     implementation("androidx.navigation:navigation-ui:$navVersion")
     implementation("androidx.fragment:fragment-ktx:$fragmentVersion")
+
+    // Room
+    implementation(libs.room.runtime)
+    kapt(libs.room.compiler)
+    implementation(libs.room.ktx)
 }
