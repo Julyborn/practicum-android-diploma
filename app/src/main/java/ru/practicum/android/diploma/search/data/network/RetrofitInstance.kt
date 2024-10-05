@@ -7,12 +7,12 @@ import retrofit2.converter.gson.GsonConverterFactory
 object RetrofitInstance {
 
     private const val HH_URL = "https://api.hh.ru/"
-    private const val AUTH_TOKEN = "access_token"
-    private const val USER_AGENT = "user_agent"
+    private const val AUTH_TOKEN = "Authorization"
+    private const val USER_AGENT = "userAgent"
 
     private val okHttpClient: OkHttpClient by lazy {
         OkHttpClient.Builder()
-            .addInterceptor(AuthInterceptor(AUTH_TOKEN, USER_AGENT))
+            .addInterceptor(AuthInterceptor(null, USER_AGENT))
             .build()
     }
 
