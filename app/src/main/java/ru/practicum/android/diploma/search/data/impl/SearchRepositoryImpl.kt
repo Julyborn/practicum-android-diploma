@@ -33,11 +33,7 @@ class SearchRepositoryImpl(
             try {
                 val options = params.toMap()
 
-                val response = api.searchVacancies(
-                    authToken = null,
-                    userAgent = "userAgent",
-                    options = options
-                )
+                val response = api.searchVacancies(options)
 
                 val vacancies = response.items.map { vacancy ->
                     Vacancy(
