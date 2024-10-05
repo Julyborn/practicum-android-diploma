@@ -16,7 +16,8 @@ import ru.practicum.android.diploma.util.formatSalary
 
 class SearchViewModel(val searchInteractor: SearchInteractor) : ViewModel() {
     private val _uiState = MutableLiveData<UiScreenState>(UiScreenState.Default)
-    val uiState: LiveData<UiScreenState> get() = _uiState
+    val uiState: LiveData<UiScreenState>
+        get() = _uiState
 
     private val _vacanciesList = MutableLiveData<List<VacancyUi>>(emptyList())
     private val _searchQuery = MutableLiveData<String>("")
