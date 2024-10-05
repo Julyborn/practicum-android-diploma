@@ -80,12 +80,9 @@ class SearchRepositoryImpl(
         )
     }
 
-    private fun getArea(areaDto: AreaDto?): String {
-        if (areaDto == null) {
-            return ""
-        }
-        return areaDto.name ?: ""
-    }
+    private fun getArea(areaDto: AreaDto?): String =
+        areaDto?.name.orEmpty()
+
 
     private fun getEmployer(employerDto: EmployerDto?): Employer {
         if (employerDto == null) {
