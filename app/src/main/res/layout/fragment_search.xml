@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -19,9 +19,9 @@
             android:layout_gravity="center"
             android:layout_marginStart="16dp"
             android:layout_weight="1"
-            android:fontFamily="@font/ys_display_medium"
-            android:text="@string/Search_vacansies"
-            android:textSize="22dp" />
+            android:text="@string/Search_vacancies"
+            android:textSize="22sp"
+            tools:ignore="TextSizeCheck" />
 
         <ImageButton
             style="@style/night_image"
@@ -29,13 +29,15 @@
             android:layout_height="40dp"
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="12dp"
-            android:background="@drawable/ic_filter" />
+            android:background="@drawable/ic_filter"
+            android:contentDescription="@string/filter"
+            tools:ignore="TouchTargetSizeCheck" />
     </LinearLayout>
 
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardView"
         style="@style/search_card_view_style"
+        android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_marginHorizontal="16dp"
@@ -58,13 +60,12 @@
                 android:layout_weight="1"
                 android:background="?selectableItemBackground"
                 android:focusable="true"
-                android:hint="Введите запрос"
                 android:imeOptions="actionDone"
                 android:inputType="text"
                 android:maxLines="1"
-                android:paddingStart="16dp"
                 android:singleLine="true"
-                android:textColor="@color/black_universal" />
+                android:textColor="@color/black_universal"
+                tools:ignore="Autofill,RtlSymmetry,TextContrastCheck,VisualLintTextFieldSize" />
 
             <ImageView
                 style="@style/ic_search"
@@ -73,7 +74,8 @@
                 android:layout_gravity="center"
                 android:layout_marginEnd="8dp"
                 android:background="@drawable/ic_search"
-                android:visibility="visible" />
+                android:visibility="visible"
+                android:contentDescription="@string/search"/>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
@@ -81,26 +83,27 @@
         android:id="@+id/ivImgSearch"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginHorizontal="16dp"
         android:background="@drawable/img_search"
-        android:visibility="gone"
+        android:layout_marginHorizontal="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="328:223"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardView" />
+        app:layout_constraintTop_toBottomOf="@+id/cardView"
+        android:visibility="gone"
+        android:contentDescription="@string/search"/>
 
     <ProgressBar
-        android:id="@+id/pbLoading"
+            android:id="@+id/pbLoading"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginHorizontal="16dp"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
-
         app:layout_constraintEnd_toEndOf="parent"
+
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardView" />
+        app:layout_constraintTop_toBottomOf="@+id/cardView"
+        android:visibility="gone"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clNoInternet"
@@ -119,42 +122,45 @@
             app:layout_constraintDimensionRatio="328:223"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="@string/No_internet"/>
 
         <TextView
-            android:id="@+id/tvNoInternet"
             style="@style/night_text"
+            android:id="@+id/tvNoInternet"
             android:layout_width="268dp"
             android:layout_height="26dp"
-            android:layout_marginHorizontal="30dp"
-            android:layout_marginTop="16dp"
-            android:fontFamily="@font/ys_display_medium"
-            android:gravity="center"
             android:text="@string/No_internet"
+            android:gravity="center"
+            android:fontFamily="@font/ys_display_medium"
             android:textSize="22sp"
+            android:layout_marginTop="16dp"
+            android:layout_marginHorizontal="30dp"
             app:layout_constraintEnd_toEndOf="@+id/ivImgNoInternet"
             app:layout_constraintStart_toStartOf="@+id/ivImgNoInternet"
-            app:layout_constraintTop_toBottomOf="@+id/ivImgNoInternet" />
+            app:layout_constraintTop_toBottomOf="@+id/ivImgNoInternet"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 
     <TextView
         android:id="@+id/tvCountList"
         android:layout_width="wrap_content"
+        android:minWidth="159dp"
         android:layout_height="27dp"
         android:layout_marginTop="11dp"
         android:background="@drawable/shape"
-        android:fontFamily="@font/ys_display_medium"
+        android:elevation="1dp"
+        android:fontFamily="@font/ys_display_regular"
         android:gravity="center"
-        android:minWidth="159dp"
-        android:text="Таких вакансий нет"
-        android:textColor="@color/white_universal"
-        android:textSize="16dp"
-        android:visibility="visible"
+        android:text="@string/Vacancies_not_found"
+        android:textColor="@color/white"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="@+id/cardView"
         app:layout_constraintStart_toStartOf="@+id/cardView"
-        app:layout_constraintTop_toBottomOf="@+id/cardView" />
+        app:layout_constraintTop_toBottomOf="@+id/cardView"
+        tools:ignore="TextSizeCheck,TextContrastCheck" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clEmptyList"
@@ -174,36 +180,40 @@
             app:layout_constraintDimensionRatio="328:223"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="@string/Vacancies_not_found"/>
 
         <TextView
-            android:id="@+id/tvNoList"
             style="@style/night_text"
+            android:id="@+id/tvNoList"
             android:layout_width="268dp"
             android:layout_height="52dp"
-            android:layout_marginHorizontal="30dp"
-            android:layout_marginTop="16dp"
-            android:fontFamily="@font/ys_display_medium"
-            android:gravity="center"
             android:text="@string/No_list"
+            android:gravity="center"
+            android:fontFamily="@font/ys_display_medium"
             android:textSize="22sp"
-            android:visibility="visible"
+            android:layout_marginTop="16dp"
+            android:layout_marginHorizontal="30dp"
             app:layout_constraintEnd_toEndOf="@+id/ivImgNoList"
             app:layout_constraintStart_toStartOf="@+id/ivImgNoList"
-            app:layout_constraintTop_toBottomOf="@+id/ivImgNoList" />
+            app:layout_constraintTop_toBottomOf="@+id/ivImgNoList"
+            android:visibility="visible"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/vacancyList"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginHorizontal="16dp"
         android:layout_marginTop="17dp"
+        android:layout_marginHorizontal="16dp"
+        tools:listitem="@layout/item_vacancy"
         android:visibility="visible"
-        app:layout_constraintTop_toBottomOf="@+id/tvCountList"
-        tools:listitem="@layout/item_vacancy" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvCountList"/>
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
