@@ -22,12 +22,15 @@ class VacanciesViewModel(private val vacanciesInteractor: VacanciesInteractor) :
             } catch (e: IOException) {
                 _screenState.value = VacancyScreenState.Error(VacancyScreenState.ErrorType.SERVER_ERROR)
             } catch (e: HttpException) {
-                if (e.code() == 404) {
+                if (e.code() == HTTP_NOT_FOUND) {
                     _screenState.value = VacancyScreenState.Error(VacancyScreenState.ErrorType.NOT_FOUND)
                 } else {
                     _screenState.value = VacancyScreenState.Error(VacancyScreenState.ErrorType.SERVER_ERROR)
                 }
             }
         }
+    }
+    companion object {
+        private const val HTTP_NOT_FOUND = 404
     }
 }
