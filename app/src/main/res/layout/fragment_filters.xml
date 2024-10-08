@@ -2,15 +2,193 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <TextView
-        android:id="@+id/screenTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="FILTERS SCREEN"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <LinearLayout
+        android:id="@+id/filterSettings"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            style="@style/night_image"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="8dp"
+            android:layout_gravity="center_vertical"
+            android:backgroundTint="@color/white"
+            android:src="@drawable/arrow_back" />
+        <TextView
+            style="@style/night_text"
+            android:layout_width="0dp"
+            android:layout_height="26dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="4dp"
+            android:layout_weight="1"
+            android:textColor="@color/black"
+            android:text="Настройки фильтрации"
+            android:textSize="22sp"
+            tools:ignore="TextSizeCheck" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/filterJob"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/filterSettings">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintTop_toBottomOf="@+id/filterSettings">
+
+            <EditText
+                android:id="@+id/editJob"
+                style="@style/search_et"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:textSize="16sp"
+                android:layout_weight="1"
+                android:background="?selectableItemBackground"
+                android:focusable="true"
+                android:hint="Место работы"
+                android:imeOptions="actionDone"
+                android:inputType="text"
+                android:maxLines="1"
+                android:paddingStart="16dp"
+                android:singleLine="true"
+                tools:ignore="Autofill,RtlSymmetry,TextContrastCheck,VisualLintTextFieldSize" />
+
+            <ImageButton
+                android:id="@+id/imageButtonJob"
+                android:layout_gravity="center"
+                android:backgroundTint="@color/white"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                app:srcCompat="@drawable/transition" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/filterIndustry"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/filterJob">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintTop_toBottomOf="@+id/filterJob">
+
+            <EditText
+                android:id="@+id/editIndustry"
+                style="@style/search_et"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:textSize="16sp"
+                android:layout_weight="1"
+                android:background="?selectableItemBackground"
+                android:focusable="true"
+                android:hint="Отрасль"
+                android:imeOptions="actionDone"
+                android:inputType="text"
+                android:maxLines="1"
+                android:paddingStart="16dp"
+                android:singleLine="true"
+                tools:ignore="Autofill,RtlSymmetry,TextContrastCheck,VisualLintTextFieldSize" />
+
+            <ImageButton
+                android:id="@+id/imageButtonIndustry"
+                android:layout_gravity="center"
+                android:backgroundTint="@color/white"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                app:srcCompat="@drawable/transition" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/filterSalary"
+        style="@style/search_card_view_style"
+        android:layout_width="match_parent"
+        android:layout_height="51dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="24dp"
+        app:cardCornerRadius="12dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/filterIndustry">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@+id/filterIndustry">
+
+            <TextView
+                android:id="@+id/textView4"
+                style="@style/search_et"
+                android:layout_width="match_parent"
+                android:layout_height="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:textSize="12sp"
+                android:layout_marginEnd="12dp"
+                android:text="Ожидаемая зарплата" />
+
+            <EditText
+                android:id="@+id/editSalary"
+                style="@style/search_et"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="12dp"
+                android:layout_marginBottom="8dp"
+                android:background="?selectableItemBackground"
+                android:focusable="true"
+                android:textSize="16sp"
+                android:hint="Введите сумму"
+                android:imeOptions="actionDone"
+                android:inputType="text"
+                android:maxLines="1"
+                android:layout_marginStart="16dp"
+                android:singleLine="true"
+                android:textColor="@color/black_universal"
+                tools:ignore="Autofill,RtlSymmetry,TextContrastCheck,VisualLintTextFieldSize" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <LinearLayout
+        android:id="@+id/filterNoSalary"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="24dp"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/filterSalary" >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="16dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="Не показывать без зарплаты"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            tools:ignore="TextSizeCheck" />
+        <CheckBox
+            android:id="@+id/checkBox2"
+            android:layout_gravity="center"
+            android:layout_width="48dp"
+            android:layout_height="48dp" />
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
