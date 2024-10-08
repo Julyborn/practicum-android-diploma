@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 import ru.practicum.android.diploma.vacancies.domain.api.VacanciesInteractor
 import java.io.IOException
 
@@ -19,8 +20,13 @@ class VacanciesViewModel(private val vacanciesInteractor: VacanciesInteractor) :
                 val details = vacanciesInteractor.getVacancyDetails(vacancyId)
                 _screenState.value = VacancyScreenState.Success(details)
             } catch (e: IOException) {
-                _screenState.value = VacancyScreenState.Error
-                throw e
+                _screenState.value = VacancyScreenState.Error(VacancyScreenState.ErrorType.SERVER_ERROR)
+            } catch (e: HttpException) {
+                if (e.code() == 404) {
+                    _screenState.value = VacancyScreenState.Error(VacancyScreenState.ErrorType.NOT_FOUND)
+                } else {
+                    _screenState.value = VacancyScreenState.Error(VacancyScreenState.ErrorType.SERVER_ERROR)
+                }
             }
         }
     }

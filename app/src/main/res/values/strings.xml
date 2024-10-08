@@ -26,4 +26,5 @@
     <string name="key_skills">Ключевые навыки</string>
     <string name="share_vacancy_title">Поделиться вакансией через</string>
     <string name="share_vacancy_message">Посмотрите вакансию: https://hh.ru/vacancy/%1$s</string>
+    <string name="vacancy_server_error">Ошибка сервера</string>
 </resources>

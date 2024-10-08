@@ -68,27 +68,37 @@ class VacanciesFragment : Fragment() {
         when (screenState) {
             is VacancyScreenState.Loading -> showLoadingState()
             is VacancyScreenState.Success -> showSuccessState(screenState.vacancyDetails)
-            is VacancyScreenState.Error -> showErrorState()
+            is VacancyScreenState.Error -> showErrorState(screenState.errorType)
         }
     }
 
     private fun showLoadingState() {
         binding.loadingIndicator.visibility = View.VISIBLE
-        binding.vacancyPlaceholder.visibility = View.GONE
+        binding.noVacancyPlaceholder.visibility = View.GONE
         binding.clVacancyDetails.visibility = View.GONE
+        binding.vacancyServerError.visibility = View.GONE
     }
 
     private fun showSuccessState(vacancyDetails: VacancyDetails) {
         binding.clVacancyDetails.visibility = View.VISIBLE
         binding.loadingIndicator.visibility = View.GONE
-        binding.vacancyPlaceholder.visibility = View.GONE
+        binding.noVacancyPlaceholder.visibility = View.GONE
+        binding.vacancyServerError.visibility = View.GONE
         displayVacancyDetails(vacancyDetails)
     }
 
-    private fun showErrorState() {
+    private fun showErrorState(errorType: VacancyScreenState.ErrorType) {
         binding.loadingIndicator.visibility = View.GONE
-        binding.vacancyPlaceholder.visibility = View.VISIBLE
         binding.clVacancyDetails.visibility = View.GONE
+        when (errorType) {
+            VacancyScreenState.ErrorType.NOT_FOUND -> {
+                binding.noVacancyPlaceholder.visibility = View.VISIBLE
+            }
+
+            VacancyScreenState.ErrorType.SERVER_ERROR -> {
+                binding.vacancyServerError.visibility = View.VISIBLE
+            }
+        }
     }
 
     private fun loadEmployerLogo(logoUrl: String?) {
