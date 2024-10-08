@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -98,8 +97,14 @@ class SearchFragment : Fragment() {
             UiScreenState.Default -> showDefaultState()
             UiScreenState.Empty -> showEmptyState()
             UiScreenState.Loading -> showLoadingState()
-            UiScreenState.NoInternetError -> showNoInternetErrorState()
-            UiScreenState.ServerError -> showServerErrorState()
+            UiScreenState.NoInternetError -> {
+                showNoInternetErrorState()
+                Toast.makeText(requireContext(), getString(R.string.no_internet_toast), Toast.LENGTH_SHORT).show()
+            }
+            UiScreenState.ServerError -> {
+                showServerErrorState()
+                Toast.makeText(requireContext(), getString(R.string.error_toast), Toast.LENGTH_SHORT).show()
+            }
             is UiScreenState.Success -> showSuccessState(state.vacancies, state.found)
         }
     }

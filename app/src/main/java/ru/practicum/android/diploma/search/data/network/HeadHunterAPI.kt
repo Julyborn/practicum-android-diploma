@@ -12,8 +12,6 @@ interface HeadHunterAPI {
     // Поиск вакансий
     @GET("vacancies")
     suspend fun searchVacancies(
-        @Header("Authorization") authToken: String?,
-        @Header("User-Agent") userAgent: String?,
         @QueryMap options: Map<String, String>
     ): SearchResponse
 
