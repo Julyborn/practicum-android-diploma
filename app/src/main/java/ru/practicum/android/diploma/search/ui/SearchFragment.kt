@@ -4,9 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import android.view.inputmethod.EditorInfo
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -46,8 +49,11 @@ class SearchFragment : Fragment() {
             renderUiState(it)
         }
 
-        searchItemAdapter = SearchItemAdapter {
-            val action = ""
+        searchItemAdapter = SearchItemAdapter { vacancyId ->
+            val bundle = Bundle().apply {
+                putString(KEY_VACANCY, vacancyId)
+            }
+            findNavController().navigate(R.id.action_searchFragment_to_vacanciesFragment, bundle)
         }
 
         binding.vacancyList.apply {
@@ -93,8 +99,14 @@ class SearchFragment : Fragment() {
             UiScreenState.Default -> showDefaultState()
             UiScreenState.Empty -> showEmptyState()
             UiScreenState.Loading -> showLoadingState()
-            UiScreenState.NoInternetError -> showNoInternetErrorState()
-            UiScreenState.ServerError -> showServerErrorState()
+            UiScreenState.NoInternetError -> {
+                showNoInternetErrorState()
+                Toast.makeText(requireContext(), getString(R.string.no_internet_toast), Toast.LENGTH_SHORT).show()
+            }
+            UiScreenState.ServerError -> {
+                showServerErrorState()
+                Toast.makeText(requireContext(), getString(R.string.error_toast), Toast.LENGTH_SHORT).show()
+            }
             is UiScreenState.Success -> showSuccessState(state.vacancies, state.found)
         }
     }
@@ -146,5 +158,9 @@ class SearchFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        const val KEY_VACANCY = "vacancyId"
     }
 }
