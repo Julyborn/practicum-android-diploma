@@ -3,5 +3,6 @@
     <style name="Theme.PracticumAndroidDiploma" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/black_universal</item>
         <item name="colorOnPrimary">@color/white_universal</item>
+        <item name="colorOnSecondary">@color/white_universal</item>
     </style>
 </resources>
