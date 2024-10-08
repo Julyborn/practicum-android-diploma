@@ -154,7 +154,7 @@
         android:elevation="1dp"
         android:fontFamily="@font/ys_display_regular"
         android:gravity="center"
-        android:text="@string/Vacancies_not_found"
+        android:text="@string/no_vacancies_text"
         android:textColor="@color/white"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="@+id/cardView"
@@ -181,7 +181,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:contentDescription="@string/Vacancies_not_found"/>
+            android:contentDescription="@string/no_vacancies_text"/>
 
         <TextView
             style="@style/night_text"
