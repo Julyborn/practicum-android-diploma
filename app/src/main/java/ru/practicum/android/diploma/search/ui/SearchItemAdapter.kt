@@ -13,7 +13,7 @@ import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.search.presentation.models.VacancyUi
 
 class SearchItemAdapter(
-    private val onClick: (vacancyId: String) -> Unit
+    val onClick: (vacancyId: String) -> Unit
 ) : Adapter<SearchItemAdapter.SearchItemViewHolder>() {
     private var vacancies = listOf<VacancyUi>()
 
