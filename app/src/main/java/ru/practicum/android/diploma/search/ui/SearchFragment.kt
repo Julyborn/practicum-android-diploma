@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSearchBinding
+import ru.practicum.android.diploma.filter.ui.FilterFragment
 import ru.practicum.android.diploma.search.presentation.SearchViewModel
 import ru.practicum.android.diploma.search.presentation.models.UiScreenState
 import ru.practicum.android.diploma.search.presentation.models.VacancyUi
@@ -92,6 +93,9 @@ class SearchFragment : Fragment() {
                 false
             }
         }
+        binding.openFilter.setOnClickListener {
+            openFilterFragment()
+        }
     }
 
     private fun renderUiState(state: UiScreenState) {
@@ -162,5 +166,9 @@ class SearchFragment : Fragment() {
 
     companion object {
         const val KEY_VACANCY = "vacancyId"
+    }
+
+    private fun openFilterFragment() {
+        findNavController().navigate(R.id.action_searchFragment_to_filterFragment)
     }
 }
