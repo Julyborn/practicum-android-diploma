@@ -8,6 +8,7 @@ import android.view.inputmethod.EditorInfo
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -47,8 +48,11 @@ class SearchFragment : Fragment() {
             renderUiState(it)
         }
 
-        searchItemAdapter = SearchItemAdapter {
-            val action = ""
+        searchItemAdapter = SearchItemAdapter { vacancyId ->
+            val bundle = Bundle().apply {
+                putString(KEY_VACANCY, vacancyId)
+            }
+            findNavController().navigate(R.id.action_searchFragment_to_vacanciesFragment, bundle)
         }
 
         binding.vacancyList.apply {
@@ -147,5 +151,9 @@ class SearchFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        const val KEY_VACANCY = "vacancyId"
     }
 }
