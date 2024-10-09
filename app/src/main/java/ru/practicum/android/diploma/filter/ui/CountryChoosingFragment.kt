@@ -17,7 +17,6 @@ class CountryChoosingFragment : Fragment() {
     private var _binding: FragmentCountryChoosingBinding? = null
     private val binding get() = _binding!!
     private val viewModel by viewModel<CountryViewModel>()
-    private lateinit var adapter: CountryAdapter
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -29,7 +28,8 @@ class CountryChoosingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter = CountryAdapter { country ->
+
+        var adapter = CountryAdapter { country ->
             onCountrySelected(country)
         }
         binding.countryRV.adapter = adapter

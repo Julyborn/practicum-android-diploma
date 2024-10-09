@@ -92,7 +92,7 @@ class SearchFragment : Fragment() {
             }
         }
         val navController = findNavController()
-        binding.filterButton.setOnClickListener{
+        binding.filterButton.setOnClickListener {
             navController.navigate(R.id.action_searchFragment_to_filterFragment)
         }
     }
