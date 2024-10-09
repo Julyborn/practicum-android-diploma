@@ -51,7 +51,7 @@
             app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 
             <EditText
-                android:id="@+id/editText"
+                android:id="@+id/searchEditText"
                 style="@style/search_et"
                 android:layout_width="0dp"
                 android:layout_marginStart="16dp"
@@ -70,6 +70,7 @@
                 tools:ignore="Autofill,RtlSymmetry,TextContrastCheck,VisualLintTextFieldSize" />
 
             <ImageView
+                android:id="@+id/search_icon"
                 style="@style/ic_search"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
@@ -77,6 +78,18 @@
                 android:layout_marginEnd="8dp"
                 android:background="@drawable/ic_search"
                 android:visibility="visible"
+                android:contentDescription="@string/search"/>
+
+            <ImageView
+                android:id="@+id/clear_icon"
+                style="@style/ic_search"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/ic_button_clear"
+                android:padding="13dp"
+                android:visibility="gone"
                 android:contentDescription="@string/search"/>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
