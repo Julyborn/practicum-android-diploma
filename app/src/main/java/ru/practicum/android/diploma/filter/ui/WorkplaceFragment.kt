@@ -13,7 +13,7 @@ class WorkplaceFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_filters, container, false)
+        return inflater.inflate(R.layout.fragment_workplace, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

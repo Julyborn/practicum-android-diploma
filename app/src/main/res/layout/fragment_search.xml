@@ -24,6 +24,7 @@
             tools:ignore="TextSizeCheck" />
 
         <ImageButton
+            android:id="@+id/filterButton"
             style="@style/night_image"
             android:layout_width="40dp"
             android:layout_height="40dp"
