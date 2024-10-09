@@ -33,7 +33,7 @@
 
     <style name="CustomBottomNavigationStyle" parent="Widget.MaterialComponents.BottomNavigationView">
         <item name="itemIconTint">@color/bottom_nav_item_color</item>
-        <item name="itemBackground">@color/white</item>
+        <item name="itemBackground">?attr/colorPrimary</item>
         <item name="itemTextColor">@color/bottom_nav_item_color</item>
     </style>
 
