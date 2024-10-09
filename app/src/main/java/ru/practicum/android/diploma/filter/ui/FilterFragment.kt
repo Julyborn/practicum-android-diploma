@@ -13,7 +13,7 @@ class FilterFragment : Fragment() {
 
     private var _binding: FragmentFiltersBinding? = null
     private val binding get() = _binding!!
-    rivate val searchViewModel: SearchViewModel by activityViewModels()
+    private val searchViewModel: SearchViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?

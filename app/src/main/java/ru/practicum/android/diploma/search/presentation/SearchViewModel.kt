@@ -24,6 +24,12 @@ class SearchViewModel(val searchInteractor: SearchInteractor) : ViewModel() {
 
     private var searchJob: Job? = null
 
+    // Переменные для фильтра
+    private var filterLocation: String? = null
+    private var filterIndustry: String? = null
+    private var filterSalary: String? = null
+    private var hideWithoutSalary: Boolean = false
+
     // Переменные пагинации
     private var currentPage = 0
     private var maxPages = Int.MAX_VALUE
@@ -60,6 +66,16 @@ class SearchViewModel(val searchInteractor: SearchInteractor) : ViewModel() {
                 isNextPageLoading = false
             }
         }
+    }
+
+    fun applyFilters(location: String?, industry: String?, salary: String?, hideWithoutSalary: Boolean) {
+        filterLocation = location
+        filterIndustry = industry
+        filterSalary = salary
+        this.hideWithoutSalary = hideWithoutSalary
+
+        val query = _searchQuery.value ?: return
+        onSearchQueryChanged(query)
     }
 
     private fun renderState(result: Resource<List<Vacancy>>) {
