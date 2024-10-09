@@ -20,8 +20,6 @@ class CountryViewModel(private val countryInteractor: CountryInteractor) : ViewM
                 _countries.value = CountryState.Success(countriesList)
             } catch (e: IOException) {
                 _countries.value = CountryState.Error
-            } catch (e: Exception) {
-                _countries.value = CountryState.Error
             }
         }
     }
