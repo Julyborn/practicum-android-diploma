@@ -76,4 +76,22 @@
             android:paddingBottom="@dimen/dp_24" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <Button
+        android:id="@+id/chooseButton"
+        style="@style/TextMedium16"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_60"
+        android:layout_marginHorizontal="@dimen/dp_16"
+        android:layout_marginBottom="@dimen/dp_24"
+        android:backgroundTint="@color/blue"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:text="@string/choose"
+        android:textAllCaps="false"
+        android:textColor="@color/white_universal"
+        android:visibility="gone"
+        app:cornerRadius="@dimen/dp_12"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
