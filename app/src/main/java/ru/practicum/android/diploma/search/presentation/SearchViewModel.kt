@@ -14,7 +14,7 @@ import ru.practicum.android.diploma.search.presentation.models.UiScreenState
 import ru.practicum.android.diploma.search.presentation.models.VacancyUi
 import ru.practicum.android.diploma.util.formatSalary
 
-class SearchViewModel(val searchInteractor: SearchInteractor) : ViewModel() {
+class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewModel() {
     private val _uiState = MutableLiveData<UiScreenState>(UiScreenState.Default)
     val uiState: LiveData<UiScreenState>
         get() = _uiState
@@ -40,32 +40,14 @@ class SearchViewModel(val searchInteractor: SearchInteractor) : ViewModel() {
         maxPages = Int.MAX_VALUE
         _vacanciesList.value = emptyList()
         _searchQuery.value = query
-        if (query == "") {
+        if (query.isEmpty()) {
             searchJob?.cancel()
             _uiState.value = UiScreenState.Default
             return
         }
-        val params = VacancySearchParams(query = query, page = currentPage)
+        val params = buildSearchParams(query)
         _uiState.value = UiScreenState.Loading
         searchRequest(params)
-    }
-
-    fun onLastItemReached() {
-        if (isNextPageLoading || currentPage >= maxPages - 1) return
-        isNextPageLoading = true
-        val query = _searchQuery.value ?: return
-        val params = VacancySearchParams(query = query, page = currentPage + 1)
-        searchRequest(params)
-    }
-
-    private fun searchRequest(params: VacancySearchParams) {
-        searchJob?.cancel()
-        searchJob = viewModelScope.launch {
-            searchInteractor.searchVacancies(params).collect { result ->
-                renderState(result)
-                isNextPageLoading = false
-            }
-        }
     }
 
     fun applyFilters(location: String?, industry: String?, salary: String?, hideWithoutSalary: Boolean) {
@@ -76,6 +58,35 @@ class SearchViewModel(val searchInteractor: SearchInteractor) : ViewModel() {
 
         val query = _searchQuery.value ?: return
         onSearchQueryChanged(query)
+    }
+
+    fun onLastItemReached() {
+        if (isNextPageLoading || currentPage >= maxPages - 1) return
+        isNextPageLoading = true
+        val query = _searchQuery.value ?: return
+        val params = buildSearchParams(query = query, page = currentPage + 1)
+        searchRequest(params)
+    }
+
+    private fun buildSearchParams(query: String, page: Int = 0): VacancySearchParams {
+        return VacancySearchParams(
+            query = query,
+            location = filterLocation,
+            industry = filterIndustry,
+            salary = filterSalary?.toIntOrNull(),
+            hideWithoutSalary = hideWithoutSalary,
+            page = page
+        )
+    }
+
+    private fun searchRequest(params: VacancySearchParams) {
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
+            searchInteractor.searchVacancies(params).collect { result ->
+                renderState(result)
+                isNextPageLoading = false
+            }
+        }
     }
 
     private fun renderState(result: Resource<List<Vacancy>>) {
