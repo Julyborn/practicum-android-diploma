@@ -13,7 +13,14 @@ fun Salary?.formatSalary(): String {
         "RUR" -> "₽"
         "USD" -> "$"
         "EUR" -> "€"
-        else -> ""
+        "GBP" -> "£"
+        "JPY" -> "¥"
+        "CNY" -> "¥"
+        "INR" -> "₹"
+        "KRW" -> "₩"
+        "BRL" -> "R$"
+        "TRY" -> "₺"
+        else -> this.currency
     }
 
     return when {

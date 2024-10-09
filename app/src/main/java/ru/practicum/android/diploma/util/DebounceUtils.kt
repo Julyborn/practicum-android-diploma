@@ -16,11 +16,11 @@ fun <T> debounce(
     delayMs: Long,
     scope: CoroutineScope,
     action: (T) -> Unit
-): DebouncedFunction<T> {
-    return DebouncedFunction(delayMs, scope, action)
+): DebounceUtils<T> {
+    return DebounceUtils(delayMs, scope, action)
 }
 
-class DebouncedFunction<T>(
+class DebounceUtils<T>(
     private val delayMs: Long,
     private val scope: CoroutineScope,
     private val action: (T) -> Unit
