@@ -24,7 +24,7 @@ val viewModelModule = module {
     }
 
     viewModel<VacanciesViewModel> {
-        VacanciesViewModel(get())
+        VacanciesViewModel(get(), get())
     }
 
     viewModel<WorkplaceViewModel> {

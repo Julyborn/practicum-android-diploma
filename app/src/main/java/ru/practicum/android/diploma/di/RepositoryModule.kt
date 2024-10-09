@@ -15,7 +15,7 @@ import ru.practicum.android.diploma.vacancies.domain.api.VacanciesRepository
 val repositoryModule = module {
 
     single<FavoritesRepository> {
-        FavoritesRepositoryImpl()
+        FavoritesRepositoryImpl(get(), get())
     }
 
     single<FilterRepository> {
