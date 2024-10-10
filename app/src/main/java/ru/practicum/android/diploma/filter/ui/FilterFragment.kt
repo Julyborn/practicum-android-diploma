@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.databinding.FragmentFiltersBinding
 import ru.practicum.android.diploma.search.presentation.SearchViewModel
 
@@ -13,7 +14,7 @@ class FilterFragment : Fragment() {
 
     private var _binding: FragmentFiltersBinding? = null
     private val binding get() = _binding!!
-    private val searchViewModel: SearchViewModel by activityViewModels()
+    private val searchViewModel by viewModel<SearchViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
