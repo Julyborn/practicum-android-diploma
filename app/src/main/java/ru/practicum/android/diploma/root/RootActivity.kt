@@ -3,6 +3,7 @@ package ru.practicum.android.diploma.root
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -21,21 +22,18 @@ class RootActivity : AppCompatActivity() {
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.filterFragment -> {
-                    bottomNavigationView.visibility = View.GONE
-                }
-
-                R.id.vacanciesFragment -> {
-                    bottomNavigationView.visibility = View.GONE
-                }
-
+                R.id.filterFragment,
+                R.id.vacanciesFragment -> bottomNavigationView.visibility = View.GONE
                 else -> {
                     bottomNavigationView.visibility = View.VISIBLE
                 }
             }
         }
+        updateTheme()
         // Пример использования access token для HeadHunter API
         //  networkRequestExample(accessToken = BuildConfig.HH_ACCESS_TOKEN)
     }
-
+    private fun updateTheme() {
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+    }
 }

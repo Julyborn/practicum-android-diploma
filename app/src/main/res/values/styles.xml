@@ -33,7 +33,7 @@
 
     <style name="CustomBottomNavigationStyle" parent="Widget.MaterialComponents.BottomNavigationView">
         <item name="itemIconTint">@color/bottom_nav_item_color</item>
-        <item name="itemBackground">@color/white</item>
+        <item name="itemBackground">?attr/colorPrimary</item>
         <item name="itemTextColor">@color/bottom_nav_item_color</item>
     </style>
 
@@ -70,9 +70,9 @@
         <item name="android:layout_height">@dimen/dp_48</item>
         <item name="android:layout_marginStart">@dimen/dp_4</item>
         <item name="android:layout_marginTop">@dimen/dp_8</item>
+        <item name="tint">?attr/colorOnPrimary</item>
         <item name="android:scaleType">centerInside</item>
         <item name="android:src">@drawable/ic_button_arrow_back</item>
-        <item name="tint">?attr/colorOnPrimary</item>
         <item name="android:foreground">?attr/selectableItemBackground</item>
     </style>
 

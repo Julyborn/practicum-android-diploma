@@ -22,10 +22,49 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/countryRV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp_24"
         app:layout_constraintTop_toBottomOf="@+id/screenTitle"
         tools:listitem="@layout/item_country" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/noCountryPlaceholder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/ivVacancyPlaceholder"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/dp_16"
+            android:layout_marginEnd="@dimen/dp_16"
+            android:scaleType="fitCenter"
+            android:src="@drawable/img_no_list_country"
+            app:layout_constraintDimensionRatio="328:223"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            style="@style/TextMedium22"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_16"
+            android:gravity="center_horizontal"
+            android:paddingStart="@dimen/dp_48"
+            android:paddingEnd="@dimen/dp_48"
+            android:text="@string/no_list_country"
+            app:layout_constraintEnd_toEndOf="@+id/ivVacancyPlaceholder"
+            app:layout_constraintStart_toStartOf="@+id/ivVacancyPlaceholder"
+            app:layout_constraintTop_toBottomOf="@+id/ivVacancyPlaceholder" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
