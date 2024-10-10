@@ -29,4 +29,11 @@
     <string name="share_vacancy_title">Поделиться вакансией через</string>
     <string name="share_vacancy_message">Посмотрите вакансию: https://hh.ru/vacancy/%1$s</string>
     <string name="vacancy_server_error">Ошибка сервера</string>
+    <string name="filter_settings">Настройки фильтрации</string>
+    <string name="place_work">Место работы</string>
+    <string name="no_salary">Не показывать без зарплаты</string>
+    <string name="apply">Применить</string>
+    <string name="reset_filter">Сбросить</string>
+    <string name="industry">Отрасль</string>
+    <string name="edit_salary">Введите сумму</string>
 </resources>
