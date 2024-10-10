@@ -18,7 +18,7 @@
             style="@style/night_image"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_gravity="center_vertical"
+            android:layout_gravity="center"
             android:layout_marginStart="8dp"
             android:backgroundTint="@color/white"
             android:src="@drawable/arrow_back" />
@@ -28,7 +28,7 @@
             android:layout_width="0dp"
             android:layout_height="26dp"
             android:layout_gravity="center"
-            android:layout_marginStart="4dp"
+            android:layout_marginStart="8dp"
             android:layout_weight="1"
             android:text="Настройки фильтрации"
             android:textColor="@color/black"
@@ -54,6 +54,7 @@
                 style="@style/search_et"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="4dp"
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:background="?selectableItemBackground"
@@ -71,9 +72,19 @@
                 android:id="@+id/imageButtonJob"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
+                android:layout_marginEnd="4dp"
                 android:layout_gravity="center"
                 android:backgroundTint="@color/white"
                 app:srcCompat="@drawable/transition" />
+            <ImageButton
+                android:id="@+id/imageButtonJobClear"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="4dp"
+                android:layout_gravity="center"
+                android:backgroundTint="@color/white"
+                android:visibility="gone"
+                app:srcCompat="@drawable/cancel" />
         </LinearLayout>
     </LinearLayout>
 
@@ -94,6 +105,7 @@
                 style="@style/search_et"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="4dp"
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:background="?selectableItemBackground"
@@ -111,9 +123,19 @@
                 android:id="@+id/imageButtonIndustry"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
+                android:layout_marginEnd="4dp"
                 android:layout_gravity="center"
                 android:backgroundTint="@color/white"
                 app:srcCompat="@drawable/transition" />
+            <ImageButton
+                android:id="@+id/imageButtonIndustryClear"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="4dp"
+                android:layout_gravity="center"
+                android:backgroundTint="@color/white"
+                android:visibility="gone"
+                app:srcCompat="@drawable/cancel" />
         </LinearLayout>
     </LinearLayout>
 
@@ -141,7 +163,8 @@
                 android:layout_height="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="12dp"
+                android:layout_marginEnd="16dp"
+                android:textColor="@color/grey"
                 android:text="Ожидаемая зарплата"
                 android:textSize="12sp" />
 
@@ -151,7 +174,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginEnd="12dp"
+                android:layout_marginEnd="16dp"
                 android:layout_marginBottom="8dp"
                 android:background="?selectableItemBackground"
                 android:focusable="true"
@@ -181,6 +204,7 @@
             android:layout_height="48dp"
             android:layout_gravity="center"
             android:layout_marginStart="16dp"
+            android:layout_marginEnd="4dp"
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:text="Не показывать без зарплаты"
@@ -192,7 +216,9 @@
             android:id="@+id/checkBox2"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:layout_gravity="center" />
+            android:layout_marginEnd="4dp"
+            android:layout_gravity="center"
+            android:buttonTint="@color/blue" />
     </LinearLayout>
 
 
