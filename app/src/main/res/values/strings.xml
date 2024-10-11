@@ -36,4 +36,5 @@
     <string name="reset_filter">Сбросить</string>
     <string name="industry">Отрасль</string>
     <string name="edit_salary">Введите сумму</string>
+    <string name="expected_salary">Ожидаемая зарплата</string>
 </resources>
