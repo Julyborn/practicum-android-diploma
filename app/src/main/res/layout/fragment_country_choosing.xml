@@ -41,7 +41,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/ivVacancyPlaceholder"
+            android:id="@+id/ivPlaceholder"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginStart="@dimen/dp_16"
@@ -62,9 +62,22 @@
             android:paddingStart="@dimen/dp_48"
             android:paddingEnd="@dimen/dp_48"
             android:text="@string/no_list_country"
-            app:layout_constraintEnd_toEndOf="@+id/ivVacancyPlaceholder"
-            app:layout_constraintStart_toStartOf="@+id/ivVacancyPlaceholder"
-            app:layout_constraintTop_toBottomOf="@+id/ivVacancyPlaceholder" />
+            app:layout_constraintEnd_toEndOf="@+id/ivPlaceholder"
+            app:layout_constraintStart_toStartOf="@+id/ivPlaceholder"
+            app:layout_constraintTop_toBottomOf="@+id/ivPlaceholder" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ProgressBar
+        android:id="@+id/loadingIndicator"
+        android:layout_width="@dimen/dp_36"
+        android:layout_height="@dimen/dp_36"
+        android:layout_gravity="center"
+        android:indeterminate="true"
+        android:indeterminateTint="@color/blue"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

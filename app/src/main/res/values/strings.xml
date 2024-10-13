@@ -15,7 +15,7 @@
     <string name="No_list">Не удалось получить список вакансий</string>
     <string name="filter">filter</string>
     <string name="search">Search</string>
-    <string name="Input_request">Введите запрос</string>
+    <string name="Input_request"> Введите запрос</string>
     <string name="Error_server">Ошибка сервера</string>
     <string name="found_vacancies_count">Найдено %1$d вакансий</string>
     <string name="no_vacancies_text">Таких вакансий нет</string>
@@ -40,4 +40,5 @@
     <string name="region_entering">Введите регион</string>
     <string name="choose">Выбрать</string>
     <string name="no_list_country">Не удалось загрузить список</string>
+    <string name="no_region">Такого региона нет</string>
 </resources>

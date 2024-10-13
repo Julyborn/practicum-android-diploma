@@ -9,8 +9,8 @@ import ru.practicum.android.diploma.filter.domain.models.Country
 class CountryViewHolder(rootView: View) : RecyclerView.ViewHolder(rootView) {
     private val countryName: TextView = rootView.findViewById(R.id.countryName)
 
-    fun bind(country: Country, onCountrySelected: (String) -> Unit) {
+    fun bind(country: Country, onClick: (Country) -> Unit) {
         countryName.text = country.name
-        itemView.setOnClickListener { onCountrySelected(country.name) }
+        itemView.setOnClickListener { onClick(country) }
     }
 }

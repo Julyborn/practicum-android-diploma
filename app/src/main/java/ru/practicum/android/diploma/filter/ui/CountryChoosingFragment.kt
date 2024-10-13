@@ -9,14 +9,15 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.databinding.FragmentCountryChoosingBinding
-import ru.practicum.android.diploma.filter.presentation.CountryState
-import ru.practicum.android.diploma.filter.presentation.CountryViewModel
+import ru.practicum.android.diploma.filter.domain.models.Country
+import ru.practicum.android.diploma.filter.presentation.CountryChoosingViewModel
+import ru.practicum.android.diploma.filter.presentation.WorkplaceState
 
 class CountryChoosingFragment : Fragment() {
 
     private var _binding: FragmentCountryChoosingBinding? = null
     private val binding get() = _binding!!
-    private val viewModel by viewModel<CountryViewModel>()
+    private val viewModel by viewModel<CountryChoosingViewModel>()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -29,25 +30,42 @@ class CountryChoosingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        var adapter = CountryAdapter { country ->
+        val adapter = CountryAdapter { country ->
             onCountrySelected(country)
         }
         binding.countryRV.adapter = adapter
         binding.countryRV.layoutManager = LinearLayoutManager(context)
         binding.backButton.setOnClickListener { findNavController().popBackStack() }
-        viewModel.countries.observe(viewLifecycleOwner) { state ->
+        viewModel.loadCountries()
+
+        viewModel.state.observe(viewLifecycleOwner) { state ->
             when (state) {
-                is CountryState.Success -> {
+                is WorkplaceState.Loading -> {
+                    binding.loadingIndicator.visibility = View.VISIBLE
+                    binding.noCountryPlaceholder.visibility = View.GONE
+                    binding.countryRV.visibility = View.GONE
+                }
+
+                is WorkplaceState.Success -> {
+                    binding.loadingIndicator.visibility = View.GONE
+                    binding.noCountryPlaceholder.visibility = View.GONE
+                    binding.countryRV.visibility = View.VISIBLE
                     adapter.update(state.countries)
                 }
 
-                is CountryState.Error -> {
+                is WorkplaceState.FetchError -> {
+                    binding.loadingIndicator.visibility = View.GONE
+                    binding.noCountryPlaceholder.visibility = View.VISIBLE
+                    binding.countryRV.visibility = View.GONE
+                }
+
+                else -> {
+                    binding.loadingIndicator.visibility = View.GONE
                     binding.noCountryPlaceholder.visibility = View.VISIBLE
                     binding.countryRV.visibility = View.GONE
                 }
             }
         }
-        viewModel.loadCountries()
     }
 
     override fun onDestroyView() {
@@ -55,16 +73,8 @@ class CountryChoosingFragment : Fragment() {
         _binding = null
     }
 
-    private fun onCountrySelected(country: String) {
-        val resultBundle = Bundle().apply {
-            putString(SELECTED_COUNTRY, country)
-        }
-        parentFragmentManager.setFragmentResult(COUNTRY_KEY, resultBundle)
+    private fun onCountrySelected(country: Country) {
+        viewModel.selectCountry(country)
         requireActivity().onBackPressed()
-    }
-
-    companion object {
-        const val SELECTED_COUNTRY = "selected_country"
-        const val COUNTRY_KEY = "countryRequestKey"
     }
 }
