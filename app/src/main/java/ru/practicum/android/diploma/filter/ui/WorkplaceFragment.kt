@@ -49,10 +49,7 @@ class WorkplaceFragment : Fragment() {
             binding.regionEditText.setText(region?.name ?: DEF)
             changeHintColor(binding.regionTextInputLayout, region != null)
             binding.icRegionArrow.setImageResource(
-                if (region != null)
-                    R.drawable.ic_button_clear
-                else
-                    R.drawable.ic_right_arrow
+                if (region != null) R.drawable.ic_button_clear else R.drawable.ic_right_arrow
             )
         }
 
