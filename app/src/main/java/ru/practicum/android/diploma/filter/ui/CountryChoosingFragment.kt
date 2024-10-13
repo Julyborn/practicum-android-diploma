@@ -13,7 +13,6 @@ import ru.practicum.android.diploma.filter.domain.models.Country
 import ru.practicum.android.diploma.filter.presentation.CountryChoosingViewModel
 import ru.practicum.android.diploma.filter.presentation.WorkplaceState
 
-
 class CountryChoosingFragment : Fragment() {
 
     private var _binding: FragmentCountryChoosingBinding? = null

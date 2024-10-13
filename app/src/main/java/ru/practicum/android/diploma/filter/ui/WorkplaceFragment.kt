@@ -21,7 +21,6 @@ class WorkplaceFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel by viewModel<WorkplaceViewModel>()
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -38,13 +37,23 @@ class WorkplaceFragment : Fragment() {
         viewModel.selectedCountry.observe(viewLifecycleOwner) { country ->
             binding.countryEditText.setText(country?.name ?: DEF)
             changeHintColor(binding.countryTextInputLayout, country != null)
-            binding.icCountryArrow.setImageResource(if (country != null) R.drawable.ic_button_clear else R.drawable.ic_right_arrow)
+            binding.icCountryArrow.setImageResource(
+                if (country != null)
+                    R.drawable.ic_button_clear
+                else
+                    R.drawable.ic_right_arrow
+            )
             binding.chooseButton.visibility = if (country != null) View.VISIBLE else View.GONE
         }
         viewModel.selectedRegion.observe(viewLifecycleOwner) { region ->
             binding.regionEditText.setText(region?.name ?: DEF)
             changeHintColor(binding.regionTextInputLayout, region != null)
-            binding.icRegionArrow.setImageResource(if (region != null) R.drawable.ic_button_clear else R.drawable.ic_right_arrow)
+            binding.icRegionArrow.setImageResource(
+                if (region != null)
+                    R.drawable.ic_button_clear
+                else
+                    R.drawable.ic_right_arrow
+            )
         }
 
         binding.countryEditText.setOnClickListener {
@@ -66,7 +75,6 @@ class WorkplaceFragment : Fragment() {
             findNavController().popBackStack()
         }
 
-
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
@@ -74,7 +82,8 @@ class WorkplaceFragment : Fragment() {
                     viewModel.clearCountry()
                     findNavController().popBackStack()
                 }
-            })
+            }
+        )
 
         changeHintColor(binding.countryTextInputLayout, false)
         changeHintColor(binding.regionTextInputLayout, false)
@@ -89,7 +98,6 @@ class WorkplaceFragment : Fragment() {
                 ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.grey))
         }
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -16,12 +16,13 @@ class RegionChoosingViewModel(private val interactor: WorkplaceInteractor) : Vie
     val state: LiveData<WorkplaceState> = _state
 
     private var countryCache: List<Country>? = null
+    private var allRegions: List<Region> = emptyList()
 
     init {
+        loadRegions()
         viewModelScope.launch {
             countryCache = interactor.getCountries()
         }
-        loadRegions()
     }
 
     fun loadRegions() {
@@ -38,6 +39,7 @@ class RegionChoosingViewModel(private val interactor: WorkplaceInteractor) : Vie
         viewModelScope.launch {
             try {
                 val regions = interactor.getAllRegions()
+                allRegions = regions
                 if (regions.isEmpty()) {
                     _state.value = WorkplaceState.FetchError
                 } else {
@@ -45,6 +47,7 @@ class RegionChoosingViewModel(private val interactor: WorkplaceInteractor) : Vie
                 }
             } catch (e: IOException) {
                 _state.value = WorkplaceState.FetchError
+                throw e
             }
         }
     }
@@ -53,6 +56,7 @@ class RegionChoosingViewModel(private val interactor: WorkplaceInteractor) : Vie
         viewModelScope.launch {
             try {
                 val regions = interactor.getRegionsByCountry(countryId)
+                allRegions = regions
                 if (regions.isEmpty()) {
                     _state.value = WorkplaceState.FetchError
                 } else {
@@ -66,18 +70,15 @@ class RegionChoosingViewModel(private val interactor: WorkplaceInteractor) : Vie
     }
 
     fun filterRegions(query: String) {
-        val filteredRegions = state.value?.let { state ->
-            if (state is WorkplaceState.Success && state.regions != null) {
-                state.regions.filter { it.name.contains(query, ignoreCase = true) }
-            } else {
-                emptyList()
-            }
-        }
-
-        if (filteredRegions.isNullOrEmpty()) {
-            _state.value = WorkplaceState.NoRegionsError
+        val filteredRegions = if (query.isEmpty()) {
+            allRegions
         } else {
-            _state.value = WorkplaceState.Success(emptyList(), filteredRegions)
+            allRegions.filter { it.name.contains(query, ignoreCase = true) }
+        }
+        _state.value = if (filteredRegions.isEmpty()) {
+            WorkplaceState.NoRegionsError
+        } else {
+            WorkplaceState.Success(emptyList(), filteredRegions)
         }
     }
 
@@ -88,7 +89,6 @@ class RegionChoosingViewModel(private val interactor: WorkplaceInteractor) : Vie
 
     private fun getCountryById(countryId: String?) {
         viewModelScope.launch {
-
             if (countryCache == null) {
                 countryCache = interactor.getCountries()
             }

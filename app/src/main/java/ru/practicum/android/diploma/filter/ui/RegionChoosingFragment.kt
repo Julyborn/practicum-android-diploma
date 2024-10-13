@@ -21,7 +21,7 @@ class RegionChoosingFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel by viewModel<RegionChoosingViewModel>()
 
-    private lateinit var regionAdapter: RegionAdapter
+    private val regionAdapter: RegionAdapter = RegionAdapter { region -> onRegionSelected(region) }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,9 +34,6 @@ class RegionChoosingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        regionAdapter = RegionAdapter { region -> onRegionSelected(region) }
-
 
         binding.regionsRecyclerView.layoutManager = LinearLayoutManager(context)
         binding.regionsRecyclerView.adapter = regionAdapter
@@ -53,8 +50,7 @@ class RegionChoosingFragment : Fragment() {
 
         }
         binding.regionsEditText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 viewModel.filterRegions(s.toString())
                 if (s.isNullOrEmpty()) {
@@ -65,8 +61,7 @@ class RegionChoosingFragment : Fragment() {
                     binding.icClear.visibility = View.VISIBLE
                 }
             }
-
-            override fun afterTextChanged(s: Editable?) {}
+            override fun afterTextChanged(s: Editable?) = Unit
         })
 
         binding.icClear.setOnClickListener {
@@ -75,7 +70,6 @@ class RegionChoosingFragment : Fragment() {
 
         binding.backButton.setOnClickListener { findNavController().popBackStack() }
     }
-
 
     private fun showLoadingIndicator() {
         binding.placeholderError.visibility = View.GONE

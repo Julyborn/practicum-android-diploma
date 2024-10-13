@@ -20,6 +20,7 @@ class WorkplaceRepositoryImpl(
                 )
             }
         } catch (e: IOException) {
+            throw e
             emptyList()
         }
     }
@@ -35,6 +36,7 @@ class WorkplaceRepositoryImpl(
                 )
             }
         } catch (e: IOException) {
+            throw e
             emptyList()
         }
     }
