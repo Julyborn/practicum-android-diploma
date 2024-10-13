@@ -32,7 +32,6 @@ class WorkplaceFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val navController = findNavController()
 
         viewModel.selectedCountry.observe(viewLifecycleOwner) { country ->
             binding.countryEditText.setText(country?.name ?: DEF)
@@ -50,21 +49,7 @@ class WorkplaceFragment : Fragment() {
             )
         }
 
-        binding.countryEditText.setOnClickListener {
-            navController.navigate(R.id.action_workplaceFragment_to_countryChoosingFragment)
-        }
-        binding.regionEditText.setOnClickListener {
-            navController.navigate(R.id.action_workplaceFragment_to_regionChoosingFragment)
-        }
-
-        binding.backButton.setOnClickListener {
-            viewModel.clearCountry()
-            findNavController().popBackStack()
-        }
-
-        binding.icCountryArrow.setOnClickListener { viewModel.clearCountry() }
-        binding.icRegionArrow.setOnClickListener { viewModel.clearRegion() }
-        binding.chooseButton.setOnClickListener {findNavController().popBackStack() }
+        clickListeners()
 
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
@@ -75,7 +60,6 @@ class WorkplaceFragment : Fragment() {
                 }
             }
         )
-
         changeHintColor(binding.countryTextInputLayout, false)
         changeHintColor(binding.regionTextInputLayout, false)
     }
@@ -88,6 +72,23 @@ class WorkplaceFragment : Fragment() {
             inputLayout.defaultHintTextColor =
                 ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.grey))
         }
+    }
+
+    private fun clickListeners() {
+        binding.countryEditText.setOnClickListener {
+            findNavController().navigate(R.id.action_workplaceFragment_to_countryChoosingFragment)
+        }
+        binding.regionEditText.setOnClickListener {
+            findNavController().navigate(R.id.action_workplaceFragment_to_regionChoosingFragment)
+        }
+
+        binding.backButton.setOnClickListener {
+            viewModel.clearCountry()
+            findNavController().popBackStack()
+        }
+        binding.icCountryArrow.setOnClickListener { viewModel.clearCountry() }
+        binding.icRegionArrow.setOnClickListener { viewModel.clearRegion() }
+        binding.chooseButton.setOnClickListener { findNavController().popBackStack() }
     }
 
     override fun onDestroyView() {
