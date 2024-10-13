@@ -59,15 +59,12 @@ class WorkplaceFragment : Fragment() {
 
         binding.backButton.setOnClickListener {
             viewModel.clearCountry()
-            viewModel.clearRegion()
             findNavController().popBackStack()
         }
 
         binding.icCountryArrow.setOnClickListener { viewModel.clearCountry() }
         binding.icRegionArrow.setOnClickListener { viewModel.clearRegion() }
-        binding.chooseButton.setOnClickListener {
-            findNavController().popBackStack()
-        }
+        binding.chooseButton.setOnClickListener {findNavController().popBackStack() }
 
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
