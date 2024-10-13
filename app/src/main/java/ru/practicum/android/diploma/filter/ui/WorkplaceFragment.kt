@@ -38,10 +38,7 @@ class WorkplaceFragment : Fragment() {
             binding.countryEditText.setText(country?.name ?: DEF)
             changeHintColor(binding.countryTextInputLayout, country != null)
             binding.icCountryArrow.setImageResource(
-                if (country != null)
-                    R.drawable.ic_button_clear
-                else
-                    R.drawable.ic_right_arrow
+                if (country != null) R.drawable.ic_button_clear else R.drawable.ic_right_arrow
             )
             binding.chooseButton.visibility = if (country != null) View.VISIBLE else View.GONE
         }
