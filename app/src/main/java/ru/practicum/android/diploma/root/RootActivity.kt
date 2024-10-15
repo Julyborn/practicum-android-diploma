@@ -24,6 +24,7 @@ class RootActivity : AppCompatActivity() {
             when (destination.id) {
                 R.id.filterFragment,
                 R.id.vacanciesFragment -> bottomNavigationView.visibility = View.GONE
+                R.id.industryFragment -> bottomNavigationView.visibility = View.GONE
                 else -> {
                     bottomNavigationView.visibility = View.VISIBLE
                 }
