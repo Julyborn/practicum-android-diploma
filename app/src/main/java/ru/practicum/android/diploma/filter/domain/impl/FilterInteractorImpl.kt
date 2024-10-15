@@ -12,4 +12,8 @@ class FilterInteractorImpl(private val filterRepository: FilterRepository) : Fil
     override fun loadFilterSettings(): FilterSettings {
         return filterRepository.loadFilterSettings()
     }
+
+    override fun clearFilterSettings() {
+        return filterRepository.clearFilters()
+    }
 }
