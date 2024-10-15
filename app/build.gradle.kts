@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("kotlin-kapt")
     id("ru.practicum.android.diploma.plugins.developproperties")
 }
 
@@ -36,16 +37,31 @@ android {
 
     buildFeatures {
         buildConfig = true
+        viewBinding = true
     }
 }
 
 dependencies {
+    val navVersion = "2.8.1"
+    val fragmentVersion = "1.8.3"
+
     implementation(libs.androidX.core)
     implementation(libs.androidX.appCompat)
 
     // UI layer libraries
     implementation(libs.ui.material)
     implementation(libs.ui.constraintLayout)
+
+    // Retrofit
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+
+    // Koin
+    implementation(libs.koin.android)
+
+    // Glide
+    implementation(libs.glide)
+    kapt(libs.compiler)
 
     // region Unit tests
     testImplementation(libs.unitTests.junit)
@@ -55,4 +71,14 @@ dependencies {
     androidTestImplementation(libs.uiTests.junitExt)
     androidTestImplementation(libs.uiTests.espressoCore)
     // endregion
+
+    // Navigation
+    implementation("androidx.navigation:navigation-fragment:$navVersion")
+    implementation("androidx.navigation:navigation-ui:$navVersion")
+    implementation("androidx.fragment:fragment-ktx:$fragmentVersion")
+
+    // Room
+    implementation(libs.room.runtime)
+    kapt(libs.room.compiler)
+    implementation(libs.room.ktx)
 }

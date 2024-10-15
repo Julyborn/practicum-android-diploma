@@ -1,3 +1,35 @@
 <resources>
     <string name="app_name">Practicum-Android-Diploma</string>
+    <string name="worked_on_this">Над приложением работали</string>
+    <string name="team">Команда</string>
+    <string name="member1">Палади Олег Игоревич</string>
+    <string name="member2">Мячина Александра Юрьевна</string>
+    <string name="member3">Владислав Горымов</string>
+    <string name="member4">Алексей Кулаев</string>
+    <string name="member5">Пётр Михайлович Павлов</string>
+    <string name="bottom_nav_item_main">Главная</string>
+    <string name="bottom_nav_item_favorites">Избранное</string>
+    <string name="bottom_nav_item_team">Команда</string>
+    <string name="Search_vacancies">Поиск вакансий</string>
+    <string name="No_internet">Нет интернета</string>
+    <string name="No_list">Не удалось получить список вакансий</string>
+    <string name="filter">filter</string>
+    <string name="search">Search</string>
+    <string name="Input_request"> Введите запрос</string>
+    <string name="Error_server">Ошибка сервера</string>
+    <string name="found_vacancies_count">Найдено %1$d вакансий</string>
+    <string name="no_vacancies_text">Таких вакансий нет</string>
+    <string name="no_internet_toast">Проверьте подключение к интернету</string>
+    <string name="error_toast">Произошла ошибка</string>
+    <string name="vacancy">Вакансия</string>
+    <string name="required_experience">Требуемый опыт</string>
+    <string name="vacancy_description">Описание вакансии</string>
+    <string name="vacancy_not_found">Вакансия не найдена или удалена</string>
+    <string name="key_skills">Ключевые навыки</string>
+    <string name="share_vacancy_title">Поделиться вакансией через</string>
+    <string name="share_vacancy_message">Посмотрите вакансию: https://hh.ru/vacancy/%1$s</string>
+    <string name="vacancy_server_error">Ошибка сервера</string>
+    <string name="favorite_screen_empty_list">Список пуст</string>
+    <string name="favorite_screen_error">Не удалось получить список вакансий</string>
+    <string name="favorite_screen_title">Избранное</string>
 </resources>
