@@ -9,6 +9,9 @@ import ru.practicum.android.diploma.favorites.data.db.AppDatabase
 import ru.practicum.android.diploma.favorites.data.db.converters.VacancyDetailsDbConverter
 import ru.practicum.android.diploma.search.data.network.HeadHunterAPI
 import ru.practicum.android.diploma.search.data.network.RetrofitInstance
+import ru.practicum.android.diploma.search.domain.api.SearchInteractor
+import ru.practicum.android.diploma.search.domain.impl.SearchInteractorImpl
+import ru.practicum.android.diploma.search.presentation.SearchViewModel
 
 private const val APPLICATION_PREFERENCES = "application_preferences"
 

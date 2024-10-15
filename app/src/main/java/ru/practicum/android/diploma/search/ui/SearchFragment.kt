@@ -192,4 +192,8 @@ class SearchFragment : Fragment() {
     companion object {
         const val KEY_VACANCY = "vacancyId"
     }
+
+    private fun openFilterFragment() {
+        findNavController().navigate(R.id.action_searchFragment_to_filterFragment)
+    }
 }
