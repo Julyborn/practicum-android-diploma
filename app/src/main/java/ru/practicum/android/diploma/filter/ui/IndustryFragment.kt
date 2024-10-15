@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.koin.android.ext.android.inject
@@ -45,9 +46,11 @@ class IndustryFragment : Fragment() {
             binding.industryList.smoothScrollToPosition(position)
         }
 
+        // Настройка RecyclerView
         binding.industryList.adapter = industryAdapter
         binding.industryList.layoutManager = LinearLayoutManager(requireContext())
 
+        // Обработчик кнопки поиска
         binding.imageButtonIndustrySearch.setOnClickListener {
             val query = binding.editIndustry.text.toString().trim()
             if (query.isNotEmpty()) {
@@ -122,6 +125,16 @@ class IndustryFragment : Fragment() {
                 parentFragmentManager.popBackStack()
             }
         }
+
+        binding.editIndustry.setOnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                binding.imageButtonFilterIndustryClear.visibility = View.GONE
+                binding.imageButtonIndustrySearch.visibility = View.VISIBLE
+            } else {
+                binding.imageButtonFilterIndustryClear.visibility = View.VISIBLE
+                binding.imageButtonIndustrySearch.visibility = View.GONE
+            }
+        }
     }
 
     override fun onDestroyView() {
@@ -129,3 +142,4 @@ class IndustryFragment : Fragment() {
         _binding = null
     }
 }
+
