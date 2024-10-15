@@ -1,6 +1,17 @@
 package ru.practicum.android.diploma.filter.presentation
 
 import androidx.lifecycle.ViewModel
+import ru.practicum.android.diploma.filter.data.dto.FilterSettings
 import ru.practicum.android.diploma.filter.domain.api.FilterInteractor
 
-class FilterViewModel(filterInteractor: FilterInteractor) : ViewModel()
+class FilterViewModel(private val filterInteractor: FilterInteractor) : ViewModel() {
+
+    fun applyFilters(location: String?, industry: String?, salary: String?, hideWithoutSalary: Boolean) {
+        val filterSettings = FilterSettings(location, industry, salary, hideWithoutSalary)
+        filterInteractor.saveFilterSettings(filterSettings)
+    }
+
+    fun loadFilters(): FilterSettings {
+        return filterInteractor.loadFilterSettings()
+    }
+}
