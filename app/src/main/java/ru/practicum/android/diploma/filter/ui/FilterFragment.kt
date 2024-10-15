@@ -35,8 +35,15 @@ class FilterFragment : Fragment() {
         }
 
         val savedFilters = filterViewModel.loadFilters()
-        binding.editJob.setText(savedFilters.location)
-        binding.editIndustry.setText(savedFilters.industry)
+        binding.addNameFilterJob.setText(savedFilters.location)
+        binding.addNameFilterIndustry.setText(savedFilters.industry)
+        if (savedFilters.industry != null) {
+            binding.editIndustry.visibility = View.GONE
+            binding.imageButtonIndustry.visibility = View.GONE
+
+            binding.addFilterIndustryLinearLayout.visibility = View.VISIBLE
+            binding.imageButtonIndustryClear.visibility = View.VISIBLE
+        }
         binding.editSalary.setText(savedFilters.salary)
         binding.checkBox2.isChecked = savedFilters.hideWithoutSalary
 
@@ -75,6 +82,7 @@ class FilterFragment : Fragment() {
             binding.imageButtonIndustry.visibility = View.VISIBLE
 
             binding.addNameFilterIndustry.text = ""
+            savedFilters.industry = null
         }
 
         binding.editSalary.setOnFocusChangeListener { _, hasFocus ->

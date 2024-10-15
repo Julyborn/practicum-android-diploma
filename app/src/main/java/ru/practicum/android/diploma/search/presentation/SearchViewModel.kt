@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import ru.practicum.android.diploma.filter.domain.api.FilterInteractor
 import ru.practicum.android.diploma.search.domain.api.SearchInteractor
 import ru.practicum.android.diploma.search.domain.models.Resource
 import ru.practicum.android.diploma.search.domain.models.Vacancy
@@ -14,7 +15,10 @@ import ru.practicum.android.diploma.search.presentation.models.UiScreenState
 import ru.practicum.android.diploma.search.presentation.models.VacancyUi
 import ru.practicum.android.diploma.util.formatSalary
 
-class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewModel() {
+class SearchViewModel(
+    private val searchInteractor: SearchInteractor,
+    private val filterInteractor: FilterInteractor
+) : ViewModel() {
     private val _uiState = MutableLiveData<UiScreenState>(UiScreenState.Default)
     val uiState: LiveData<UiScreenState>
         get() = _uiState
@@ -35,11 +39,24 @@ class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewMode
     private var maxPages = Int.MAX_VALUE
     private var isNextPageLoading = false
 
+    init {
+        filterInteractor.loadFilterSettings()
+    }
+    private fun loadSavedFilters() {
+        val savedFilters = filterInteractor.loadFilterSettings()
+        filterLocation = savedFilters.location
+        //filterIndustry = savedFilters.industry
+        filterSalary = savedFilters.salary
+        hideWithoutSalary = savedFilters.hideWithoutSalary
+    }
     fun onSearchQueryChanged(query: String) {
         currentPage = 0
         maxPages = Int.MAX_VALUE
         _vacanciesList.value = emptyList()
         _searchQuery.value = query
+
+        loadSavedFilters()
+
         if (query.isEmpty()) {
             searchJob?.cancel()
             _uiState.value = UiScreenState.Default
@@ -52,7 +69,7 @@ class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewMode
 
     fun applyFilters(location: String?, industry: String?, salary: String?, hideWithoutSalary: Boolean) {
         filterLocation = location
-        filterIndustry = industry
+        //filterIndustry = industry
         filterSalary = salary
         this.hideWithoutSalary = hideWithoutSalary
 
@@ -72,7 +89,7 @@ class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewMode
         return VacancySearchParams(
             query = query,
             location = filterLocation,
-            industry = filterIndustry,
+            //industry = filterIndustry,
             salary = filterSalary?.toIntOrNull(),
             hideWithoutSalary = hideWithoutSalary,
             page = page

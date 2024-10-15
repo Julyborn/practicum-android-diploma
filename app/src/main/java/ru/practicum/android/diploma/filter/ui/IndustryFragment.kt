@@ -46,11 +46,9 @@ class IndustryFragment : Fragment() {
             binding.industryList.smoothScrollToPosition(position)
         }
 
-        // Настройка RecyclerView
         binding.industryList.adapter = industryAdapter
         binding.industryList.layoutManager = LinearLayoutManager(requireContext())
 
-        // Обработчик кнопки поиска
         binding.imageButtonIndustrySearch.setOnClickListener {
             val query = binding.editIndustry.text.toString().trim()
             if (query.isNotEmpty()) {
