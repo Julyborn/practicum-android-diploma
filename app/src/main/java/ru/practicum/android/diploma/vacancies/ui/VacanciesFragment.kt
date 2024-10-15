@@ -45,6 +45,20 @@ class VacanciesFragment : Fragment() {
         viewModel.screenState.observe(viewLifecycleOwner) { screenState -> handleScreenState(screenState) }
         binding.shareButton.setOnClickListener { shareVacancy(vacancyId) }
         binding.backButton.setOnClickListener { findNavController().popBackStack() }
+
+        binding.addToFavoriteButton.setOnClickListener {
+            viewModel.addToFavoriteHandler()
+        }
+
+        viewModel.isFavorite.observe(viewLifecycleOwner) { isFavorite ->
+            isFavorite?.let {
+                if (it) {
+                    binding.addToFavoriteButton.setImageResource(R.drawable.ic_button_remove_from_favorite)
+                } else {
+                    binding.addToFavoriteButton.setImageResource(R.drawable.ic_button_add_to_favorite)
+                }
+            }
+        }
     }
 
     private fun displayVacancyDetails(vacancyDetails: VacancyDetails) {

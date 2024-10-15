@@ -23,8 +23,12 @@ class RootActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.filterFragment,
+                R.id.workplaceFragment,
+                R.id.countryChoosingFragment,
+                R.id.regionChoosingFragment,
                 R.id.vacanciesFragment -> bottomNavigationView.visibility = View.GONE
                 R.id.industryFragment -> bottomNavigationView.visibility = View.GONE
+
                 else -> {
                     bottomNavigationView.visibility = View.VISIBLE
                 }
@@ -34,6 +38,7 @@ class RootActivity : AppCompatActivity() {
         // Пример использования access token для HeadHunter API
         //  networkRequestExample(accessToken = BuildConfig.HH_ACCESS_TOKEN)
     }
+
     private fun updateTheme() {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
     }
