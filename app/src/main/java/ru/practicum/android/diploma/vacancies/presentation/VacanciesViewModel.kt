@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.vacancies.presentation
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -20,6 +21,7 @@ class VacanciesViewModel(private val vacanciesInteractor: VacanciesInteractor) :
                 val details = vacanciesInteractor.getVacancyDetails(vacancyId)
                 _screenState.value = VacancyScreenState.Success(details)
             } catch (e: IOException) {
+                Log.e("VacanciesViewModel", "catch IOException: ${e.localizedMessage}", e)
                 _screenState.value = VacancyScreenState.Error(VacancyScreenState.ErrorType.SERVER_ERROR)
             } catch (e: HttpException) {
                 if (e.code() == HTTP_NOT_FOUND) {
