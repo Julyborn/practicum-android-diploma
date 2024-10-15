@@ -49,6 +49,38 @@
             android:orientation="horizontal"
             app:layout_constraintTop_toBottomOf="@+id/filterSettings">
 
+            <LinearLayout
+                android:id="@+id/addFilterJobLinearLayout"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/dp_16"
+                android:layout_marginEnd="@dimen/dp_4"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@+id/filterJob">
+
+                <TextView
+                    android:id="@+id/addFilterJob"
+                    style="@style/search_filter"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_16"
+                    android:layout_gravity="center"
+                    android:text="@string/industry"
+                    android:textSize="@dimen/text_size_12" />
+
+                <TextView
+                    android:id="@+id/addNameFilterJob"
+                    style="@style/search_filter"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_19"
+                    android:layout_gravity="center"
+                    android:text=""
+                    android:textSize="@dimen/text_size_16" />
+
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/editJob"
                 style="@style/search_et"
@@ -94,7 +126,40 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:orientation="horizontal"
             app:layout_constraintTop_toBottomOf="@+id/filterJob">
+
+            <LinearLayout
+                android:id="@+id/addFilterIndustryLinearLayout"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:layout_marginEnd="@dimen/dp_4"
+                android:layout_marginStart="@dimen/dp_16"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@+id/filterJob">
+
+                <TextView
+                    android:id="@+id/addFilterIndustry"
+                    style="@style/search_filter"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_16"
+                    android:textSize="@dimen/text_size_12"
+                    android:layout_gravity="center"
+                    android:text="@string/industry" />
+
+                <TextView
+                    android:id="@+id/addNameFilterIndustry"
+                    style="@style/search_filter"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_19"
+                    android:layout_gravity="center"
+                    android:textSize="@dimen/text_size_16"
+                    android:text="" />
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/editIndustry"
@@ -171,7 +236,6 @@
                 android:layout_marginBottom="@dimen/dp_8"
                 android:background="?selectableItemBackground"
                 android:focusable="true"
-                android:inputType="number"
                 android:hint="@string/edit_salary"
                 android:inputType="number"
                 android:imeOptions="actionDone"
