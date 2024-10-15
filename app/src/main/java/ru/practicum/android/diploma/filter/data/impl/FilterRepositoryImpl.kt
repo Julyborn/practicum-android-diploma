@@ -18,4 +18,8 @@ class FilterRepositoryImpl(private val filterPreferences: FilterPreferences) : F
     override fun loadFilterSettings(): FilterSettings {
         return filterPreferences.getFilters()
     }
+
+    override fun clearFilters() {
+        filterPreferences.clearFilters()
+    }
 }
