@@ -1,6 +1,8 @@
 package ru.practicum.android.diploma.search.ui
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -61,7 +63,7 @@ class SearchFragment : Fragment() {
             adapter = searchItemAdapter
         }
 
-        binding.editText.addTextChangedListener { query ->
+        binding.searchEditText.addTextChangedListener { query ->
             debounceSearch(query.toString())
         }
 
@@ -82,9 +84,9 @@ class SearchFragment : Fragment() {
             }
         })
 
-        binding.editText.setOnEditorActionListener { v, actionId, event ->
+        binding.searchEditText.setOnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                val query = binding.editText.text.toString()
+                val query = binding.searchEditText.text.toString()
                 debounceSearch.cancel()
                 viewModel.onSearchQueryChanged(query)
                 true
@@ -92,8 +94,32 @@ class SearchFragment : Fragment() {
                 false
             }
         }
-        binding.openFilter.setOnClickListener {
-            openFilterFragment()
+
+        binding.clearIcon.setOnClickListener {
+            binding.searchEditText.text.clear()
+        }
+
+        binding.searchEditText.addTextChangedListener(object : TextWatcher {
+            @Suppress("EmptyFunctionBlock")
+            override fun afterTextChanged(s: Editable?) {
+                // Не используется в данном случае
+            }
+            @Suppress("EmptyFunctionBlock")
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (s.isNullOrEmpty()) {
+                    binding.searchIcon.visibility = View.VISIBLE
+                    binding.clearIcon.visibility = View.GONE
+                } else {
+                    binding.searchIcon.visibility = View.GONE
+                    binding.clearIcon.visibility = View.VISIBLE
+                }
+            }
+        })
+        val navController = findNavController()
+        binding.filterButton.setOnClickListener {
+            navController.navigate(R.id.action_searchFragment_to_filterFragment)
         }
     }
 
