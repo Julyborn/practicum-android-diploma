@@ -27,4 +27,9 @@ val interactorModule = module {
     single<VacanciesInteractor> {
         VacanciesInteractorImpl(get())
     }
+
+    factory<SearchInteractor> {
+        SearchInteractorImpl(get())
+    }
+
 }
