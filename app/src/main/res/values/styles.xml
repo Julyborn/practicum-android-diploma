@@ -41,7 +41,10 @@
         <item name="android:textColorHint">@color/grey</item>
         <item name="android:fontFamily">@font/ys_display_regular</item>
     </style>
-
+    <style name="search_filter">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+    </style>
     <style name="search_card_view_style">
         <item name="cardBackgroundColor">@color/light_grey</item>
     </style>
@@ -114,5 +117,9 @@
     <style name="filter_salary_clear">
         <item name="backgroundTint">@color/light_grey</item>
         <item name="android:src">@drawable/cancel</item>
+    </style>
+    <style name="industry_search">
+        <item name="backgroundTint">@color/light_grey</item>
+        <item name="android:src">@drawable/ic_search</item>
     </style>
 </resources>
