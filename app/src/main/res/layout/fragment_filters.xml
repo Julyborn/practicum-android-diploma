@@ -67,7 +67,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp_16"
                     android:layout_gravity="center"
-                    android:text="@string/industry"
+                    android:text="@string/place_work"
                     android:textSize="@dimen/text_size_12" />
 
                 <TextView
@@ -102,17 +102,18 @@
                 android:layout_width="@dimen/dp_48"
                 android:layout_height="@dimen/dp_48"
                 style="@style/button_job"
+                android:visibility="gone"
                 android:layout_gravity="center"
                 android:layout_marginEnd="@dimen/dp_4" />
 
             <ImageButton
                 android:id="@+id/imageButtonJobClear"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/dp_48"
+                android:layout_height="@dimen/dp_48"
                 style="@style/button_cancel"
                 android:layout_gravity="center"
                 android:layout_marginEnd="@dimen/dp_4"
-                android:visibility="gone" />
+ />
         </LinearLayout>
     </LinearLayout>
 
@@ -183,6 +184,7 @@
                 android:layout_height="@dimen/dp_48"
                 style="@style/button_job"
                 android:layout_gravity="center"
+                android:visibility="gone"
                 android:layout_marginEnd="@dimen/dp_4" />
 
             <ImageButton
@@ -192,7 +194,7 @@
                 style="@style/button_cancel"
                 android:layout_gravity="center"
                 android:layout_marginEnd="@dimen/dp_4"
-                android:visibility="gone" />
+                 />
         </LinearLayout>
     </LinearLayout>
 
