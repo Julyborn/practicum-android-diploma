@@ -3,7 +3,6 @@ package ru.practicum.android.diploma.search.data.impl
 import android.content.Context
 import android.net.http.HttpException
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresExtension
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
