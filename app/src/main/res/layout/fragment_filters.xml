@@ -102,7 +102,6 @@
                 android:layout_width="@dimen/dp_48"
                 android:layout_height="@dimen/dp_48"
                 style="@style/button_job"
-                android:visibility="gone"
                 android:layout_gravity="center"
                 android:layout_marginEnd="@dimen/dp_4" />
 
@@ -111,6 +110,7 @@
                 android:layout_width="@dimen/dp_48"
                 android:layout_height="@dimen/dp_48"
                 style="@style/button_cancel"
+                android:visibility="gone"
                 android:layout_gravity="center"
                 android:layout_marginEnd="@dimen/dp_4"
  />
@@ -184,7 +184,6 @@
                 android:layout_height="@dimen/dp_48"
                 style="@style/button_job"
                 android:layout_gravity="center"
-                android:visibility="gone"
                 android:layout_marginEnd="@dimen/dp_4" />
 
             <ImageButton
@@ -193,6 +192,7 @@
                 android:layout_height="@dimen/dp_48"
                 style="@style/button_cancel"
                 android:layout_gravity="center"
+                android:visibility="gone"
                 android:layout_marginEnd="@dimen/dp_4"
                  />
         </LinearLayout>
