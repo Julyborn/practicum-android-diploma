@@ -118,7 +118,10 @@ class IndustryFragment : Fragment() {
             if (selectedIndustry != null) {
                 parentFragmentManager.setFragmentResult(
                     "industryRequestKey",
-                    bundleOf("selectedIndustry" to selectedIndustry.name)
+                    bundleOf(
+                        "selectedIndustry" to selectedIndustry.name,
+                        "selectedIndustryId" to selectedIndustry.id
+                    )
                 )
                 parentFragmentManager.popBackStack()
             }
@@ -140,4 +143,3 @@ class IndustryFragment : Fragment() {
         _binding = null
     }
 }
-
