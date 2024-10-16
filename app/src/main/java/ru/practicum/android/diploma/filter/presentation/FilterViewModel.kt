@@ -11,8 +11,16 @@ class FilterViewModel(private val filterInteractor: FilterInteractor) : ViewMode
         return filterInteractor.loadFilterSettings()
     }
 
-    fun applyFilters(location: String?, industry: String?, salary: String?, hideWithoutSalary: Boolean) {
-        val filterSettings = FilterSettings(location, industry, salary, hideWithoutSalary)
+    fun applyFilters(
+        location: String?,
+        industry: String?,
+        salary: String?,
+        industryId: String?,
+        selectedCountry: String?,
+        selectedRegion: String?,
+        hideWithoutSalary: Boolean
+    ) {
+        val filterSettings = FilterSettings(location, industry, salary, industryId, selectedCountry, selectedRegion, hideWithoutSalary)
 
         filterInteractor.saveFilterSettings(filterSettings)
     }
