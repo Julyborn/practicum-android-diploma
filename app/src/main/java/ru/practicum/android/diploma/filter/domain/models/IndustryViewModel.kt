@@ -36,7 +36,7 @@ class IndustryViewModel(private val industryInteractor: IndustryInteractor) : Vi
         maxPages = Int.MAX_VALUE
         _industriesList.value = emptyList()
         _searchQuery.value = query
-        Log.d("onSearchQueryChanged","query: $query")
+        Log.d("onSearchQueryChanged", "query: $query")
         val params = buildSearchParams(query)
         _uiState.value = UiScreenState.Loading
         searchRequest(params)
@@ -49,7 +49,6 @@ class IndustryViewModel(private val industryInteractor: IndustryInteractor) : Vi
         val params = buildSearchParams(query = query, page = currentPage + 1)
         searchRequest(params)
     }
-
 
     private fun buildSearchParams(query: String, page: Int = 0): IndustrySearchParams {
         return IndustrySearchParams(

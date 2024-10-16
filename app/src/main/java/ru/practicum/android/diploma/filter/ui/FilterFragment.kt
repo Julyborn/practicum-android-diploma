@@ -18,10 +18,12 @@ class FilterFragment : Fragment() {
     private var _binding: FragmentFiltersBinding? = null
     private val binding get() = _binding!!
 
-    private val filterViewModel:FilterViewModel by inject()
+    private val filterViewModel: FilterViewModel by inject()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentFiltersBinding.inflate(inflater, container, false)
         return binding.root
@@ -70,7 +72,15 @@ class FilterFragment : Fragment() {
             val hideWithoutSalary = binding.checkBox2.isChecked
             val selectedCountry = savedFilters.selectedCountry
             val selectedRegion = savedFilters.selectedRegion
-            filterViewModel.applyFilters(location, industry, salary, industryId, selectedCountry, selectedRegion, hideWithoutSalary)
+            filterViewModel.applyFilters(
+                location,
+                industry,
+                salary,
+                industryId,
+                selectedCountry,
+                selectedRegion,
+                hideWithoutSalary
+            )
             parentFragmentManager.popBackStack()
         }
 
@@ -141,7 +151,7 @@ class FilterFragment : Fragment() {
             }
         }
 
-        binding.imageButtonFilterSalaryClear.setOnClickListener{
+        binding.imageButtonFilterSalaryClear.setOnClickListener {
             binding.editSalary.text.clear()
             binding.editSalary.clearFocus()
             binding.expectedSalary.setTextColor(ContextCompat.getColor(requireContext(), R.color.grey))

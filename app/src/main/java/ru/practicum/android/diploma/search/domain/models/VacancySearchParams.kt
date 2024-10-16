@@ -1,7 +1,5 @@
 package ru.practicum.android.diploma.search.domain.models
 
-import android.util.Log
-
 data class VacancySearchParams(
     val query: String = "",
     val location: String? = null,
@@ -16,7 +14,9 @@ data class VacancySearchParams(
 
 fun VacancySearchParams.toMap(): Map<String, String> {
     val params = mutableMapOf(
-        "text" to query, "per_page" to perPage.toString(), "page" to page.toString()
+        "text" to query,
+        "per_page" to perPage.toString(),
+        "page" to page.toString()
     )
 
     location?.let { params["location"] = it }

@@ -16,7 +16,7 @@ class FilterPreferencesImpl(context: Context) : FilterPreferences {
         salary: String?,
         industryId: String?,
         hideWithoutSalary: Boolean
-    )  {
+    ) {
         sharedPreferences.edit().apply {
             putString(KEY_LOCATION, location)
             putString(KEY_INDUSTRY, industry)
@@ -34,7 +34,15 @@ class FilterPreferencesImpl(context: Context) : FilterPreferences {
         val selectedCountry = sharedPreferences.getString(KEY_SELECTED_COUNTRY, null)
         val selectedRegion = sharedPreferences.getString(KEY_SELECTED_REGION, null)
         val hideWithoutSalary = sharedPreferences.getBoolean(KEY_HIDE_WITHOUT_SALARY, false)
-        return FilterSettings(location, industry, salary, industryId, selectedCountry, selectedRegion, hideWithoutSalary)
+        return FilterSettings(
+            location,
+            industry,
+            salary,
+            industryId,
+            selectedCountry,
+            selectedRegion,
+            hideWithoutSalary
+        )
     }
 
     override fun clearFilters() {

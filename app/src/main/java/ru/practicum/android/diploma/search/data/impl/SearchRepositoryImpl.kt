@@ -43,7 +43,7 @@ class SearchRepositoryImpl(
                         areaName = getArea(vacancy.area),
                         industryId = vacancy.industryId?.id ?: "",
                         selectedCountry = vacancy.selectedCountry ?: "",
-                        selectedRegion  =   vacancy.selectedRegion ?: "",
+                        selectedRegion = vacancy.selectedRegion ?: "",
                         employer = getEmployer(vacancy.employer)
                     )
                 }.filter { vacancy ->

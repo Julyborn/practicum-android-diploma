@@ -45,7 +45,7 @@ class SearchViewModel(
     private fun loadSavedFilters() {
         val savedFilters = filterInteractor.loadFilterSettings()
         filterLocation = savedFilters.location
-        //filterIndustry = savedFilters.industry
+        // filterIndustry = savedFilters.industry
         filterSalary = savedFilters.salary
         hideWithoutSalary = savedFilters.hideWithoutSalary
     }
@@ -69,7 +69,7 @@ class SearchViewModel(
 
     fun applyFilters(location: String?, industry: String?, salary: String?, hideWithoutSalary: Boolean) {
         filterLocation = location
-        //filterIndustry = industry
+        // filterIndustry = industry
         filterSalary = salary
         this.hideWithoutSalary = hideWithoutSalary
 
@@ -89,7 +89,7 @@ class SearchViewModel(
         return VacancySearchParams(
             query = query,
             location = filterLocation,
-            //industry = filterIndustry,
+            // industry = filterIndustry,
             salary = filterSalary?.toIntOrNull(),
             hideWithoutSalary = hideWithoutSalary,
             page = page

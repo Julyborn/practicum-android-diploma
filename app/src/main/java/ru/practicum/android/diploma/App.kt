@@ -1,9 +1,6 @@
 package ru.practicum.android.diploma
 
 import android.app.Application
-import android.content.SharedPreferences
-import androidx.appcompat.app.AppCompatDelegate
-import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import ru.practicum.android.diploma.di.dataModule
