@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputLayout
@@ -88,7 +89,21 @@ class WorkplaceFragment : Fragment() {
         }
         binding.icCountryArrow.setOnClickListener { viewModel.clearCountry() }
         binding.icRegionArrow.setOnClickListener { viewModel.clearRegion() }
-        binding.chooseButton.setOnClickListener { findNavController().popBackStack() }
+        binding.chooseButton.setOnClickListener {
+            val selectedCountry = viewModel.selectedCountry.value
+            val selectedRegion = viewModel.selectedRegion.value
+
+            if (selectedCountry != null && selectedRegion != null) {
+                parentFragmentManager.setFragmentResult(
+                    "workplaceRequestKey",
+                    bundleOf(
+                        "selectedCountry" to selectedCountry.name,
+                        "selectedRegion" to selectedRegion.name
+                    )
+                )
+                findNavController().popBackStack()
+            }
+        }
     }
 
     override fun onDestroyView() {
