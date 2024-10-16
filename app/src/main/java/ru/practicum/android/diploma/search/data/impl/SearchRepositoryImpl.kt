@@ -3,6 +3,7 @@ package ru.practicum.android.diploma.search.data.impl
 import android.content.Context
 import android.net.http.HttpException
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresExtension
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -41,15 +42,25 @@ class SearchRepositoryImpl(
                         name = vacancy.name,
                         salary = getSalary(vacancy.salary),
                         areaName = getArea(vacancy.area),
-                        //industryId = getindustryId(vacancy.industryId),
+                        industryId = vacancy.industryId?.id ?: "",
+                        selectedCountry = vacancy.selectedCountry ?: "",
+                        selectedRegion  =   vacancy.selectedRegion ?: "",
                         employer = getEmployer(vacancy.employer)
                     )
                 }.filter { vacancy ->
-                    val matchesLocation = params.location?.let { vacancy.areaName == it } ?: true
 
-                    /*val matchesIndustry = params.industry?.let { industry ->
-                        vacancy.industryId.id?.equals(industry, ignoreCase = true) ?: false
-                    } ?: true*/
+                    val matchesLocation = params.selectedCountry?.let { selectedCountry ->
+                        val matchesCountry = vacancy.areaName.contains(selectedCountry, ignoreCase = true)
+                        val matchesRegion = params.selectedRegion?.let { selectedRegion ->
+                            vacancy.areaName.contains(selectedRegion, ignoreCase = true)
+                        } ?: true
+
+                        matchesCountry || matchesRegion
+                    } ?: true
+
+                    val matchesIndustry = params.industryId?.let { industryId ->
+                        vacancy.industryId == industryId
+                    } ?: true
 
                     val salary = vacancy.salary.from ?: 0
                     val matchesSalary = params.salary?.let { salary >= it } ?: true
@@ -60,9 +71,8 @@ class SearchRepositoryImpl(
                         true
                     }
 
-                    matchesLocation && matchesSalary && matchesHideWithoutSalary
+                    matchesLocation && matchesIndustry && matchesSalary && matchesHideWithoutSalary
                 }
-
                 emit(
                     Resource.Success(
                         data = vacancies,
