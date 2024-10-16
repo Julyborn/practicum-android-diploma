@@ -24,7 +24,7 @@
             android:layout_marginEnd="@dimen/dp_4"
             android:text="RadioButton"
             android:button="@null"
-            android:drawableEnd="?android:attr/listChoiceIndicatorSingle"
+            android:drawableEnd="@drawable/custom_choice_indicator"
             android:focusable="false"
             android:clickable="false"/>
     </LinearLayout>
