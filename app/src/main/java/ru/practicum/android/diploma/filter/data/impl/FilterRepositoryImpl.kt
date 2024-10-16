@@ -11,6 +11,7 @@ class FilterRepositoryImpl(private val filterPreferences: FilterPreferences) : F
             filterSettings.location,
             filterSettings.industry,
             filterSettings.salary,
+            filterSettings.industryId,
             filterSettings.hideWithoutSalary
         )
     }
