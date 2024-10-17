@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Practicum-Android-Diploma</string>
     <string name="worked_on_this">Над приложением работали</string>
     <string name="team">Команда</string>
@@ -32,4 +32,23 @@
     <string name="favorite_screen_empty_list">Список пуст</string>
     <string name="favorite_screen_error">Не удалось получить список вакансий</string>
     <string name="favorite_screen_title">Избранное</string>
+    <string name="choosing_workplace">Выбор места работы</string>
+    <string name="country">Страна</string>
+    <string name="region">Регион</string>
+    <string name="country_choosing">Выбор страны</string>
+    <string name="region_choosing">Выбор региона</string>
+    <string name="region_entering">Введите регион</string>
+    <string name="no_list_country">Не удалось загрузить список</string>
+    <string name="no_region">Такого региона нет</string>
+    <string name="filter_settings">Настройки фильтрации</string>
+    <string name="place_work">Место работы</string>
+    <string name="no_salary">Не показывать без зарплаты</string>
+    <string name="apply">Применить</string>
+    <string name="reset_filter">Сбросить</string>
+    <string name="industry">Отрасль</string>
+    <string name="edit_salary">Введите сумму</string>
+    <string name="expected_salary">Ожидаемая зарплата</string>
+    <string name="choose">Выбрать</string>
+    <string name="select_Industry">Выбор Отрасли</string>
+    <string name="enter_industry">Введите отрасль</string>
 </resources>

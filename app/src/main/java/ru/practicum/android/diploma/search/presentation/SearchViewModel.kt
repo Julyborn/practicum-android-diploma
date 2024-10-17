@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import ru.practicum.android.diploma.filter.domain.api.FilterInteractor
 import ru.practicum.android.diploma.search.domain.api.SearchInteractor
 import ru.practicum.android.diploma.search.domain.models.Resource
 import ru.practicum.android.diploma.search.domain.models.Vacancy
@@ -14,7 +15,10 @@ import ru.practicum.android.diploma.search.presentation.models.UiScreenState
 import ru.practicum.android.diploma.search.presentation.models.VacancyUi
 import ru.practicum.android.diploma.util.formatSalary
 
-class SearchViewModel(val searchInteractor: SearchInteractor) : ViewModel() {
+class SearchViewModel(
+    private val searchInteractor: SearchInteractor,
+    private val filterInteractor: FilterInteractor
+) : ViewModel() {
     private val _uiState = MutableLiveData<UiScreenState>(UiScreenState.Default)
     val uiState: LiveData<UiScreenState>
         get() = _uiState
@@ -24,32 +28,80 @@ class SearchViewModel(val searchInteractor: SearchInteractor) : ViewModel() {
 
     private var searchJob: Job? = null
 
+    // Переменные для фильтра
+    private var filterLocation: String? = null
+
+//    private var filterIndustry: String? = null
+    private var filterSalary: String? = null
+    private var hideWithoutSalary: Boolean = false
+    private var filterIndustryId: String? = null
+    private var area: String? = null
+
     // Переменные пагинации
     private var currentPage = 0
     private var maxPages = Int.MAX_VALUE
     private var isNextPageLoading = false
+
+    init {
+        filterInteractor.loadFilterSettings()
+    }
+
+    private fun loadSavedFilters() {
+        val savedFilters = filterInteractor.loadFilterSettings()
+        filterLocation = savedFilters.location
+        // filterIndustry = savedFilters.industry
+        filterSalary = savedFilters.salary
+        hideWithoutSalary = savedFilters.hideWithoutSalary
+        filterIndustryId = savedFilters.industryId
+        area = savedFilters.area
+    }
 
     fun onSearchQueryChanged(query: String) {
         currentPage = 0
         maxPages = Int.MAX_VALUE
         _vacanciesList.value = emptyList()
         _searchQuery.value = query
-        if (query == "") {
+
+        loadSavedFilters()
+
+        if (query.isEmpty()) {
             searchJob?.cancel()
             _uiState.value = UiScreenState.Default
             return
         }
-        val params = VacancySearchParams(query = query, page = currentPage)
+        val params = buildSearchParams(query)
         _uiState.value = UiScreenState.Loading
         searchRequest(params)
+    }
+
+    fun applyFilters(location: String?, industry: String?, salary: String?, hideWithoutSalary: Boolean) {
+        filterLocation = location
+        // filterIndustry = industry
+        filterSalary = salary
+        this.hideWithoutSalary = hideWithoutSalary
+
+        val query = _searchQuery.value ?: return
+        onSearchQueryChanged(query)
     }
 
     fun onLastItemReached() {
         if (isNextPageLoading || currentPage >= maxPages - 1) return
         isNextPageLoading = true
         val query = _searchQuery.value ?: return
-        val params = VacancySearchParams(query = query, page = currentPage + 1)
+        val params = buildSearchParams(query = query, page = currentPage + 1)
         searchRequest(params)
+    }
+
+    private fun buildSearchParams(query: String, page: Int = 0): VacancySearchParams {
+        return VacancySearchParams(
+            query = query,
+            location = filterLocation,
+            industryId = filterIndustryId,
+            salary = filterSalary?.toIntOrNull(),
+            hideWithoutSalary = hideWithoutSalary,
+            page = page,
+            area = area
+        )
     }
 
     private fun searchRequest(params: VacancySearchParams) {
