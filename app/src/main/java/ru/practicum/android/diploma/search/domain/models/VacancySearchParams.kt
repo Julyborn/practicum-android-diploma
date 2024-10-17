@@ -19,16 +19,21 @@ fun VacancySearchParams.toMap(): Map<String, String> {
         "page" to page.toString()
     )
 
-    location?.let { params["location"] = it }
-
-    selectedCountry?.let { params["country"] = it }
-    selectedRegion?.let { params["region"] = it }
+//    location?.let { params["location"] = it }
+//
+//    selectedCountry?.let { params["country"] = it }
+//    selectedRegion?.let { params["region"] = it }
 
     industryId?.let { params["industry"] = it }
     salary?.let { params["salary"] = it.toString() }
 
     if (hideWithoutSalary) {
         params["only_with_salary"] = "true"
+    }
+
+    if (location != null) {
+        val area = selectedRegion ?: selectedCountry
+        area?.let { params["area"] = it }
     }
 
     return params

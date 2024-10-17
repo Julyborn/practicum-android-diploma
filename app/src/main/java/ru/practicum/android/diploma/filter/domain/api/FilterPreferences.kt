@@ -8,7 +8,9 @@ interface FilterPreferences {
         industry: String?,
         salary: String?,
         industryId: String?,
-        hideWithoutSalary: Boolean
+        hideWithoutSalary: Boolean,
+        countryId: String?,
+        regionId: String?
     )
     fun getFilters(): FilterSettings
     fun clearFilters()

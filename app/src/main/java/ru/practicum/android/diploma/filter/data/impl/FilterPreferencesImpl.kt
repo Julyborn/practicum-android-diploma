@@ -15,13 +15,18 @@ class FilterPreferencesImpl(context: Context) : FilterPreferences {
         industry: String?,
         salary: String?,
         industryId: String?,
-        hideWithoutSalary: Boolean
+        hideWithoutSalary: Boolean,
+        countryId: String?,
+        regionId: String?
     ) {
         sharedPreferences.edit().apply {
             putString(KEY_LOCATION, location)
             putString(KEY_INDUSTRY, industry)
             putString(KEY_SALARY, salary)
+            putString(KEY_INDUSTRY_ID, industryId)
             putBoolean(KEY_HIDE_WITHOUT_SALARY, hideWithoutSalary)
+            putString(KEY_SELECTED_COUNTRY, countryId)
+            putString(KEY_SELECTED_REGION, regionId)
             apply()
         }
     }

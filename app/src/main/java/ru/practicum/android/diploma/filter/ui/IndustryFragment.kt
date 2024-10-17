@@ -28,7 +28,7 @@ class IndustryFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentIndustryBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -36,37 +36,16 @@ class IndustryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.arrowBack.setOnClickListener {
-            parentFragmentManager.popBackStack()
-        }
+        addListeners()
 
         industryAdapter = IndustryAdapter { industryId, position ->
             Log.d("IndustryFragment", "Industry selected: $industryId at position $position")
-
             binding.buttonChoose.visibility = View.VISIBLE
             binding.industryList.smoothScrollToPosition(position)
         }
 
         binding.industryList.adapter = industryAdapter
         binding.industryList.layoutManager = LinearLayoutManager(requireContext())
-
-        binding.imageButtonIndustrySearch.setOnClickListener {
-            val query = binding.editIndustry.text.toString().trim()
-            if (query.isNotEmpty()) {
-                viewModel.onSearchQueryChanged(query)
-                binding.imageButtonFilterIndustryClear.visibility = View.VISIBLE
-                binding.imageButtonIndustrySearch.visibility = View.GONE
-            } else {
-                viewModel.onSearchQueryChanged("")
-            }
-        }
-
-        binding.imageButtonFilterIndustryClear.setOnClickListener {
-            binding.editIndustry.text.clear()
-            viewModel.onSearchQueryChanged("")
-            binding.imageButtonFilterIndustryClear.visibility = View.GONE
-            binding.imageButtonIndustrySearch.visibility = View.VISIBLE
-        }
 
         viewModel.industriesList.observe(viewLifecycleOwner) { industries ->
             industryAdapter.update(industries)
@@ -77,23 +56,39 @@ class IndustryFragment : Fragment() {
                 is UiScreenState.Loading -> {
                     binding.progressBar.visibility = View.VISIBLE
                 }
+
                 is UiScreenState.Default -> {
                     binding.progressBar.visibility = View.GONE
                 }
+
                 is UiScreenState.Empty -> {
                     binding.progressBar.visibility = View.GONE
                     Toast.makeText(requireContext(), "No industries found", Toast.LENGTH_SHORT).show()
                 }
+
                 is UiScreenState.NoInternetError -> {
                     binding.progressBar.visibility = View.GONE
                     Toast.makeText(requireContext(), "No internet connection", Toast.LENGTH_SHORT).show()
                 }
+
                 is UiScreenState.ServerError -> {
                     binding.progressBar.visibility = View.GONE
                     Toast.makeText(requireContext(), "Server error", Toast.LENGTH_SHORT).show()
                 }
+
                 is UiScreenState.Success -> TODO()
             }
+        }
+
+        viewModel.onSearchQueryChanged("")
+
+    }
+
+    private fun addListeners() {
+        setSearchButtonListeners()
+
+        binding.arrowBack.setOnClickListener {
+            parentFragmentManager.popBackStack()
         }
 
         binding.industryList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -111,8 +106,6 @@ class IndustryFragment : Fragment() {
                 }
             }
         })
-
-        viewModel.onSearchQueryChanged("")
 
         binding.buttonChoose.setOnClickListener {
             val selectedIndustry = industryAdapter.getSelectedIndustry()
@@ -136,6 +129,26 @@ class IndustryFragment : Fragment() {
                 binding.imageButtonFilterIndustryClear.visibility = View.VISIBLE
                 binding.imageButtonIndustrySearch.visibility = View.GONE
             }
+        }
+    }
+
+    private fun setSearchButtonListeners() {
+        binding.imageButtonIndustrySearch.setOnClickListener {
+            val query = binding.editIndustry.text.toString().trim()
+            if (query.isNotEmpty()) {
+                viewModel.onSearchQueryChanged(query)
+                binding.imageButtonFilterIndustryClear.visibility = View.VISIBLE
+                binding.imageButtonIndustrySearch.visibility = View.GONE
+            } else {
+                viewModel.onSearchQueryChanged("")
+            }
+        }
+
+        binding.imageButtonFilterIndustryClear.setOnClickListener {
+            binding.editIndustry.text.clear()
+            viewModel.onSearchQueryChanged("")
+            binding.imageButtonFilterIndustryClear.visibility = View.GONE
+            binding.imageButtonIndustrySearch.visibility = View.VISIBLE
         }
     }
 

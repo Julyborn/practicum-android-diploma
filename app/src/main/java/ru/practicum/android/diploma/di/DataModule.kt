@@ -58,7 +58,7 @@ val dataModule = module {
     }
 
     single<FilterRepository> {
-        FilterRepositoryImpl(get())
+        FilterRepositoryImpl(get(), get())
     }
 
     single<FilterPreferences> {
