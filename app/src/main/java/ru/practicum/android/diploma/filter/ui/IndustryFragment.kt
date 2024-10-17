@@ -22,7 +22,13 @@ class IndustryFragment : Fragment() {
 
     private val viewModel: IndustryViewModel by inject()
 
-    private lateinit var industryAdapter: IndustryAdapter
+    private val industryAdapter: IndustryAdapter by lazy {
+        IndustryAdapter { industryId, position ->
+            Log.d("IndustryFragment", "Industry selected: $industryId at position $position")
+            binding.buttonChoose.visibility = View.VISIBLE
+            binding.industryList.smoothScrollToPosition(position)
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,12 +43,6 @@ class IndustryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         addListeners()
-
-        industryAdapter = IndustryAdapter { industryId, position ->
-            Log.d("IndustryFragment", "Industry selected: $industryId at position $position")
-            binding.buttonChoose.visibility = View.VISIBLE
-            binding.industryList.smoothScrollToPosition(position)
-        }
 
         binding.industryList.adapter = industryAdapter
         binding.industryList.layoutManager = LinearLayoutManager(requireContext())

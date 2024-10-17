@@ -5,7 +5,6 @@ class FilterSettings(
     var industry: String?,
     var salary: String?,
     var industryId: String?,
-    var selectedCountry: String?,
-    var selectedRegion: String?,
-    var hideWithoutSalary: Boolean
+    var hideWithoutSalary: Boolean,
+    var area: String?
 )

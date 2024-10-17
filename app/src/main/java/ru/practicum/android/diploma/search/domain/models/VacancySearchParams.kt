@@ -10,6 +10,7 @@ data class VacancySearchParams(
     val hideWithoutSalary: Boolean = false,
     val perPage: Int = 20,
     val page: Int = 0,
+    val area: String?
 )
 
 fun VacancySearchParams.toMap(): Map<String, String> {
@@ -19,21 +20,12 @@ fun VacancySearchParams.toMap(): Map<String, String> {
         "page" to page.toString()
     )
 
-//    location?.let { params["location"] = it }
-//
-//    selectedCountry?.let { params["country"] = it }
-//    selectedRegion?.let { params["region"] = it }
-
     industryId?.let { params["industry"] = it }
     salary?.let { params["salary"] = it.toString() }
+    area?.let { params["area"] = it }
 
     if (hideWithoutSalary) {
         params["only_with_salary"] = "true"
-    }
-
-    if (location != null) {
-        val area = selectedRegion ?: selectedCountry
-        area?.let { params["area"] = it }
     }
 
     return params

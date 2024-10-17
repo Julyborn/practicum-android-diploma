@@ -98,7 +98,9 @@ class WorkplaceFragment : Fragment() {
                     "workplaceRequestKey",
                     bundleOf(
                         "selectedCountry" to selectedCountry?.name,
-                        "selectedRegion" to selectedRegion?.name
+                        "selectedCountryId" to selectedCountry?.id,
+                        "selectedRegion" to selectedRegion?.name,
+                        "selectedRegionId" to selectedRegion?.id
                     )
                 )
                 findNavController().popBackStack()

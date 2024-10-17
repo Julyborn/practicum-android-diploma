@@ -19,7 +19,7 @@ val repositoryModule = module {
     }
 
     single<FilterRepository> {
-        FilterRepositoryImpl(get(), get())
+        FilterRepositoryImpl(get())
     }
 
     single<SearchRepository> {

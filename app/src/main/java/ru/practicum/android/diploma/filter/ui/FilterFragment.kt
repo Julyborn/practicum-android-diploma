@@ -11,7 +11,6 @@ import androidx.navigation.fragment.findNavController
 import org.koin.android.ext.android.inject
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentFiltersBinding
-import ru.practicum.android.diploma.filter.data.dto.FilterSettings
 import ru.practicum.android.diploma.filter.presentation.FilterViewModel
 
 class FilterFragment : Fragment() {
@@ -25,7 +24,7 @@ class FilterFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentFiltersBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -37,24 +36,22 @@ class FilterFragment : Fragment() {
             parentFragmentManager.popBackStack()
         }
 
-        val savedFilters = filterViewModel.loadFilters()
-        binding.addNameFilterJob.setText(savedFilters.location)
-        binding.addNameFilterIndustry.setText(savedFilters.industry)
-        updateIndustryVisibility(savedFilters)
-        updateLocationVisibility(savedFilters)
-
-        binding.editSalary.setText(savedFilters.salary)
-        binding.checkBox2.isChecked = savedFilters.hideWithoutSalary
-
+        filterViewModel.loadFilters()
+        observeViewModel()
         showButtonsIfChanged()
 
-        binding.addNameFilterJob.addTextChangedListener { showButtonsIfChanged() }
-        binding.addNameFilterIndustry.addTextChangedListener { showButtonsIfChanged() }
-        binding.editSalary.addTextChangedListener { showButtonsIfChanged() }
-        binding.checkBox2.setOnCheckedChangeListener { _, _ -> showButtonsIfChanged() }
+        binding.editSalary.addTextChangedListener { salary ->
+            filterViewModel.updateSalary(salary.toString())
+            showButtonsIfChanged()
+        }
 
-        setApplyButtonListener(savedFilters)
-        setFragmentResultListeners(savedFilters)
+        binding.checkBox2.setOnCheckedChangeListener { _, isChecked ->
+            filterViewModel.updateHideWithoutSalary(isChecked)
+            showButtonsIfChanged()
+        }
+
+        setApplyButtonListener()
+        setFragmentResultListeners()
 
         binding.imageButtonIndustry.setOnClickListener {
             openIndustryFragment()
@@ -64,11 +61,11 @@ class FilterFragment : Fragment() {
         }
 
         binding.imageButtonIndustryClear.setOnClickListener {
-            clearIndustryFilter(savedFilters)
+            clearIndustryFilter()
         }
 
         binding.imageButtonJobClear.setOnClickListener {
-            clearJobFilter(savedFilters)
+            clearJobFilter()
         }
 
         binding.imageButtonFilterSalaryClear.setOnClickListener {
@@ -76,68 +73,77 @@ class FilterFragment : Fragment() {
         }
 
         setSalaryFocusChangeListener()
-        setResetFilters(savedFilters)
+        setResetFilters()
     }
 
-    private fun updateIndustryVisibility(savedFilters: FilterSettings) {
-        if (savedFilters.industry != null) {
-            binding.editIndustry.visibility = View.GONE
-            binding.imageButtonIndustry.visibility = View.GONE
-            binding.addFilterIndustryLinearLayout.visibility = View.VISIBLE
-            binding.imageButtonIndustryClear.visibility = View.VISIBLE
+    private fun observeViewModel() {
+        filterViewModel.salary.observe(viewLifecycleOwner) { salary ->
+            if (binding.editSalary.text.toString() != salary) {
+                binding.editSalary.setText(salary)
+                binding.editSalary.setSelection(salary.length)
+            }
+        }
+
+        filterViewModel.hideWithoutSalary.observe(viewLifecycleOwner) { hideWithoutSalary ->
+            binding.checkBox2.isChecked = hideWithoutSalary
+        }
+
+        filterViewModel.location.observe(viewLifecycleOwner) { location ->
+            if (location.isNotEmpty()) {
+                binding.addNameFilterJob.text = location
+                updateLocationVisibility()
+            }
+        }
+
+        filterViewModel.industry.observe(viewLifecycleOwner) { industry ->
+            binding.addNameFilterIndustry.text = industry
+            if (industry != null) {
+                updateIndustryVisibility()
+            }
         }
     }
 
-    private fun updateLocationVisibility(savedFilters: FilterSettings) {
-        if (savedFilters.location != null) {
-            binding.addNameFilterJob.setText(savedFilters.location)
-            binding.imageButtonJob.visibility = View.GONE
-            binding.editJob.visibility = View.GONE
-            binding.imageButtonJobClear.visibility = View.VISIBLE
-            binding.addFilterJobLinearLayout.visibility = View.VISIBLE
-            binding.addFilterJob.visibility = View.VISIBLE
-            binding.addNameFilterJob.visibility = View.VISIBLE
-        }
+    private fun updateIndustryVisibility() {
+        binding.editIndustry.visibility = View.GONE
+        binding.imageButtonIndustry.visibility = View.GONE
+        binding.addFilterIndustryLinearLayout.visibility = View.VISIBLE
+        binding.imageButtonIndustryClear.visibility = View.VISIBLE
     }
 
-    private fun setApplyButtonListener(savedFilters: FilterSettings) {
+    private fun updateLocationVisibility() {
+        binding.imageButtonJob.visibility = View.GONE
+        binding.editJob.visibility = View.GONE
+        binding.imageButtonJobClear.visibility = View.VISIBLE
+        binding.addFilterJobLinearLayout.visibility = View.VISIBLE
+        binding.addFilterJob.visibility = View.VISIBLE
+        binding.addNameFilterJob.visibility = View.VISIBLE
+    }
+
+    private fun setApplyButtonListener() {
         binding.buttonApply.setOnClickListener {
-            val location = binding.addNameFilterJob.text.toString().takeIf { it.isNotEmpty() }
-            val industry = binding.addNameFilterIndustry.text.toString().takeIf { it.isNotEmpty() }
-            val salary = binding.editSalary.text.toString().takeIf { it.isNotEmpty() }
-            val industryId = savedFilters.industryId
-            val hideWithoutSalary = binding.checkBox2.isChecked
-            val selectedCountry = savedFilters.selectedCountry
-            val selectedRegion = savedFilters.selectedRegion
-            filterViewModel.applyFilters(
-                location,
-                industry,
-                salary,
-                industryId,
-                selectedCountry,
-                selectedRegion,
-                hideWithoutSalary
-            )
+            filterViewModel.applyFilters()
             parentFragmentManager.popBackStack()
         }
     }
 
-    private fun setFragmentResultListeners(savedFilters: FilterSettings) {
+    private fun setFragmentResultListeners() {
         parentFragmentManager.setFragmentResultListener("industryRequestKey", this) { _, bundle ->
             val selectedIndustry = bundle.getString("selectedIndustry")
             val selectedIndustryId = bundle.getString("selectedIndustryId")
             if (selectedIndustry != null && selectedIndustryId != null) {
+                filterViewModel.updateIndustry(industryId = selectedIndustryId, industry = selectedIndustry)
                 binding.editIndustry.visibility = View.GONE
                 binding.imageButtonIndustry.visibility = View.GONE
-                savedFilters.industryId = selectedIndustryId
-                binding.addNameFilterIndustry.text = selectedIndustry
                 binding.addFilterIndustryLinearLayout.visibility = View.VISIBLE
                 binding.imageButtonIndustryClear.visibility = View.VISIBLE
+
             }
         }
         parentFragmentManager.setFragmentResultListener("workplaceRequestKey", this) { _, bundle ->
             val selectedCountry = bundle.getString("selectedCountry")
+            val selectedCountryId = bundle.getString("selectedCountryId")
             val selectedRegion = bundle.getString("selectedRegion")
+            val selectedRegionId = bundle.getString("selectedRegionId")
 
             if (selectedCountry != null || selectedRegion != null) {
                 val locationText = if (selectedRegion != null) {
@@ -145,30 +151,16 @@ class FilterFragment : Fragment() {
                 } else {
                     "$selectedCountry"
                 }
-                binding.addNameFilterJob.text = locationText
-                savedFilters.selectedCountry = selectedCountry
-                savedFilters.selectedRegion = selectedRegion
-                binding.imageButtonJob.visibility = View.GONE
-                binding.editJob.visibility = View.GONE
-                binding.imageButtonJobClear.visibility = View.VISIBLE
-                binding.addFilterJobLinearLayout.visibility = View.VISIBLE
-                binding.addFilterJob.visibility = View.VISIBLE
-                binding.addNameFilterJob.visibility = View.VISIBLE
+                val areaId = selectedRegionId ?: selectedCountryId
+                filterViewModel.setLocation(locationText)
+                filterViewModel.setArea(areaId)
             }
         }
     }
 
-    private fun setResetFilters(savedFilters: FilterSettings) {
+    private fun setResetFilters() {
         binding.buttonResetFilter.setOnClickListener {
             filterViewModel.clearFilters()
-            binding.addNameFilterJob.text = ""
-            binding.addNameFilterIndustry.text = ""
-            binding.editSalary.text.clear()
-            binding.checkBox2.isChecked = false
-            savedFilters.industry = null
-            savedFilters.location = null
-            savedFilters.salary = null
-            savedFilters.hideWithoutSalary = false
             binding.buttonApply.visibility = View.GONE
             binding.buttonResetFilter.visibility = View.GONE
             binding.imageButtonFilterSalaryClear.visibility = View.GONE
@@ -184,25 +176,25 @@ class FilterFragment : Fragment() {
         }
     }
 
-    private fun clearIndustryFilter(savedFilters: FilterSettings) {
+    private fun clearIndustryFilter() {
         binding.addFilterIndustryLinearLayout.visibility = View.GONE
         binding.imageButtonIndustryClear.visibility = View.GONE
         binding.editIndustry.visibility = View.VISIBLE
         binding.imageButtonIndustry.visibility = View.VISIBLE
-        binding.addNameFilterIndustry.text = ""
-        savedFilters.industry = null
+        filterViewModel.clearIndustry()
     }
 
-    private fun clearJobFilter(savedFilters: FilterSettings) {
-        binding.imageButtonJob.visibility = View.VISIBLE
-        binding.editJob.visibility = View.VISIBLE
+    private fun clearJobFilter() {
+        binding.addFilterJobLinearLayout.visibility = View.GONE
         binding.imageButtonJobClear.visibility = View.GONE
-        binding.addNameFilterJob.text = ""
-        savedFilters.location = null
+        binding.imageButtonJob.visibility = View.VISIBLE
+        binding.addNameFilterJob.visibility = View.VISIBLE
+        binding.editJob.visibility = View.VISIBLE
+        filterViewModel.clearJobFilter()
     }
 
     private fun clearSalaryFilter() {
-        binding.editSalary.text.clear()
+        filterViewModel.clearSalary()
         binding.editSalary.clearFocus()
         binding.expectedSalary.setTextColor(ContextCompat.getColor(requireContext(), R.color.grey))
         binding.imageButtonFilterSalaryClear.visibility = View.GONE
@@ -227,13 +219,16 @@ class FilterFragment : Fragment() {
             binding.editSalary.text.isNotEmpty() ||
             binding.checkBox2.isChecked
 
-        if (isChanged) {
-            binding.buttonApply.visibility = View.VISIBLE
-            binding.buttonResetFilter.visibility = View.VISIBLE
-        } else {
-            binding.buttonApply.visibility = View.GONE
-            binding.buttonResetFilter.visibility = View.GONE
-        }
+        binding.buttonApply.visibility = View.VISIBLE
+        binding.buttonResetFilter.visibility = View.VISIBLE
+
+//        if (isChanged) {
+//            binding.buttonApply.visibility = View.VISIBLE
+//            binding.buttonResetFilter.visibility = View.VISIBLE
+//        } else {
+//            binding.buttonApply.visibility = View.GONE
+//            binding.buttonResetFilter.visibility = View.GONE
+//        }
     }
 
     private fun openIndustryFragment() {

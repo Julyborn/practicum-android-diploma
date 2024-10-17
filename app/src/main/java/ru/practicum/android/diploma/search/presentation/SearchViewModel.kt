@@ -30,12 +30,12 @@ class SearchViewModel(
 
     // Переменные для фильтра
     private var filterLocation: String? = null
-    private var filterIndustry: String? = null
+
+//    private var filterIndustry: String? = null
     private var filterSalary: String? = null
     private var hideWithoutSalary: Boolean = false
-    private var filterCountryId: String? = null
-    private var filterRegionId: String? = null
     private var filterIndustryId: String? = null
+    private var area: String? = null
 
     // Переменные пагинации
     private var currentPage = 0
@@ -52,9 +52,8 @@ class SearchViewModel(
         // filterIndustry = savedFilters.industry
         filterSalary = savedFilters.salary
         hideWithoutSalary = savedFilters.hideWithoutSalary
-        filterCountryId = savedFilters.selectedCountry
-        filterRegionId = savedFilters.selectedRegion
         filterIndustryId = savedFilters.industryId
+        area = savedFilters.area
     }
 
     fun onSearchQueryChanged(query: String) {
@@ -101,8 +100,7 @@ class SearchViewModel(
             salary = filterSalary?.toIntOrNull(),
             hideWithoutSalary = hideWithoutSalary,
             page = page,
-            selectedCountry = filterCountryId,
-            selectedRegion = filterRegionId
+            area = area
         )
     }
 
