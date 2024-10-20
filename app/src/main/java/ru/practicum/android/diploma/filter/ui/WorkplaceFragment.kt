@@ -93,12 +93,14 @@ class WorkplaceFragment : Fragment() {
             val selectedCountry = viewModel.selectedCountry.value
             val selectedRegion = viewModel.selectedRegion.value
 
-            if (selectedCountry != null && selectedRegion != null) {
+            if (selectedCountry != null || selectedRegion != null) {
                 parentFragmentManager.setFragmentResult(
                     "workplaceRequestKey",
                     bundleOf(
-                        "selectedCountry" to selectedCountry.name,
-                        "selectedRegion" to selectedRegion.name
+                        "selectedCountry" to selectedCountry?.name,
+                        "selectedCountryId" to selectedCountry?.id,
+                        "selectedRegion" to selectedRegion?.name,
+                        "selectedRegionId" to selectedRegion?.id
                     )
                 )
                 findNavController().popBackStack()

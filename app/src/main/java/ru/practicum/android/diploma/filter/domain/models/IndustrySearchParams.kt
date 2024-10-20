@@ -9,7 +9,9 @@ data class IndustrySearchParams(
 
 fun IndustrySearchParams.toMap(): Map<String, String> {
     val params = mutableMapOf(
-        "text" to query, "per_page" to perPage.toString(), "page" to page.toString()
+        "text" to query,
+        "per_page" to perPage.toString(),
+        "page" to page.toString()
     )
     return params
 }
