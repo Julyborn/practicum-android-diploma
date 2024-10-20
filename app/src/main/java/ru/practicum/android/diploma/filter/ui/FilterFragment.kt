@@ -16,7 +16,6 @@ import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentFiltersBinding
 import ru.practicum.android.diploma.filter.presentation.FilterViewModel
 
-
 class FilterFragment : Fragment() {
 
     private var _binding: FragmentFiltersBinding? = null
@@ -47,6 +46,7 @@ class FilterFragment : Fragment() {
         binding.editSalary.addTextChangedListener { salary ->
             filterViewModel.updateSalary(salary.toString())
             showActionButtons()
+
         }
 
         binding.checkBoxNoSalary.setOnCheckedChangeListener { _, isChecked ->
@@ -99,6 +99,7 @@ class FilterFragment : Fragment() {
         filterViewModel.salary.observe(viewLifecycleOwner) { salary ->
             if (binding.editSalary.text.toString() != salary) {
                 binding.editSalary.setText(salary)
+                showActionButtons()
             }
         }
 
@@ -132,6 +133,7 @@ class FilterFragment : Fragment() {
             val selectedCountry = bundle.getString("selectedCountry")
             val selectedRegion = bundle.getString("selectedRegion")
             val locationText = listOfNotNull(selectedCountry, selectedRegion).joinToString(", ")
+
             filterViewModel.updateLocation(locationText)
             showActionButtons()
         }
@@ -176,6 +178,7 @@ class FilterFragment : Fragment() {
     private fun clearSalaryFilter() {
         binding.editSalary.text.clear()
         binding.imageButtonFilterSalaryClear.visibility = View.GONE
+        binding.expectedSalary.setTextColor(ContextCompat.getColor(requireContext(), R.color.grey))
         binding.expectedSalary.setTextColor(ContextCompat.getColor(requireContext(), R.color.grey))
         binding.editSalary.clearFocus()
     }
