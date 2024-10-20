@@ -58,7 +58,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_48"
                 android:layout_gravity="center"
-                android:background="?selectableItemBackground"
+                android:background="@color/light_grey"
                 android:focusable="true"
                 android:inputType="text"
                 android:hint="@string/enter_industry"
