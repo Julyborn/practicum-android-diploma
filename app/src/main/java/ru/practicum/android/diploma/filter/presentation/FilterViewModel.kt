@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import ru.practicum.android.diploma.filter.data.dto.FilterSettings
 import ru.practicum.android.diploma.filter.domain.api.FilterInteractor
 
-
 class FilterViewModel(private val filterInteractor: FilterInteractor) : ViewModel() {
 
     private val _hideWithoutSalary = MutableLiveData<Boolean>()
