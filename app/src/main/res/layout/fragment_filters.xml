@@ -219,7 +219,7 @@
             app:layout_constraintTop_toBottomOf="@+id/filterIndustry">
 
             <TextView
-                android:id="@+id/expected_salary"
+                android:id="@+id/expectedSalary"
                 style="@style/expected_salary"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_16"
