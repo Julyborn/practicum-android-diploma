@@ -63,16 +63,24 @@ class IndustryFragment : Fragment() {
 
                 is UiScreenState.Empty -> {
                     binding.progressBar.visibility = View.GONE
+                    binding.industryList.visibility = View.GONE
+                    binding.placeholderError.visibility = View.VISIBLE
                     Toast.makeText(requireContext(), "No industries found", Toast.LENGTH_SHORT).show()
                 }
 
                 is UiScreenState.NoInternetError -> {
                     binding.progressBar.visibility = View.GONE
+                    binding.progressBar.visibility = View.GONE
+                    binding.industryList.visibility = View.GONE
+                    binding.placeholderError.visibility = View.VISIBLE
                     Toast.makeText(requireContext(), "No internet connection", Toast.LENGTH_SHORT).show()
                 }
 
                 is UiScreenState.ServerError -> {
                     binding.progressBar.visibility = View.GONE
+                    binding.progressBar.visibility = View.GONE
+                    binding.industryList.visibility = View.GONE
+                    binding.placeholderError.visibility = View.VISIBLE
                     Toast.makeText(requireContext(), "Server error", Toast.LENGTH_SHORT).show()
                 }
 
