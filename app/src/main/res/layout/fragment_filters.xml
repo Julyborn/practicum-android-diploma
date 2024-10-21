@@ -206,6 +206,8 @@
         android:layout_marginHorizontal="@dimen/dp_16"
         android:layout_marginTop="@dimen/dp_24"
         app:cardCornerRadius="@dimen/dp_12"
+        android:clickable="true"
+        android:focusable="false"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/filterIndustry">
 
@@ -224,7 +226,7 @@
                 android:layout_marginStart="@dimen/dp_16"
                 android:layout_marginTop="@dimen/dp_8"
                 android:layout_marginEnd="@dimen/dp_16"
-                android:background="?selectableItemBackground"
+                android:background="@color/light_grey"
                 android:text="@string/expected_salary"
                 android:textSize="@dimen/text_size_12" />
 
@@ -236,7 +238,7 @@
                 android:layout_marginStart="@dimen/dp_16"
                 android:layout_marginEnd="@dimen/dp_16"
                 android:layout_marginBottom="@dimen/dp_8"
-                android:background="?selectableItemBackground"
+                android:background="@color/light_grey"
                 android:focusable="true"
                 android:hint="@string/edit_salary"
                 android:inputType="number"
@@ -245,6 +247,7 @@
                 android:singleLine="true"
                 android:textColor="@color/black_universal"
                 android:textSize="@dimen/text_size_16"
+                android:textCursorDrawable="@drawable/cursor"
                 tools:ignore="Autofill,RtlSymmetry,TextContrastCheck,VisualLintTextFieldSize" />
         </LinearLayout>
 
@@ -270,9 +273,9 @@
         app:layout_constraintTop_toBottomOf="@+id/filterSalary">
 
         <TextView
+            style="@style/no_salary_text"
             android:layout_width="@dimen/dp_0"
             android:layout_height="@dimen/dp_48"
-            style="@style/night_text"
             android:layout_gravity="center"
             android:layout_marginStart="@dimen/dp_16"
             android:layout_marginEnd="@dimen/dp_4"

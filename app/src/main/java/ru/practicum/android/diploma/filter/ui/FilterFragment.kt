@@ -1,9 +1,12 @@
 package ru.practicum.android.diploma.filter.ui
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
@@ -39,9 +42,12 @@ class FilterFragment : Fragment() {
         filterViewModel.loadFilters()
         observeViewModel()
 
+
         binding.editSalary.addTextChangedListener { salary ->
             filterViewModel.updateSalary(salary.toString())
         }
+
+
 
         binding.checkBox2.setOnCheckedChangeListener { _, isChecked ->
             filterViewModel.updateHideWithoutSalary(isChecked)
@@ -71,12 +77,33 @@ class FilterFragment : Fragment() {
 
         setSalaryFocusChangeListener()
         setResetFilters()
+
         filterViewModel.isApplyButtonVisible.observe(viewLifecycleOwner) { isVisible ->
             binding.buttonApply.visibility = if (isVisible) View.VISIBLE else View.GONE
         }
         filterViewModel.isResetButtonVisible.observe(viewLifecycleOwner) { isVisible ->
             binding.buttonResetFilter.visibility = if (isVisible) View.VISIBLE else View.GONE
         }
+
+        setFocusListeners()
+    }
+
+    private fun setFocusListeners() {
+        showButtonsIfChanged()
+        binding.filterSalary.setOnClickListener {
+            binding.editSalary.requestFocus()
+            binding.editSalary.addTextChangedListener { salary ->
+                filterViewModel.updateSalary(salary.toString())
+                showKeyboard(binding.editSalary)
+            }
+        }
+    }
+
+    @SuppressLint("ServiceCast")
+    private fun showKeyboard(view: View) {
+        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
+
     }
 
     private fun observeViewModel() {

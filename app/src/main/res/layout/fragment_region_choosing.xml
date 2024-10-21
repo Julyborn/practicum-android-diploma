@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorPrimary"
+    android:fitsSystemWindows="true"
     tools:context=".filter.ui.RegionChoosingFragment">
 
     <ImageView
@@ -76,17 +77,9 @@
                 android:contentDescription="@string/search"
                 android:padding="13dp"
                 android:src="@drawable/ic_button_clear"
-                android:visibility="gone" />/>
+                android:visibility="gone" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/regionsRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp_16"
-        app:layout_constraintTop_toBottomOf="@+id/editTextLayout"
-        tools:listitem="@layout/item_country" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/placeholderError"
@@ -129,13 +122,9 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/placeholderNoList"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/ivPlaceholderNoList"
@@ -145,6 +134,7 @@
             android:layout_marginEnd="@dimen/dp_16"
             android:scaleType="fitCenter"
             android:src="@drawable/no_list"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="328:223"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -163,6 +153,16 @@
             app:layout_constraintStart_toStartOf="@+id/ivPlaceholderNoList"
             app:layout_constraintTop_toBottomOf="@+id/ivPlaceholderNoList" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/regionsRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/dp_16"
+        android:paddingBottom="@dimen/dp_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextLayout"
+        tools:listitem="@layout/item_country" />
 
     <ProgressBar
         android:id="@+id/loadingIndicator"
