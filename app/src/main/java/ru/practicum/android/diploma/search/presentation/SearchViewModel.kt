@@ -24,6 +24,13 @@ class SearchViewModel(
         get() = _uiState
 
     private val _vacanciesList = MutableLiveData<List<VacancyUi>>(emptyList())
+    val vacanciesList: LiveData<List<VacancyUi>>
+        get() = _vacanciesList
+
+    private val _errorEvent = MutableLiveData<String>()
+    val errorEvent: LiveData<String>
+        get() = _errorEvent
+
     private val _searchQuery = MutableLiveData<String>("")
 
     private var searchJob: Job? = null
@@ -41,6 +48,7 @@ class SearchViewModel(
     private var currentPage = 0
     private var maxPages = Int.MAX_VALUE
     private var isNextPageLoading = false
+    var isFirstSearch = false
 
     init {
         filterInteractor.loadFilterSettings()
@@ -61,6 +69,7 @@ class SearchViewModel(
         maxPages = Int.MAX_VALUE
         _vacanciesList.value = emptyList()
         _searchQuery.value = query
+        isFirstSearch = true
 
         loadSavedFilters()
 
@@ -116,8 +125,8 @@ class SearchViewModel(
 
     private fun renderState(result: Resource<List<Vacancy>>) {
         when (result) {
-            is Resource.NoInternetError -> _uiState.value = UiScreenState.NoInternetError
-            is Resource.ServerError -> _uiState.value = UiScreenState.ServerError
+            is Resource.NoInternetError -> _uiState.value = handleNoInternetError()
+            is Resource.ServerError -> _uiState.value = handleServerError()
             is Resource.Success -> if (result.data.isEmpty()) {
                 _uiState.value = UiScreenState.Empty
             } else {
@@ -127,11 +136,37 @@ class SearchViewModel(
                 currentPage = result.page ?: currentPage
                 maxPages = result.pages ?: maxPages
                 _vacanciesList.value = _vacanciesList.value?.plus(vacanciesUi)
+                isFirstSearch = false
                 _uiState.value = UiScreenState.Success(
                     vacancies = _vacanciesList.value ?: emptyList(),
                     found = result.found ?: 0
                 )
             }
+        }
+    }
+
+    private fun handleNoInternetError(): UiScreenState {
+        return if (isFirstSearch) {
+            UiScreenState.NoInternetError
+        } else {
+            isNextPageLoading = false
+            _errorEvent.value = "no_internet"
+            UiScreenState.Success(
+                vacancies = _vacanciesList.value ?: emptyList(),
+                found = _vacanciesList.value?.size ?: 0
+            )
+        }
+    }
+
+    private fun handleServerError(): UiScreenState {
+        return if (isFirstSearch) {
+            UiScreenState.ServerError
+        } else {
+            isNextPageLoading = false
+            _errorEvent.value = "server_error"
+            UiScreenState.Success(
+                vacancies = _vacanciesList.value ?: emptyList(),
+                found = _vacanciesList.value?.size ?: 0)
         }
     }
 
