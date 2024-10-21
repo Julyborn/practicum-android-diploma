@@ -199,11 +199,11 @@ class SearchFragment : Fragment() {
 
     private fun hasActiveFilters(): Boolean {
         val filterSettings = filterInteractor.loadFilterSettings()
-        return (!filterSettings.location.isNullOrBlank() ||
+        return !filterSettings.location.isNullOrBlank() ||
             !filterSettings.salary.isNullOrBlank() ||
             !filterSettings.industry.isNullOrBlank() ||
             !filterSettings.area.isNullOrBlank() ||
-            filterSettings.hideWithoutSalary)
+            filterSettings.hideWithoutSalary
     }
 
     override fun onDestroyView() {

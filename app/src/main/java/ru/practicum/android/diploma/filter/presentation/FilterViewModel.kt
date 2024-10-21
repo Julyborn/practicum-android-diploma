@@ -71,22 +71,22 @@ class FilterViewModel(private val filterInteractor: FilterInteractor) : ViewMode
     }
 
     fun hasActiveFilters(): Boolean {
-        return (_location.value.orEmpty().isNotEmpty() ||
+        return _location.value.orEmpty().isNotEmpty() ||
             _salary.value.orEmpty().isNotEmpty() ||
             _industry.value.orEmpty().isNotEmpty() ||
             _location.value.orEmpty().isNotEmpty() ||
             _area.value.orEmpty().isNotEmpty() ||
-            _hideWithoutSalary.value == true)
+            _hideWithoutSalary.value == true
     }
 
     private fun hasFiltersChanged(): Boolean {
         return initialFilterSettings?.let { initial ->
-            (_hideWithoutSalary.value != initial.hideWithoutSalary) ||
-                (_salary.value.orEmpty() != initial.salary.orEmpty()) ||
-                (_location.value.orEmpty() != initial.location.orEmpty()) ||
-                (_industryId.value.orEmpty() != initial.industryId.orEmpty()) ||
-                (_industry.value.orEmpty() != initial.industry.orEmpty()) ||
-                (_area.value.orEmpty() != initial.area.orEmpty())
+            _hideWithoutSalary.value != initial.hideWithoutSalary ||
+                _salary.value.orEmpty() != initial.salary.orEmpty() ||
+                _location.value.orEmpty() != initial.location.orEmpty() ||
+                _industryId.value.orEmpty() != initial.industryId.orEmpty() ||
+                _industry.value.orEmpty() != initial.industry.orEmpty() ||
+                _area.value.orEmpty() != initial.area.orEmpty()
         } ?: false
     }
 
