@@ -37,17 +37,15 @@ class WorkplaceFragment : Fragment() {
         viewModel.selectedCountry.observe(viewLifecycleOwner) { country ->
             binding.countryEditText.setText(country?.name ?: DEF)
             changeHintColor(binding.countryTextInputLayout, country != null)
-            binding.icCountryArrow.setImageResource(
-                if (country != null) R.drawable.ic_button_clear else R.drawable.ic_right_arrow
-            )
+            binding.icCountryClear.visibility = if (country != null) View.VISIBLE else View.GONE
+            binding.icCountryArrow.visibility = if (country != null) View.GONE else View.VISIBLE
             binding.chooseButton.visibility = if (country != null) View.VISIBLE else View.GONE
         }
         viewModel.selectedRegion.observe(viewLifecycleOwner) { region ->
             binding.regionEditText.setText(region?.name ?: DEF)
             changeHintColor(binding.regionTextInputLayout, region != null)
-            binding.icRegionArrow.setImageResource(
-                if (region != null) R.drawable.ic_button_clear else R.drawable.ic_right_arrow
-            )
+            binding.icRegionClear.visibility = if (region != null) View.VISIBLE else View.GONE
+            binding.icRegionArrow.visibility = if (region != null) View.GONE else View.VISIBLE
         }
 
         clickListeners()
@@ -79,16 +77,21 @@ class WorkplaceFragment : Fragment() {
         binding.countryEditText.setOnClickListener {
             findNavController().navigate(R.id.action_workplaceFragment_to_countryChoosingFragment)
         }
+        binding.icCountryArrow.setOnClickListener {
+            findNavController().navigate(R.id.action_workplaceFragment_to_countryChoosingFragment)
+        }
         binding.regionEditText.setOnClickListener {
             findNavController().navigate(R.id.action_workplaceFragment_to_regionChoosingFragment)
         }
-
+        binding.icRegionArrow.setOnClickListener {
+            findNavController().navigate(R.id.action_workplaceFragment_to_regionChoosingFragment)
+        }
         binding.backButton.setOnClickListener {
             viewModel.clearCountry()
             findNavController().popBackStack()
         }
-        binding.icCountryArrow.setOnClickListener { viewModel.clearCountry() }
-        binding.icRegionArrow.setOnClickListener { viewModel.clearRegion() }
+        binding.icCountryClear.setOnClickListener { viewModel.clearCountry() }
+        binding.icRegionClear.setOnClickListener { viewModel.clearRegion() }
         binding.chooseButton.setOnClickListener {
             val selectedCountry = viewModel.selectedCountry.value
             val selectedRegion = viewModel.selectedRegion.value
