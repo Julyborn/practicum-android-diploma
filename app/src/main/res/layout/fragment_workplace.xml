@@ -24,7 +24,7 @@
     <LinearLayout
         android:id="@+id/countryLinerLayout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_60"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp_24"
         android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@+id/screenTitle">
@@ -51,6 +51,7 @@
                 android:backgroundTint="?attr/colorPrimary"
                 android:drawableTint="?attr/colorOnPrimary"
                 android:focusable="false"
+                android:focusableInTouchMode="false"
                 android:gravity="center_vertical"
                 android:inputType="none" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -61,8 +62,21 @@
             android:layout_height="@dimen/dp_40"
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="@dimen/dp_8"
+            android:background="?selectableItemBackground"
             android:scaleType="centerInside"
             android:src="@drawable/ic_right_arrow"
+            app:tint="?attr/colorOnPrimary" />
+
+        <ImageView
+            android:id="@+id/icCountryClear"
+            android:layout_width="@dimen/dp_40"
+            android:layout_height="@dimen/dp_40"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="@dimen/dp_8"
+            android:background="?selectableItemBackground"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_button_clear"
+            android:visibility="gone"
             app:tint="?attr/colorOnPrimary" />
     </LinearLayout>
 
@@ -79,6 +93,7 @@
             android:layout_height="@dimen/dp_60"
             android:layout_weight="1"
             android:backgroundTint="?attr/colorPrimary"
+            android:duplicateParentState="true"
             android:gravity="center_vertical"
             android:hint="@string/region"
             android:textColorHint="@color/grey"
@@ -105,8 +120,20 @@
             android:layout_height="@dimen/dp_40"
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="@dimen/dp_8"
+            android:duplicateParentState="true"
             android:scaleType="centerInside"
             android:src="@drawable/ic_right_arrow"
+            app:tint="?attr/colorOnPrimary" />
+
+        <ImageView
+            android:id="@+id/icRegionClear"
+            android:layout_width="@dimen/dp_40"
+            android:layout_height="@dimen/dp_40"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="@dimen/dp_8"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_button_clear"
+            android:visibility="gone"
             app:tint="?attr/colorOnPrimary" />
     </LinearLayout>
 
