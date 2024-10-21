@@ -1,6 +1,5 @@
 package ru.practicum.android.diploma.filter.ui
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -24,9 +23,7 @@ class FilterFragment : Fragment() {
     private val filterViewModel: FilterViewModel by inject()
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentFiltersBinding.inflate(inflater, container, false)
         return binding.root
@@ -232,10 +229,8 @@ class FilterFragment : Fragment() {
     }
 
     private fun showButtonsIfChanged() {
-        val isChanged = binding.addNameFilterJob.text.isNotEmpty() ||
-            binding.addNameFilterIndustry.text.isNotEmpty() ||
-            binding.editSalary.text.isNotEmpty() ||
-            binding.checkBox2.isChecked
+        val isChanged =
+            binding.addNameFilterJob.text.isNotEmpty() || binding.addNameFilterIndustry.text.isNotEmpty() || binding.editSalary.text.isNotEmpty() || binding.checkBox2.isChecked
 
         binding.buttonApply.visibility = View.VISIBLE
         binding.buttonResetFilter.visibility = View.VISIBLE
