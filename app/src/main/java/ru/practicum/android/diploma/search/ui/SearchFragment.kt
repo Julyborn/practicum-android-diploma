@@ -14,9 +14,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSearchBinding
+import ru.practicum.android.diploma.filter.domain.api.FilterInteractor
 import ru.practicum.android.diploma.search.presentation.SearchViewModel
 import ru.practicum.android.diploma.search.presentation.models.UiScreenState
 import ru.practicum.android.diploma.search.presentation.models.VacancyUi
@@ -34,6 +36,7 @@ class SearchFragment : Fragment() {
             viewModel.onSearchQueryChanged(query)
         }
     )
+    private val filterInteractor: FilterInteractor by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -102,7 +105,6 @@ class SearchFragment : Fragment() {
         binding.searchEditText.addTextChangedListener(object : TextWatcher {
             @Suppress("EmptyFunctionBlock")
             override fun afterTextChanged(s: Editable?) {
-                // Не используется в данном случае
             }
             @Suppress("EmptyFunctionBlock")
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -134,6 +136,11 @@ class SearchFragment : Fragment() {
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        highlightFilterButton(hasActiveFilters())
     }
 
     private fun renderUiState(state: UiScreenState) {
@@ -197,6 +204,21 @@ class SearchFragment : Fragment() {
         binding.pbLoading.visibility = View.GONE
         binding.clEmptyList.visibility = View.GONE
         binding.clNoInternet.visibility = View.GONE
+    }
+
+    private fun highlightFilterButton(isHighlighted: Boolean) {
+        binding.filterButton.setImageResource(
+            if (isHighlighted) R.drawable.ic_filter_on else R.drawable.ic_filter
+        )
+    }
+
+    private fun hasActiveFilters(): Boolean {
+        val filterSettings = filterInteractor.loadFilterSettings()
+        return !filterSettings.location.isNullOrBlank() ||
+            !filterSettings.salary.isNullOrBlank() ||
+            !filterSettings.industry.isNullOrBlank() ||
+            !filterSettings.area.isNullOrBlank() ||
+            filterSettings.hideWithoutSalary
     }
 
     override fun onDestroyView() {
