@@ -89,7 +89,6 @@ class FilterFragment : Fragment() {
     }
 
     private fun setFocusListeners() {
-        showButtonsIfChanged()
         binding.filterSalary.setOnClickListener {
             binding.editSalary.requestFocus()
             binding.editSalary.addTextChangedListener { salary ->
