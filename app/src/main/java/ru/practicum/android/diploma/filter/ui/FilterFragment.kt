@@ -1,9 +1,12 @@
 package ru.practicum.android.diploma.filter.ui
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
@@ -40,11 +43,6 @@ class FilterFragment : Fragment() {
         observeViewModel()
         showButtonsIfChanged()
 
-        binding.editSalary.addTextChangedListener { salary ->
-            filterViewModel.updateSalary(salary.toString())
-            showButtonsIfChanged()
-        }
-
         binding.checkBox2.setOnCheckedChangeListener { _, isChecked ->
             filterViewModel.updateHideWithoutSalary(isChecked)
             showButtonsIfChanged()
@@ -74,6 +72,24 @@ class FilterFragment : Fragment() {
 
         setSalaryFocusChangeListener()
         setResetFilters()
+        setFocusListeners()
+    }
+
+    private fun setFocusListeners() {
+        showButtonsIfChanged()
+        binding.filterSalary.setOnClickListener {
+            binding.editSalary.requestFocus()
+            binding.editSalary.addTextChangedListener { salary ->
+                filterViewModel.updateSalary(salary.toString())
+                showKeyboard(binding.editSalary)
+            }
+        }
+    }
+
+    @SuppressLint("ServiceCast")
+    private fun showKeyboard(view: View) {
+        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
     }
 
     private fun observeViewModel() {
