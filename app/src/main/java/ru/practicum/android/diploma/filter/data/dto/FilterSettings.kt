@@ -1,8 +1,10 @@
 package ru.practicum.android.diploma.filter.data.dto
 
-data class FilterSettings(
-    val location: String?,
+class FilterSettings(
+    var location: String?,
     var industry: String?,
-    val salary: String?,
-    val hideWithoutSalary: Boolean
+    var salary: String?,
+    var industryId: String?,
+    var hideWithoutSalary: Boolean,
+    var area: String?
 )

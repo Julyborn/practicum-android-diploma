@@ -30,9 +30,12 @@ class SearchViewModel(
 
     // Переменные для фильтра
     private var filterLocation: String? = null
-    private var filterIndustry: String? = null
+
+//    private var filterIndustry: String? = null
     private var filterSalary: String? = null
     private var hideWithoutSalary: Boolean = false
+    private var filterIndustryId: String? = null
+    private var area: String? = null
 
     // Переменные пагинации
     private var currentPage = 0
@@ -42,13 +45,17 @@ class SearchViewModel(
     init {
         filterInteractor.loadFilterSettings()
     }
+
     private fun loadSavedFilters() {
         val savedFilters = filterInteractor.loadFilterSettings()
         filterLocation = savedFilters.location
-        //filterIndustry = savedFilters.industry
+        // filterIndustry = savedFilters.industry
         filterSalary = savedFilters.salary
         hideWithoutSalary = savedFilters.hideWithoutSalary
+        filterIndustryId = savedFilters.industryId
+        area = savedFilters.area
     }
+
     fun onSearchQueryChanged(query: String) {
         currentPage = 0
         maxPages = Int.MAX_VALUE
@@ -69,7 +76,7 @@ class SearchViewModel(
 
     fun applyFilters(location: String?, industry: String?, salary: String?, hideWithoutSalary: Boolean) {
         filterLocation = location
-        //filterIndustry = industry
+        // filterIndustry = industry
         filterSalary = salary
         this.hideWithoutSalary = hideWithoutSalary
 
@@ -89,10 +96,11 @@ class SearchViewModel(
         return VacancySearchParams(
             query = query,
             location = filterLocation,
-            //industry = filterIndustry,
+            industryId = filterIndustryId,
             salary = filterSalary?.toIntOrNull(),
             hideWithoutSalary = hideWithoutSalary,
-            page = page
+            page = page,
+            area = area
         )
     }
 

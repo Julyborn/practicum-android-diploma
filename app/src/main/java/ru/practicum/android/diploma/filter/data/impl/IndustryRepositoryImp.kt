@@ -59,8 +59,6 @@ class IndustryRepositoryImp(
                 emit(Resource.ServerError("Network error: ${e.localizedMessage}"))
             } catch (e: HttpException) {
                 emit(Resource.ServerError("HTTP error: ${e.localizedMessage}"))
-            } catch (e: Exception) {
-                emit(Resource.ServerError("Unknown error: ${e.localizedMessage}"))
             }
         } else {
             emit(Resource.NoInternetError("Network not available"))

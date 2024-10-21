@@ -112,4 +112,3 @@ class WorkplaceRepositoryImpl(
         const val DEF = ""
     }
 }
-
