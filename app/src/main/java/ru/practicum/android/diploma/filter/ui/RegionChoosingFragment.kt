@@ -1,11 +1,13 @@
 package ru.practicum.android.diploma.filter.ui
 
+import android.graphics.Rect
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -61,13 +63,12 @@ class RegionChoosingFragment : Fragment() {
                     binding.icClear.visibility = View.VISIBLE
                 }
             }
+
             override fun afterTextChanged(s: Editable?) = Unit
         })
-
         binding.icClear.setOnClickListener {
             binding.regionsEditText.text?.clear()
         }
-
         binding.backButton.setOnClickListener { findNavController().popBackStack() }
     }
 
@@ -87,9 +88,12 @@ class RegionChoosingFragment : Fragment() {
     }
 
     private fun showNoRegionsError() {
+        requireActivity().window.setSoftInputMode(
+            WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING
+        )
         binding.loadingIndicator.visibility = View.GONE
-        binding.regionsRecyclerView.visibility = View.GONE
         binding.placeholderError.visibility = View.GONE
+        binding.regionsRecyclerView.visibility = View.GONE
         binding.placeholderNoList.visibility = View.VISIBLE
     }
 
