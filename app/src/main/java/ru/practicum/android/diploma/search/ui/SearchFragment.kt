@@ -121,6 +121,19 @@ class SearchFragment : Fragment() {
         binding.filterButton.setOnClickListener {
             openFilterFragment()
         }
+
+        viewModel.errorEvent.observe(viewLifecycleOwner) { error ->
+            when (error) {
+                "no_internet" -> {
+                    binding.pbLoading.visibility = View.GONE
+                    Toast.makeText(requireContext(), getString(R.string.no_internet_toast), Toast.LENGTH_SHORT).show()
+                }
+                "server_error" -> {
+                    binding.pbLoading.visibility = View.GONE
+                    Toast.makeText(requireContext(), getString(R.string.error_toast), Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
     }
 
     private fun renderUiState(state: UiScreenState) {
@@ -129,12 +142,14 @@ class SearchFragment : Fragment() {
             UiScreenState.Empty -> showEmptyState()
             UiScreenState.Loading -> showLoadingState()
             UiScreenState.NoInternetError -> {
-                showNoInternetErrorState()
-                Toast.makeText(requireContext(), getString(R.string.no_internet_toast), Toast.LENGTH_SHORT).show()
+                if (viewModel.isFirstSearch) {
+                    showNoInternetErrorState()
+                }
             }
             UiScreenState.ServerError -> {
-                showServerErrorState()
-                Toast.makeText(requireContext(), getString(R.string.error_toast), Toast.LENGTH_SHORT).show()
+                if (viewModel.isFirstSearch) {
+                    showServerErrorState()
+                }
             }
             is UiScreenState.Success -> showSuccessState(state.vacancies, state.found)
         }
