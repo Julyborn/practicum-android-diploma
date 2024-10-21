@@ -302,6 +302,7 @@
         android:backgroundTint="@color/blue"
         android:text="@string/apply"
         app:layout_constraintBottom_toTopOf="@+id/buttonResetFilter"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -309,6 +310,7 @@
     <Button
         android:id="@+id/buttonResetFilter"
         style="@style/ButtonApply"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_0"
         android:layout_marginHorizontal="@dimen/dp_17"
