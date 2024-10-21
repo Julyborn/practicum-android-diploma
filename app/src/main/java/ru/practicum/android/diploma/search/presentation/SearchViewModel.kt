@@ -166,7 +166,8 @@ class SearchViewModel(
             _errorEvent.value = "server_error"
             UiScreenState.Success(
                 vacancies = _vacanciesList.value ?: emptyList(),
-                found = _vacanciesList.value?.size ?: 0)
+                found = _vacanciesList.value?.size ?: 0
+            )
         }
     }
 

@@ -23,7 +23,9 @@ class FilterFragment : Fragment() {
     private val filterViewModel: FilterViewModel by inject()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
         _binding = FragmentFiltersBinding.inflate(inflater, container, false)
         return binding.root
@@ -51,6 +53,7 @@ class FilterFragment : Fragment() {
         binding.imageButtonIndustry.setOnClickListener {
             openIndustryFragment()
         }
+
         binding.imageButtonJob.setOnClickListener {
             openWorkplaceFragment()
         }
@@ -83,7 +86,7 @@ class FilterFragment : Fragment() {
         }
     }
 
-  private fun showKeyboard(view: View) {
+    private fun showKeyboard(view: View) {
         val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
     }
@@ -229,7 +232,10 @@ class FilterFragment : Fragment() {
 
     private fun showButtonsIfChanged() {
         val isChanged =
-            binding.addNameFilterJob.text.isNotEmpty() || binding.addNameFilterIndustry.text.isNotEmpty() || binding.editSalary.text.isNotEmpty() || binding.checkBox2.isChecked
+            binding.addNameFilterJob.text.isNotEmpty()
+                || binding.addNameFilterIndustry.text.isNotEmpty()
+                || binding.editSalary.text.isNotEmpty()
+                || binding.checkBox2.isChecked
 
         binding.buttonApply.visibility = View.VISIBLE
         binding.buttonResetFilter.visibility = View.VISIBLE
