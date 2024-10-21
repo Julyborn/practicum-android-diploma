@@ -74,7 +74,6 @@ class FilterFragment : Fragment() {
 
     private fun setFocusListeners() {
         showButtonsIfChanged()
-
         binding.filterSalary.setOnClickListener {
             binding.editSalary.requestFocus()
             showKeyboard(binding.editSalary)
@@ -84,7 +83,7 @@ class FilterFragment : Fragment() {
         }
     }
 
-    private fun showKeyboard(view: View) {
+  private fun showKeyboard(view: View) {
         val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
     }
