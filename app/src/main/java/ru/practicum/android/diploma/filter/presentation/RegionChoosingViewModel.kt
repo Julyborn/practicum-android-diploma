@@ -8,7 +8,6 @@ import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.filter.domain.api.WorkplaceInteractor
 import ru.practicum.android.diploma.filter.domain.models.Country
 import ru.practicum.android.diploma.filter.domain.models.Region
-import java.io.IOException
 
 class RegionChoosingViewModel(private val interactor: WorkplaceInteractor) : ViewModel() {
 
@@ -37,34 +36,25 @@ class RegionChoosingViewModel(private val interactor: WorkplaceInteractor) : Vie
 
     private fun loadAllRegions() {
         viewModelScope.launch {
-            try {
-                val regions = interactor.getAllRegions()
-                allRegions = regions
-                if (regions.isEmpty()) {
-                    _state.value = WorkplaceState.FetchError
-                } else {
-                    _state.value = WorkplaceState.Success(emptyList(), regions)
-                }
-            } catch (e: IOException) {
+            val regions = interactor.getAllRegions()
+                .filter { it.parentId != null && it.parentId != PARENT_ID_OTHER_COUNTRY }
+            allRegions = regions
+            if (regions.isEmpty()) {
                 _state.value = WorkplaceState.FetchError
-                throw e
+            } else {
+                _state.value = WorkplaceState.Success(emptyList(), regions)
             }
         }
     }
 
     private fun loadRegionsByCountry(countryId: String) {
         viewModelScope.launch {
-            try {
-                val regions = interactor.getRegionsByCountry(countryId)
-                allRegions = regions
-                if (regions.isEmpty()) {
-                    _state.value = WorkplaceState.FetchError
-                } else {
-                    _state.value = WorkplaceState.Success(emptyList(), regions)
-                }
-            } catch (e: IOException) {
+            val regions = interactor.getRegionsByCountry(countryId)
+            allRegions = regions
+            if (regions.isEmpty()) {
                 _state.value = WorkplaceState.FetchError
-                throw e
+            } else {
+                _state.value = WorkplaceState.Success(emptyList(), regions)
             }
         }
     }
@@ -97,5 +87,9 @@ class RegionChoosingViewModel(private val interactor: WorkplaceInteractor) : Vie
                 interactor.saveSelectedCountry(country)
             }
         }
+    }
+
+    companion object {
+        const val PARENT_ID_OTHER_COUNTRY = "1001"
     }
 }
