@@ -41,11 +41,13 @@ class FilterFragment : Fragment() {
 
         filterViewModel.loadFilters()
         observeViewModel()
-        showButtonsIfChanged()
+
+        binding.editSalary.addTextChangedListener { salary ->
+            filterViewModel.updateSalary(salary.toString())
+        }
 
         binding.checkBox2.setOnCheckedChangeListener { _, isChecked ->
             filterViewModel.updateHideWithoutSalary(isChecked)
-            showButtonsIfChanged()
         }
 
         setApplyButtonListener()
@@ -72,11 +74,18 @@ class FilterFragment : Fragment() {
 
         setSalaryFocusChangeListener()
         setResetFilters()
+
+        filterViewModel.isApplyButtonVisible.observe(viewLifecycleOwner) { isVisible ->
+            binding.buttonApply.visibility = if (isVisible) View.VISIBLE else View.GONE
+        }
+        filterViewModel.isResetButtonVisible.observe(viewLifecycleOwner) { isVisible ->
+            binding.buttonResetFilter.visibility = if (isVisible) View.VISIBLE else View.GONE
+        }
+
         setFocusListeners()
     }
 
     private fun setFocusListeners() {
-        showButtonsIfChanged()
         binding.filterSalary.setOnClickListener {
             binding.editSalary.requestFocus()
             binding.editSalary.addTextChangedListener { salary ->
@@ -90,6 +99,7 @@ class FilterFragment : Fragment() {
     private fun showKeyboard(view: View) {
         val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
+
     }
 
     private fun observeViewModel() {
@@ -177,7 +187,6 @@ class FilterFragment : Fragment() {
     private fun setResetFilters() {
         binding.buttonResetFilter.setOnClickListener {
             filterViewModel.clearFilters()
-            binding.buttonApply.visibility = View.GONE
             binding.buttonResetFilter.visibility = View.GONE
             binding.imageButtonFilterSalaryClear.visibility = View.GONE
             binding.addFilterJob.visibility = View.GONE
@@ -227,24 +236,6 @@ class FilterFragment : Fragment() {
                 binding.imageButtonFilterSalaryClear.visibility = View.VISIBLE
             }
         }
-    }
-
-    private fun showButtonsIfChanged() {
-        val isChanged = binding.addNameFilterJob.text.isNotEmpty() ||
-            binding.addNameFilterIndustry.text.isNotEmpty() ||
-            binding.editSalary.text.isNotEmpty() ||
-            binding.checkBox2.isChecked
-
-        binding.buttonApply.visibility = View.VISIBLE
-        binding.buttonResetFilter.visibility = View.VISIBLE
-
-//        if (isChanged) {
-//            binding.buttonApply.visibility = View.VISIBLE
-//            binding.buttonResetFilter.visibility = View.VISIBLE
-//        } else {
-//            binding.buttonApply.visibility = View.GONE
-//            binding.buttonResetFilter.visibility = View.GONE
-//        }
     }
 
     private fun openIndustryFragment() {
