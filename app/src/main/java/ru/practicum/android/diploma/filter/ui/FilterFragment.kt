@@ -42,12 +42,9 @@ class FilterFragment : Fragment() {
         filterViewModel.loadFilters()
         observeViewModel()
 
-
         binding.editSalary.addTextChangedListener { salary ->
             filterViewModel.updateSalary(salary.toString())
         }
-
-
 
         binding.checkBox2.setOnCheckedChangeListener { _, isChecked ->
             filterViewModel.updateHideWithoutSalary(isChecked)
