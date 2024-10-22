@@ -49,11 +49,12 @@
                 android:layout_gravity="center_vertical"
                 android:background="?selectableItemBackground"
                 android:backgroundTint="?attr/colorPrimary"
-                android:drawableTint="?attr/colorOnPrimary"
                 android:focusable="false"
                 android:focusableInTouchMode="false"
-                android:gravity="center_vertical"
-                android:inputType="none" />
+                android:clickable="false"
+                android:cursorVisible="false"
+                android:inputType="none"
+                android:gravity="center_vertical" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <ImageView
@@ -109,8 +110,10 @@
                 android:backgroundTint="?attr/colorPrimary"
                 android:focusable="false"
                 android:focusableInTouchMode="false"
-                android:inputType="none"
                 android:paddingEnd="@dimen/dp_24"
+                android:clickable="false"
+                android:cursorVisible="false"
+                android:inputType="none"
                 android:paddingBottom="@dimen/dp_16" />
         </com.google.android.material.textfield.TextInputLayout>
 

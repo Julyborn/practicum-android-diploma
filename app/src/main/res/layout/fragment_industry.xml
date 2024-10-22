@@ -35,59 +35,62 @@
     </LinearLayout>
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/filterIndustry"
         style="@style/search_card_view_style"
+        android:id="@+id/filterIndustry"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_56"
-        android:layout_marginHorizontal="@dimen/dp_16"
-        android:layout_marginTop="@dimen/dp_24"
-        app:cardCornerRadius="@dimen/dp_12"
+        android:layout_height="56dp"
+        android:layout_marginHorizontal="16dp"
+        app:cardCornerRadius="12dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/industrySelection">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginStart="@dimen/dp_16"
-            android:layout_marginEnd="@dimen/dp_60"
-            app:layout_constraintTop_toBottomOf="@+id/industrySelection">
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 
             <EditText
                 android:id="@+id/editIndustry"
                 style="@style/search_et"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_48"
+                android:layout_width="0dp"
+                android:layout_marginStart="16dp"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:background="?selectableItemBackground"
-                android:focusable="true"
-                android:hint="@string/enter_industry"
+                android:layout_marginEnd="12dp"
+                android:layout_weight="1"
                 android:imeOptions="actionDone"
+                android:background="@null"
                 android:inputType="text"
                 android:maxLines="1"
                 android:singleLine="true"
+                android:hint="@string/Input_request"
                 android:textColor="@color/black_universal"
-                android:textSize="@dimen/text_size_16"
+                android:textCursorDrawable="@drawable/cursor"
                 tools:ignore="Autofill,RtlSymmetry,TextContrastCheck,VisualLintTextFieldSize" />
+
+            <ImageView
+                android:id="@+id/imageButtonIndustrySearch"
+                style="@style/ic_search"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/ic_search"
+                android:visibility="visible"
+                android:contentDescription="@string/search"/>
+
+            <ImageView
+                android:id="@+id/imageButtonFilterIndustryClear"
+                style="@style/ic_search"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/ic_button_clear"
+                android:padding="13dp"
+                android:visibility="gone"
+                android:contentDescription="@string/search"/>
         </LinearLayout>
-
-        <ImageButton
-            android:id="@+id/imageButtonIndustrySearch"
-            style="@style/industry_search"
-            android:layout_width="@dimen/dp_48"
-            android:layout_height="@dimen/dp_48"
-            android:layout_gravity="right"
-            android:layout_marginTop="@dimen/dp_4"
-            android:layout_marginEnd="@dimen/dp_4" />
-
-        <ImageButton
-            android:id="@+id/imageButtonFilterIndustryClear"
-            style="@style/filter_salary_clear"
-            android:layout_width="@dimen/dp_24"
-            android:layout_height="@dimen/dp_24"
-            android:layout_gravity="right"
-            android:layout_marginTop="@dimen/dp_14"
-            android:layout_marginEnd="@dimen/dp_16"
-            android:visibility="gone" />
     </androidx.cardview.widget.CardView>
 
 
@@ -156,12 +159,13 @@
 
     <ProgressBar
         android:id="@+id/progressBar"
-        android:layout_width="@dimen/dp_40"
-        android:layout_height="@dimen/dp_40"
-        android:layout_gravity="center"
-        android:indeterminateTint="@color/blue"
-        android:visibility="gone"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginHorizontal="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:indeterminateTint = "@color/blue"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/filterIndustry"
+        android:visibility="gone"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

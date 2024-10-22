@@ -39,7 +39,6 @@ class FilterFragment : Fragment() {
             parentFragmentManager.popBackStack()
         }
 
-        filterViewModel.loadFilters()
         observeViewModel()
 
         binding.editSalary.addTextChangedListener { salary ->
@@ -53,10 +52,10 @@ class FilterFragment : Fragment() {
         setApplyButtonListener()
         setFragmentResultListeners()
 
-        binding.imageButtonIndustry.setOnClickListener {
+        binding.filterIndustry.setOnClickListener {
             openIndustryFragment()
         }
-        binding.imageButtonJob.setOnClickListener {
+        binding.filterJob.setOnClickListener {
             openWorkplaceFragment()
         }
 
