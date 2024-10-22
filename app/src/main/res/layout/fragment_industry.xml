@@ -66,6 +66,7 @@
                 android:singleLine="true"
                 android:textColor="@color/black_universal"
                 android:textSize="@dimen/text_size_16"
+                android:textCursorDrawable="@drawable/cursor"
                 tools:ignore="Autofill,RtlSymmetry,TextContrastCheck,VisualLintTextFieldSize" />
         </LinearLayout>
 
