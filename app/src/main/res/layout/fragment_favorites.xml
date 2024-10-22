@@ -47,10 +47,10 @@
             android:src="@drawable/empty_list" />
 
         <TextView
+            style="@style/night_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:fontFamily="@font/ys_display_medium"
             android:text="@string/favorite_screen_empty_list"
             android:textSize="22sp" />
     </LinearLayout>
