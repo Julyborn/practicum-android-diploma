@@ -18,6 +18,8 @@ class RootActivity : AppCompatActivity() {
         val navController = navHostFragment.navController
 
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        val divider = findViewById<View>(R.id.divider)
+
         bottomNavigationView.setupWithNavController(navController)
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
@@ -26,17 +28,18 @@ class RootActivity : AppCompatActivity() {
                 R.id.workplaceFragment,
                 R.id.countryChoosingFragment,
                 R.id.regionChoosingFragment,
-                R.id.vacanciesFragment -> bottomNavigationView.visibility = View.GONE
-                R.id.industryFragment -> bottomNavigationView.visibility = View.GONE
-
+                R.id.vacanciesFragment,
+                R.id.industryFragment -> {
+                    bottomNavigationView.visibility = View.GONE
+                    divider.visibility = View.GONE
+                }
                 else -> {
                     bottomNavigationView.visibility = View.VISIBLE
+                    divider.visibility = View.VISIBLE
                 }
             }
         }
         updateTheme()
-        // Пример использования access token для HeadHunter API
-        //  networkRequestExample(accessToken = BuildConfig.HH_ACCESS_TOKEN)
     }
 
     private fun updateTheme() {

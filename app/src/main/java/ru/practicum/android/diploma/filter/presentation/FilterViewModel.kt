@@ -99,10 +99,9 @@ class FilterViewModel(private val filterInteractor: FilterInteractor) : ViewMode
     }
 
     fun clearFilters() {
-        filterInteractor.clearFilterSettings()
         updateHideWithoutSalary(false)
         clearSalary()
-        clearLocation()
+        clearJobFilter()
         clearIndustry()
     }
 

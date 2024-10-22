@@ -187,6 +187,7 @@ class FilterFragment : Fragment() {
     private fun setResetFilters() {
         binding.buttonResetFilter.setOnClickListener {
             filterViewModel.clearFilters()
+            binding.addFilterJobLinearLayout.visibility = View.GONE
             binding.buttonResetFilter.visibility = View.GONE
             binding.imageButtonFilterSalaryClear.visibility = View.GONE
             binding.addFilterJob.visibility = View.GONE
@@ -212,16 +213,16 @@ class FilterFragment : Fragment() {
     private fun clearJobFilter() {
         binding.addFilterJobLinearLayout.visibility = View.GONE
         binding.imageButtonJobClear.visibility = View.GONE
+        binding.editJob.visibility = View.VISIBLE
         binding.imageButtonJob.visibility = View.VISIBLE
         binding.addNameFilterJob.visibility = View.VISIBLE
-        binding.editJob.visibility = View.VISIBLE
         filterViewModel.clearJobFilter()
     }
 
     private fun clearSalaryFilter() {
         filterViewModel.clearSalary()
         binding.editSalary.clearFocus()
-        binding.expectedSalary.setTextColor(ContextCompat.getColor(requireContext(), R.color.grey))
+        binding.expectedSalary.setTextColor(ContextCompat.getColor(requireContext(), R.color.salary_text))
         binding.imageButtonFilterSalaryClear.visibility = View.GONE
     }
 
