@@ -31,7 +31,11 @@ fun Salary?.formatSalary(): String {
     }
 
     return when {
-        fromSalary != null && toSalary != null -> "от ${formatSalary(fromSalary)} до ${formatSalary(toSalary)} $currencySymbol"
+        fromSalary != null && toSalary != null -> "от ${
+            formatSalary(fromSalary)
+        } до ${formatSalary(toSalary)} " +
+            "$currencySymbol"
+
         fromSalary != null -> "от ${formatSalary(fromSalary)} $currencySymbol"
         toSalary != null -> "до ${formatSalary(toSalary)} $currencySymbol"
         else -> "Зарплата не указана"
