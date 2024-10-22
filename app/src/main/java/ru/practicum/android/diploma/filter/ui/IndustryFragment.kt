@@ -3,11 +3,9 @@ package ru.practicum.android.diploma.filter.ui
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -49,12 +47,19 @@ class IndustryFragment : Fragment() {
         binding.industryList.layoutManager = LinearLayoutManager(requireContext())
 
         viewModel.industriesList.observe(viewLifecycleOwner) { industries ->
-            if (industries.isNullOrEmpty()) {
+            if (viewModel.isLoadingAllIndustries.value == true) {
+                industryAdapter.update(industries)
+                binding.industryList.visibility = View.VISIBLE
+                binding.placeholderNoListIndustry.visibility = View.GONE
+                binding.industryNoInternet.visibility = View.GONE
+                viewModel.onIndustriesLoaded()
+            } else if (industries.isNullOrEmpty()) {
                 showNoListIndustry()
             } else {
                 industryAdapter.update(industries)
                 binding.industryList.visibility = View.VISIBLE
                 binding.placeholderNoListIndustry.visibility = View.GONE
+                binding.industryNoInternet.visibility = View.GONE
             }
         }
 
@@ -64,6 +69,7 @@ class IndustryFragment : Fragment() {
                     binding.progressBar.visibility = View.VISIBLE
                     binding.placeholderNoListIndustry.visibility = View.GONE
                     binding.placeholderErrorIndustry.visibility = View.GONE
+                    binding.industryNoInternet.visibility = View.GONE
                 }
 
                 is UiScreenState.Default -> {
@@ -71,11 +77,11 @@ class IndustryFragment : Fragment() {
                 }
 
                 is UiScreenState.Empty -> {
-                    showNoListIndustry()
+                    viewModel.loadAllIndustries()
                 }
 
                 is UiScreenState.NoInternetError -> {
-                    showErrorIndustry()
+                    showNoInternetIndustry()
 
                 }
 
@@ -168,12 +174,21 @@ class IndustryFragment : Fragment() {
         binding.industryList.visibility = View.GONE
         binding.placeholderErrorIndustry.visibility = View.VISIBLE
         binding.placeholderNoListIndustry.visibility = View.GONE
+        binding.industryNoInternet.visibility = View.GONE
+    }
+    private fun showNoInternetIndustry() {
+        binding.progressBar.visibility = View.GONE
+        binding.industryList.visibility = View.GONE
+        binding.placeholderErrorIndustry.visibility = View.GONE
+        binding.placeholderNoListIndustry.visibility = View.GONE
+        binding.industryNoInternet.visibility = View.VISIBLE
     }
     private fun showNoListIndustry() {
         binding.progressBar.visibility = View.GONE
         binding.industryList.visibility = View.GONE
         binding.placeholderNoListIndustry.visibility = View.VISIBLE
         binding.placeholderErrorIndustry.visibility = View.GONE
+        binding.industryNoInternet.visibility = View.GONE
     }
 
     override fun onDestroyView() {
