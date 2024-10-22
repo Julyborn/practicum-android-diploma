@@ -58,7 +58,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_48"
                 android:layout_gravity="center"
-                android:background="?selectableItemBackground"
                 android:focusable="true"
                 android:hint="@string/enter_industry"
                 android:imeOptions="actionDone"
@@ -67,6 +66,7 @@
                 android:singleLine="true"
                 android:textColor="@color/black_universal"
                 android:textSize="@dimen/text_size_16"
+                android:textCursorDrawable="@drawable/cursor"
                 tools:ignore="Autofill,RtlSymmetry,TextContrastCheck,VisualLintTextFieldSize" />
         </LinearLayout>
 
@@ -164,4 +164,78 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/placeholderErrorIndustry"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/inPlaceholderError"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/dp_16"
+            android:layout_marginEnd="@dimen/dp_16"
+            android:scaleType="fitCenter"
+            android:src="@drawable/img_no_list_country"
+            app:layout_constraintDimensionRatio="328:223"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            style="@style/TextMedium22"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_16"
+            android:gravity="center_horizontal"
+            android:paddingStart="@dimen/dp_48"
+            android:paddingEnd="@dimen/dp_48"
+            android:text="@string/no_list_country"
+            app:layout_constraintEnd_toEndOf="@+id/inPlaceholderError"
+            app:layout_constraintStart_toStartOf="@+id/inPlaceholderError"
+            app:layout_constraintTop_toBottomOf="@+id/inPlaceholderError" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/placeholderNoListIndustry"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/inPlaceholderNoList"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/dp_16"
+            android:layout_marginEnd="@dimen/dp_16"
+            android:scaleType="fitCenter"
+            android:src="@drawable/no_list"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="328:223"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            style="@style/TextMedium22"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_16"
+            android:gravity="center_horizontal"
+            android:paddingStart="@dimen/dp_48"
+            android:paddingEnd="@dimen/dp_48"
+            android:text="@string/no_industry_in_search"
+            app:layout_constraintEnd_toEndOf="@+id/inPlaceholderNoList"
+            app:layout_constraintStart_toStartOf="@+id/inPlaceholderNoList"
+            app:layout_constraintTop_toBottomOf="@+id/inPlaceholderNoList" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
