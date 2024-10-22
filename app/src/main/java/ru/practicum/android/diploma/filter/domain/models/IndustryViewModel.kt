@@ -93,24 +93,6 @@ class IndustryViewModel(private val industryInteractor: IndustryInteractor) : Vi
         }
     }
 
-    private fun handleNoInternetError(): UiScreenState {
-        return if (isFirstSearch) {
-            UiScreenState.NoInternetError
-        } else {
-            isNextPageLoading = false
-            UiScreenState.Default
-        }
-    }
-
-    private fun handleServerError(): UiScreenState {
-        return if (isFirstSearch) {
-            UiScreenState.ServerError
-        } else {
-            isNextPageLoading = false
-            UiScreenState.Default
-        }
-    }
-
     fun loadAllIndustries() {
         currentPage = 0
         maxPages = Int.MAX_VALUE

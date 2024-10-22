@@ -128,7 +128,9 @@ class IndustryFragment : Fragment() {
         }
 
         binding.editIndustry.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            @Suppress("EmptyFunctionBlock")
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val query = s.toString().trim()
@@ -136,8 +138,9 @@ class IndustryFragment : Fragment() {
                 binding.imageButtonIndustrySearch.visibility = View.GONE
                 binding.imageButtonFilterIndustryClear.visibility = View.VISIBLE
             }
-
-            override fun afterTextChanged(s: Editable?) {}
+            @Suppress("EmptyFunctionBlock")
+            override fun afterTextChanged(s: Editable?) {
+            }
         })
 
         binding.editIndustry.setOnFocusChangeListener { _, hasFocus ->
