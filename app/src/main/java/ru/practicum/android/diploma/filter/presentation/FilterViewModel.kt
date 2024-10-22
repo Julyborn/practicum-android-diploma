@@ -34,7 +34,11 @@ class FilterViewModel(private val filterInteractor: FilterInteractor) : ViewMode
     private val _isResetButtonVisible = MutableLiveData<Boolean>()
     val isResetButtonVisible: LiveData<Boolean> get() = _isResetButtonVisible
 
-    fun loadFilters(): FilterSettings {
+    init {
+        loadFilters()
+    }
+
+    fun loadFilters() {
         val settings = filterInteractor.loadFilterSettings()
 
         initialFilterSettings = FilterSettings(
@@ -54,7 +58,6 @@ class FilterViewModel(private val filterInteractor: FilterInteractor) : ViewMode
         _area.value = settings.area
 
         checkResetButtonVisibility()
-        return settings
     }
 
     fun applyFilters() {

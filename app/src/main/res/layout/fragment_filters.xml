@@ -112,8 +112,7 @@
                 style="@style/button_cancel"
                 android:visibility="gone"
                 android:layout_gravity="center"
-                android:layout_marginEnd="@dimen/dp_4"
- />
+                android:layout_marginEnd="@dimen/dp_4" />
         </LinearLayout>
     </LinearLayout>
 
@@ -193,8 +192,7 @@
                 style="@style/button_cancel"
                 android:layout_gravity="center"
                 android:visibility="gone"
-                android:layout_marginEnd="@dimen/dp_4"
-                 />
+                android:layout_marginEnd="@dimen/dp_4" />
         </LinearLayout>
     </LinearLayout>
 
