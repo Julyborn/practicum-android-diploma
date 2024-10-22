@@ -88,9 +88,9 @@ class FilterFragment : Fragment() {
     private fun setFocusListeners() {
         binding.filterSalary.setOnClickListener {
             binding.editSalary.requestFocus()
+            showKeyboard(binding.editSalary)
             binding.editSalary.addTextChangedListener { salary ->
                 filterViewModel.updateSalary(salary.toString())
-                showKeyboard(binding.editSalary)
             }
         }
     }
@@ -222,6 +222,8 @@ class FilterFragment : Fragment() {
     private fun clearSalaryFilter() {
         filterViewModel.clearSalary()
         binding.editSalary.clearFocus()
+        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(binding.editSalary.windowToken, 0)
         binding.expectedSalary.setTextColor(ContextCompat.getColor(requireContext(), R.color.salary_text))
         binding.imageButtonFilterSalaryClear.visibility = View.GONE
     }
