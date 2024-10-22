@@ -55,7 +55,16 @@ class FilterFragment : Fragment() {
         binding.filterIndustry.setOnClickListener {
             openIndustryFragment()
         }
+
+        binding.imageButtonIndustry.setOnClickListener {
+            openIndustryFragment()
+        }
+
         binding.filterJob.setOnClickListener {
+            openWorkplaceFragment()
+        }
+
+        binding.imageButtonJob.setOnClickListener {
             openWorkplaceFragment()
         }
 
