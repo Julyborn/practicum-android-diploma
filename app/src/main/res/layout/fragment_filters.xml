@@ -226,7 +226,6 @@
                 android:layout_marginStart="@dimen/dp_16"
                 android:layout_marginTop="@dimen/dp_8"
                 android:layout_marginEnd="@dimen/dp_16"
-                android:background="@color/light_grey"
                 android:text="@string/expected_salary"
                 android:textSize="@dimen/text_size_12" />
 
@@ -238,7 +237,6 @@
                 android:layout_marginStart="@dimen/dp_16"
                 android:layout_marginEnd="@dimen/dp_16"
                 android:layout_marginBottom="@dimen/dp_8"
-                android:background="@color/light_grey"
                 android:focusable="true"
                 android:hint="@string/edit_salary"
                 android:inputType="number"

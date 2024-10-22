@@ -33,6 +33,7 @@
 
     <style name="search_et">
         <item name="android:textColorHint">@color/grey</item>
+        <item name="android:background">@color/light_grey</item>
         <item name="android:fontFamily">@font/ys_display_regular</item>
     </style>
     <style name="search_filter">
@@ -100,6 +101,7 @@
         <item name="android:src">@drawable/arrow_back</item>
     </style>
     <style name="expected_salary">
+        <item name="android:background">@color/light_grey</item>
         <item name="android:textColor">@color/grey</item>
         <item name="android:fontFamily">@font/ys_display_regular</item>
     </style>
