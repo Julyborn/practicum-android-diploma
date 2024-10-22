@@ -98,7 +98,7 @@
         android:layout_marginHorizontal="@dimen/dp_16"
         android:layout_marginTop="@dimen/dp_17"
         android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/buttonChoose"
         app:layout_constraintTop_toBottomOf="@+id/filterIndustry"
         tools:listitem="@layout/item_industry" />
 
