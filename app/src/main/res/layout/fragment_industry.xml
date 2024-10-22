@@ -65,7 +65,6 @@
                 android:inputType="text"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:hint="@string/Input_request"
                 android:textColor="@color/black_universal"
                 android:textSize="@dimen/text_size_16"
                 android:textCursorDrawable="@drawable/cursor"
