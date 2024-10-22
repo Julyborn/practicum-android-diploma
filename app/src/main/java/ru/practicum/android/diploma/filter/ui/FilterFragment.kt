@@ -221,7 +221,7 @@ class FilterFragment : Fragment() {
     private fun clearSalaryFilter() {
         filterViewModel.clearSalary()
         binding.editSalary.clearFocus()
-        binding.expectedSalary.setTextColor(ContextCompat.getColor(requireContext(), R.color.grey))
+        binding.expectedSalary.setTextColor(ContextCompat.getColor(requireContext(), R.color.salary_text))
         binding.imageButtonFilterSalaryClear.visibility = View.GONE
     }
 
