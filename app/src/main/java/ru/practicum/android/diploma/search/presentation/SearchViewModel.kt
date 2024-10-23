@@ -47,8 +47,10 @@ class SearchViewModel(
     // Переменные пагинации
     private var currentPage = 0
     private var maxPages = Int.MAX_VALUE
-    private var isNextPageLoading = false
     var isFirstSearch = false
+    private val _isNextPageLoading = MutableLiveData<Boolean>(false)
+    val isNextPageLoading: LiveData<Boolean>
+        get() = _isNextPageLoading
 
     init {
         filterInteractor.loadFilterSettings()
@@ -94,8 +96,8 @@ class SearchViewModel(
     }
 
     fun onLastItemReached() {
-        if (isNextPageLoading || currentPage >= maxPages - 1) return
-        isNextPageLoading = true
+        if (_isNextPageLoading.value == true || currentPage >= maxPages - 1) return
+        _isNextPageLoading.value = true
         val query = _searchQuery.value ?: return
         val params = buildSearchParams(query = query, page = currentPage + 1)
         searchRequest(params)
@@ -118,7 +120,7 @@ class SearchViewModel(
         searchJob = viewModelScope.launch {
             searchInteractor.searchVacancies(params).collect { result ->
                 renderState(result)
-                isNextPageLoading = false
+                _isNextPageLoading.value = false
             }
         }
     }
@@ -149,7 +151,7 @@ class SearchViewModel(
         return if (isFirstSearch) {
             UiScreenState.NoInternetError
         } else {
-            isNextPageLoading = false
+            _isNextPageLoading.value = false
             _errorEvent.value = "no_internet"
             UiScreenState.Success(
                 vacancies = _vacanciesList.value ?: emptyList(),
@@ -162,7 +164,7 @@ class SearchViewModel(
         return if (isFirstSearch) {
             UiScreenState.ServerError
         } else {
-            isNextPageLoading = false
+            _isNextPageLoading.value = false
             _errorEvent.value = "server_error"
             UiScreenState.Success(
                 vacancies = _vacanciesList.value ?: emptyList(),

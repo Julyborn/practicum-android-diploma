@@ -54,38 +54,9 @@ class SearchFragment : Fragment() {
             renderUiState(it)
         }
 
-        searchItemAdapter = SearchItemAdapter { vacancyId ->
-            val bundle = Bundle().apply {
-                putString(KEY_VACANCY, vacancyId)
-            }
-            findNavController().navigate(R.id.action_searchFragment_to_vacanciesFragment, bundle)
-        }
-
-        binding.vacancyList.apply {
-            layoutManager = LinearLayoutManager(requireContext())
-            adapter = searchItemAdapter
-        }
-
         binding.searchEditText.addTextChangedListener { query ->
             debounceSearch(query.toString())
         }
-
-        binding.vacancyList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-
-                if (dy > 0) {
-                    val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-                    val visibleItemCount = layoutManager.childCount
-                    val totalItemCount = layoutManager.itemCount
-                    val pastVisibleItems = layoutManager.findFirstVisibleItemPosition()
-
-                    if (visibleItemCount + pastVisibleItems >= totalItemCount) {
-                        viewModel.onLastItemReached()
-                    }
-                }
-            }
-        })
 
         binding.searchEditText.setOnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -124,18 +95,9 @@ class SearchFragment : Fragment() {
             openFilterFragment()
         }
 
-        viewModel.errorEvent.observe(viewLifecycleOwner) { error ->
-            when (error) {
-                "no_internet" -> {
-                    binding.pbLoading.visibility = View.GONE
-                    Toast.makeText(requireContext(), getString(R.string.no_internet_toast), Toast.LENGTH_SHORT).show()
-                }
-                "server_error" -> {
-                    binding.pbLoading.visibility = View.GONE
-                    Toast.makeText(requireContext(), getString(R.string.error_toast), Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
+        handleError()
+        setupRecyclerView()
+        observePaginationLoading()
     }
 
     override fun onResume() {
@@ -232,5 +194,62 @@ class SearchFragment : Fragment() {
 
     private fun openFilterFragment() {
         findNavController().navigate(R.id.action_searchFragment_to_filterFragment)
+    }
+
+    private fun observePaginationLoading() {
+        viewModel.isNextPageLoading.observe(viewLifecycleOwner) { isLoading ->
+            if (isLoading) {
+                binding.nextPageLoading.visibility = View.VISIBLE
+            } else {
+                binding.nextPageLoading.visibility = View.GONE
+            }
+        }
+    }
+
+    private fun setupRecyclerView() {
+        searchItemAdapter = SearchItemAdapter { vacancyId ->
+            val bundle = Bundle().apply {
+                putString(KEY_VACANCY, vacancyId)
+            }
+            findNavController().navigate(R.id.action_searchFragment_to_vacanciesFragment, bundle)
+        }
+
+        binding.vacancyList.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = searchItemAdapter
+        }
+
+        binding.vacancyList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                if (dy > 0) {
+                    val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                    val visibleItemCount = layoutManager.childCount
+                    val totalItemCount = layoutManager.itemCount
+                    val pastVisibleItems = layoutManager.findFirstVisibleItemPosition()
+
+                    if (visibleItemCount + pastVisibleItems >= totalItemCount) {
+                        viewModel.onLastItemReached()
+                    }
+                }
+            }
+        })
+
+    }
+
+    private fun handleError() {
+        viewModel.errorEvent.observe(viewLifecycleOwner) { error ->
+            when (error) {
+                "no_internet" -> {
+                    binding.pbLoading.visibility = View.GONE
+                    Toast.makeText(requireContext(), getString(R.string.no_internet_toast), Toast.LENGTH_SHORT).show()
+                }
+                "server_error" -> {
+                    binding.pbLoading.visibility = View.GONE
+                    Toast.makeText(requireContext(), getString(R.string.error_toast), Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
     }
 }
