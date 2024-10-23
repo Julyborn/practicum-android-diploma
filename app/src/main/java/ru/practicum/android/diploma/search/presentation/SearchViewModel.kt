@@ -68,7 +68,7 @@ class SearchViewModel(
     }
 
     fun onSearchQueryChanged(query: String) {
-        if (_searchQuery.value == query) {
+        if (_searchQuery.value == query && !isFiltersChanged()) {
             return
         }
         currentPage = 0
@@ -194,6 +194,15 @@ class SearchViewModel(
         } else {
             "$name, $areaName"
         }
+    }
+
+    private fun isFiltersChanged(): Boolean {
+        val savedFilters = filterInteractor.loadFilterSettings()
+
+        return filterLocation != savedFilters.location ||
+            filterIndustryId != savedFilters.industryId ||
+            filterSalary != savedFilters.salary ||
+            hideWithoutSalary != savedFilters.hideWithoutSalary
     }
 
 }
