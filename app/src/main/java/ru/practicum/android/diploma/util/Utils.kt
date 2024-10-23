@@ -3,7 +3,6 @@ package ru.practicum.android.diploma.util
 import ru.practicum.android.diploma.search.domain.models.Salary
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
-import java.text.NumberFormat
 import java.util.Locale
 
 fun formatSalary(salary: Int): String {
