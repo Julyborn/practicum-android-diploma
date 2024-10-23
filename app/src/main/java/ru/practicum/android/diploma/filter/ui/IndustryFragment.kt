@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import org.koin.android.ext.android.inject
 import ru.practicum.android.diploma.databinding.FragmentIndustryBinding
 import ru.practicum.android.diploma.filter.domain.models.IndustryViewModel
+import ru.practicum.android.diploma.filter.ui.FilterFragment.Companion.SELECTED_INDUSTRY_ID
 import ru.practicum.android.diploma.search.presentation.models.UiScreenState
 
 class IndustryFragment : Fragment() {
@@ -41,6 +42,8 @@ class IndustryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val selectedIndustryId = arguments?.getString(SELECTED_INDUSTRY_ID).toString()
+
         addListeners()
 
         binding.industryList.adapter = industryAdapter
@@ -60,39 +63,12 @@ class IndustryFragment : Fragment() {
                 binding.industryList.visibility = View.VISIBLE
                 binding.placeholderNoListIndustry.visibility = View.GONE
                 binding.industryNoInternet.visibility = View.GONE
+                selectedIndustryId.let {
+                    industryAdapter.setSelectedIndustryId(it)
+                }
             }
         }
-
-        viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
-            when (uiState) {
-                is UiScreenState.Loading -> {
-                    binding.progressBar.visibility = View.VISIBLE
-                    binding.placeholderNoListIndustry.visibility = View.GONE
-                    binding.placeholderErrorIndustry.visibility = View.GONE
-                    binding.industryNoInternet.visibility = View.GONE
-                }
-
-                is UiScreenState.Default -> {
-                    binding.progressBar.visibility = View.GONE
-                }
-
-                is UiScreenState.Empty -> {
-                    viewModel.loadAllIndustries()
-                }
-
-                is UiScreenState.NoInternetError -> {
-                    showNoInternetIndustry()
-
-                }
-
-                is UiScreenState.ServerError -> {
-                    showErrorIndustry()
-                }
-
-                is UiScreenState.Success -> TODO()
-            }
-        }
-
+        observeUiState()
         viewModel.loadAllIndustries()
     }
 
@@ -144,6 +120,7 @@ class IndustryFragment : Fragment() {
                 binding.imageButtonIndustrySearch.visibility = View.GONE
                 binding.imageButtonFilterIndustryClear.visibility = View.VISIBLE
             }
+
             @Suppress("EmptyFunctionBlock")
             override fun afterTextChanged(s: Editable?) {
             }
@@ -176,6 +153,7 @@ class IndustryFragment : Fragment() {
         binding.placeholderNoListIndustry.visibility = View.GONE
         binding.industryNoInternet.visibility = View.GONE
     }
+
     private fun showNoInternetIndustry() {
         binding.progressBar.visibility = View.GONE
         binding.industryList.visibility = View.GONE
@@ -183,6 +161,7 @@ class IndustryFragment : Fragment() {
         binding.placeholderNoListIndustry.visibility = View.GONE
         binding.industryNoInternet.visibility = View.VISIBLE
     }
+
     private fun showNoListIndustry() {
         binding.progressBar.visibility = View.GONE
         binding.industryList.visibility = View.GONE
@@ -190,6 +169,39 @@ class IndustryFragment : Fragment() {
         binding.placeholderErrorIndustry.visibility = View.GONE
         binding.industryNoInternet.visibility = View.GONE
     }
+
+    private fun observeUiState() {
+        viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
+            when (uiState) {
+                is UiScreenState.Loading -> {
+                    binding.progressBar.visibility = View.VISIBLE
+                    binding.placeholderNoListIndustry.visibility = View.GONE
+                    binding.placeholderErrorIndustry.visibility = View.GONE
+                    binding.industryNoInternet.visibility = View.GONE
+                }
+
+                is UiScreenState.Default -> {
+                    binding.progressBar.visibility = View.GONE
+                }
+
+                is UiScreenState.Empty -> {
+                    viewModel.loadAllIndustries()
+                }
+
+                is UiScreenState.NoInternetError -> {
+                    showNoInternetIndustry()
+
+                }
+
+                is UiScreenState.ServerError -> {
+                    showErrorIndustry()
+                }
+
+                is UiScreenState.Success -> TODO()
+            }
+        }
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -250,7 +250,11 @@ class FilterFragment : Fragment() {
     }
 
     private fun openIndustryFragment() {
-        findNavController().navigate(R.id.action_filterFragment_to_industryFragment)
+        val selectedIndustryId: String? = filterViewModel.industryId.value
+        val bundle = Bundle().apply {
+            putString(SELECTED_INDUSTRY_ID, selectedIndustryId)
+        }
+        findNavController().navigate(R.id.action_filterFragment_to_industryFragment, bundle)
     }
 
     private fun openWorkplaceFragment() {
@@ -261,4 +265,9 @@ class FilterFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    companion object {
+        const val SELECTED_INDUSTRY_ID = "selectedIndustryId"
+    }
+
 }

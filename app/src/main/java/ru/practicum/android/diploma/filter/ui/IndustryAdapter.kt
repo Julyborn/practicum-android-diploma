@@ -22,6 +22,11 @@ class IndustryAdapter(
         notifyDataSetChanged()
     }
 
+    fun setSelectedIndustryId(industryId: String) {
+        selectedPosition = industries.indexOfFirst { it.id == industryId }
+        notifyDataSetChanged()
+    }
+
     class IndustryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val industryName: RadioButton = itemView.findViewById(R.id.industryName)
 
@@ -56,9 +61,8 @@ class IndustryAdapter(
 
                 notifyItemChanged(previousPosition)
                 notifyItemChanged(position)
+                onClick(industry.id, position)
             }
-
-            onClick(industry.id, position)
         }
     }
 
