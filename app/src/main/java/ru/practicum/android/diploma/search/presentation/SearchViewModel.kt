@@ -68,6 +68,9 @@ class SearchViewModel(
     }
 
     fun onSearchQueryChanged(query: String) {
+        if (_searchQuery.value == query) {
+            return
+        }
         currentPage = 0
         maxPages = Int.MAX_VALUE
         _vacanciesList.value = emptyList()
