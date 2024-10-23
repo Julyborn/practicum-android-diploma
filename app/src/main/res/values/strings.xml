@@ -17,7 +17,12 @@
     <string name="search">Search</string>
     <string name="Input_request"> Введите запрос</string>
     <string name="Error_server">Ошибка сервера</string>
-    <string name="found_vacancies_count">Найдено %1$d вакансий</string>
+    <plurals name="found_vacancies_count">
+        <item quantity="one">Найдено %d вакансия</item>
+        <item quantity="few">Найдено %d вакансии</item>
+        <item quantity="many">Найдено %d вакансий</item>
+        <item quantity="other">Найдено %d вакансий</item>
+    </plurals>
     <string name="no_vacancies_text">Таких вакансий нет</string>
     <string name="no_internet_toast">Проверьте подключение к интернету</string>
     <string name="error_toast">Произошла ошибка</string>

@@ -192,7 +192,7 @@ class SearchFragment : Fragment() {
     private fun showSuccessState(vacancies: List<VacancyUi>, found: Int) {
         hideAllState()
         searchItemAdapter?.update(vacancies)
-        binding.tvCountList.text = getString(R.string.found_vacancies_count, found)
+        binding.tvCountList.text = resources.getQuantityString(R.plurals.found_vacancies_count, found, found)
         binding.tvCountList.visibility = View.VISIBLE
         binding.vacancyList.visibility = View.VISIBLE
     }
