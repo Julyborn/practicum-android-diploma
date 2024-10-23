@@ -38,7 +38,7 @@ class SearchViewModel(
     // Переменные для фильтра
     private var filterLocation: String? = null
 
-//    private var filterIndustry: String? = null
+    //    private var filterIndustry: String? = null
     private var filterSalary: String? = null
     private var hideWithoutSalary: Boolean = false
     private var filterIndustryId: String? = null
@@ -51,6 +51,7 @@ class SearchViewModel(
     private val _isNextPageLoading = MutableLiveData<Boolean>(false)
     val isNextPageLoading: LiveData<Boolean>
         get() = _isNextPageLoading
+    private var totalVacanciesFound: Int = 0
 
     init {
         filterInteractor.loadFilterSettings()
@@ -139,9 +140,10 @@ class SearchViewModel(
                 maxPages = result.pages ?: maxPages
                 _vacanciesList.value = _vacanciesList.value?.plus(vacanciesUi)
                 isFirstSearch = false
+                totalVacanciesFound = result.found ?: totalVacanciesFound
                 _uiState.value = UiScreenState.Success(
                     vacancies = _vacanciesList.value ?: emptyList(),
-                    found = result.found ?: 0
+                    found = totalVacanciesFound
                 )
             }
         }
@@ -155,7 +157,7 @@ class SearchViewModel(
             _errorEvent.value = "no_internet"
             UiScreenState.Success(
                 vacancies = _vacanciesList.value ?: emptyList(),
-                found = _vacanciesList.value?.size ?: 0
+                found = totalVacanciesFound
             )
         }
     }
@@ -168,7 +170,7 @@ class SearchViewModel(
             _errorEvent.value = "server_error"
             UiScreenState.Success(
                 vacancies = _vacanciesList.value ?: emptyList(),
-                found = _vacanciesList.value?.size ?: 0
+                found = totalVacanciesFound
             )
         }
     }
