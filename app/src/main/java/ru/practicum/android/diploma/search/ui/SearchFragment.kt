@@ -84,6 +84,8 @@ class SearchFragment : Fragment() {
                 if (s.isNullOrEmpty()) {
                     binding.searchIcon.visibility = View.VISIBLE
                     binding.clearIcon.visibility = View.GONE
+                    debounceSearch.cancel()
+                    viewModel.onSearchQueryChanged("")
                 } else {
                     binding.searchIcon.visibility = View.GONE
                     binding.clearIcon.visibility = View.VISIBLE
