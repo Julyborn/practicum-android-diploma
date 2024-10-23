@@ -66,7 +66,7 @@ val dataModule = module {
     }
 
     viewModel<FilterViewModel> {
-        FilterViewModel(get(),get())
+        FilterViewModel(get(), get())
     }
     viewModel<IndustryViewModel> {
         IndustryViewModel(get())
