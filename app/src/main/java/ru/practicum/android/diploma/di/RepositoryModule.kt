@@ -27,7 +27,7 @@ val repositoryModule = module {
     }
 
     single<VacanciesRepository> {
-        VacanciesRepositoryImpl(get())
+        VacanciesRepositoryImpl(get(), get())
     }
     single<WorkplaceRepository> {
         WorkplaceRepositoryImpl(get(), get())

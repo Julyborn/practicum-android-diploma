@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import ru.practicum.android.diploma.favorites.domain.api.FavoritesInteractor
+import ru.practicum.android.diploma.search.data.network.NetworkUtils
 import ru.practicum.android.diploma.vacancies.domain.api.VacanciesInteractor
 import ru.practicum.android.diploma.vacancies.domain.models.VacancyDetails
 import java.io.IOException
@@ -35,6 +36,9 @@ class VacanciesViewModel(
                 _isFavorite.postValue(favoriteVacancy != null)
 
                 _screenState.value = VacancyScreenState.Success(details)
+            } catch (e: NetworkUtils.NoInternetException) {
+                _screenState.value = VacancyScreenState.Error(VacancyScreenState.ErrorType.NO_INTERNET)
+                Log.e("VacanciesViewModel", "catch NoInternetException: ${e.message}", e)
             } catch (e: IOException) {
                 Log.e("VacanciesViewModel", "catch IOException: ${e.localizedMessage}", e)
                 _screenState.value = VacancyScreenState.Error(VacancyScreenState.ErrorType.SERVER_ERROR)

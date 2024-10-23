@@ -1,14 +1,19 @@
 package ru.practicum.android.diploma.vacancies.data.impl
 
+import android.content.Context
 import ru.practicum.android.diploma.search.data.network.HeadHunterAPI
+import ru.practicum.android.diploma.search.data.network.NetworkUtils
 import ru.practicum.android.diploma.search.domain.models.Employer
 import ru.practicum.android.diploma.search.domain.models.Salary
 import ru.practicum.android.diploma.vacancies.data.dto.VacancyDetailsDto
 import ru.practicum.android.diploma.vacancies.domain.api.VacanciesRepository
 import ru.practicum.android.diploma.vacancies.domain.models.VacancyDetails
 
-class VacanciesRepositoryImpl(private val api: HeadHunterAPI) : VacanciesRepository {
+class VacanciesRepositoryImpl(private val api: HeadHunterAPI, private val context: Context) : VacanciesRepository {
     override suspend fun getVacancyDetails(vacancyId: String): VacancyDetails {
+        if (!NetworkUtils.isNetworkAvailable(context)) {
+            throw NetworkUtils.NoInternetException("NoInternetException")
+        }
         val vacancyDetailsDto = api.getVacancyDetails(
             userAgent = "Android",
             id = vacancyId

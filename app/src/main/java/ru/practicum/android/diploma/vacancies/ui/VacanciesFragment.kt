@@ -82,7 +82,13 @@ class VacanciesFragment : Fragment() {
         when (screenState) {
             is VacancyScreenState.Loading -> showLoadingState()
             is VacancyScreenState.Success -> showSuccessState(screenState.vacancyDetails)
-            is VacancyScreenState.Error -> showErrorState()
+            is VacancyScreenState.Error -> {
+                when (screenState.errorType) {
+                    VacancyScreenState.ErrorType.NOT_FOUND -> showErrorState()
+                    VacancyScreenState.ErrorType.SERVER_ERROR -> showErrorState()
+                    VacancyScreenState.ErrorType.NO_INTERNET -> showNoInternetState()
+                }
+            }
         }
     }
 
@@ -105,6 +111,12 @@ class VacanciesFragment : Fragment() {
         binding.loadingIndicator.visibility = View.GONE
         binding.clVacancyDetails.visibility = View.GONE
         binding.noVacancyPlaceholder.visibility = View.VISIBLE
+    }
+
+    private fun showNoInternetState() {
+        binding.loadingIndicator.visibility = View.GONE
+        binding.clVacancyDetails.visibility = View.GONE
+        binding.vacancyServerNoInternetError.visibility = View.VISIBLE
     }
 
     private fun loadEmployerLogo(logoUrl: String?) {
