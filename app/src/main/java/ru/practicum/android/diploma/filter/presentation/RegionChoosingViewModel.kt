@@ -76,9 +76,11 @@ class RegionChoosingViewModel(private val interactor: WorkplaceInteractor) : Vie
     fun filterRegions(query: String) {
         if (query.isEmpty()) {
             _regionsList.value = allRegions
-            _uiState.value = if (allRegions.isEmpty()) WorkplaceState.NoRegionsError
-            else WorkplaceState.Success(countryCache ?: emptyList(), allRegions)
-            return
+            _uiState.value = if (allRegions.isEmpty()) {
+                WorkplaceState.NoRegionsError
+            } else {
+                WorkplaceState.Success(countryCache ?: emptyList(), allRegions)
+            }
         }
 
         if (isNoInternet) {
