@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.filter.data.dto.IndustryDto
@@ -28,11 +29,11 @@ class IndustryAdapter(
     }
 
     class IndustryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val industryName: RadioButton = itemView.findViewById(R.id.industryName)
-
+        private val industryName: TextView = itemView.findViewById(R.id.industryName)
+        private val industryRadioBtn: RadioButton = itemView.findViewById(R.id.industryRadioBtn)
         fun bind(industry: IndustryDto, isSelected: Boolean) {
             industryName.text = industry.name
-            industryName.isChecked = isSelected
+            industryRadioBtn.isChecked = isSelected
         }
     }
 
