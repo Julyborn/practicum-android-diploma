@@ -61,10 +61,12 @@ class RegionChoosingViewModel(private val interactor: WorkplaceInteractor) : Vie
                     WorkplaceState.Success(countryCache ?: emptyList(), allRegions)
                 }
             }
+
             is Resource.NoInternetError -> {
                 isNoInternet = true
                 _uiState.value = WorkplaceState.NoInternet
             }
+
             is Resource.ServerError -> {
                 _uiState.value = WorkplaceState.FetchError
             }
@@ -88,9 +90,7 @@ class RegionChoosingViewModel(private val interactor: WorkplaceInteractor) : Vie
             }
             return
         }
-
         _uiState.value = WorkplaceState.Loading
-
         searchJob?.cancel()
         searchJob = viewModelScope.launch {
             val filteredRegions = allRegions.filter { it.name.contains(query, ignoreCase = true) }

@@ -3,8 +3,6 @@ package ru.practicum.android.diploma.filter.data.impl
 import android.content.Context
 import android.content.SharedPreferences
 import android.net.http.HttpException
-import android.os.Build
-import androidx.annotation.RequiresExtension
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -31,6 +29,8 @@ class WorkplaceRepositoryImpl(
                 Resource.Success(networkCall(), found = null, page = null, pages = null)
             } catch (e: IOException) {
                 Resource.ServerError(e.message ?: "Server error")
+            } catch (e: HttpException) {
+                Resource.ServerError("HTTP error: ${e.localizedMessage}")
             }
         } else {
             Resource.NoInternetError("No internet connection")
@@ -42,18 +42,14 @@ class WorkplaceRepositoryImpl(
             api.getAreas()
                 .filter { it.parentId == null }
                 .map { areaDto ->
-                    Country(
-                        id = areaDto.id,
-                        name = areaDto.name.toString()
-                    )
+                    Country(id = areaDto.id, name = areaDto.name ?: DEF)
                 }
         }
     }
 
     override suspend fun getRegionsByCountry(countryId: String): Resource<List<Region>> {
         return safeNetworkCall {
-            val response = api.getRegions(countryId)
-            response.areas.map { areaDto ->
+            api.getRegions(countryId).areas.map { areaDto ->
                 Region(
                     id = areaDto.id,
                     name = areaDto.name ?: DEF,
@@ -63,24 +59,29 @@ class WorkplaceRepositoryImpl(
         }
     }
 
+    // Упрощение методов записи/чтения данных из SharedPreferences
+    private fun putString(key: String, value: String?) {
+        sharedPreferences.edit().putString(key, value).apply()
+    }
+
+    private fun getString(key: String): String? {
+        return sharedPreferences.getString(key, null)
+    }
+
     override fun saveSelectedCountry(country: Country?) {
-        sharedPreferences.edit()
-            .putString(COUNTRY_ID, country?.id)
-            .putString(COUNTRY_NAME, country?.name)
-            .apply()
+        putString(COUNTRY_ID, country?.id)
+        putString(COUNTRY_NAME, country?.name)
     }
 
     override fun saveSelectedRegion(region: Region?) {
-        sharedPreferences.edit()
-            .putString(REGION_ID, region?.id)
-            .putString(REGION_NAME, region?.name)
-            .putString(PARENT_ID, region?.parentId)
-            .apply()
+        putString(REGION_ID, region?.id)
+        putString(REGION_NAME, region?.name)
+        putString(PARENT_ID, region?.parentId)
     }
 
     override fun getSelectedCountry(): Country? {
-        val id = sharedPreferences.getString(COUNTRY_ID, null)
-        val name = sharedPreferences.getString(COUNTRY_NAME, null)
+        val id = getString(COUNTRY_ID)
+        val name = getString(COUNTRY_NAME)
         return if (id != null && name != null) {
             Country(id, name)
         } else {
@@ -88,62 +89,38 @@ class WorkplaceRepositoryImpl(
         }
     }
 
-    override suspend fun getAllRegions(): Flow<Resource<MutableList<Region>>> = flow {
-        if (NetworkUtils.isNetworkAvailable(context)) {
-            try {
-                val countriesResponse = api.getAreas()
-                val countries = countriesResponse.filter { it.parentId == null }
-                    .map { areaDto ->
-                        Country(
-                            id = areaDto.id,
-                            name = areaDto.name.toString()
-                        )
-                    }
-
-                if (countries.isEmpty()) {
-                    emit(Resource.ServerError("No countries found"))
-                    return@flow
-                }
-
-                val regionsList = mutableListOf<Region>()
-                countries.forEach { country ->
-                    val regionsByCountryResponse = api.getRegions(country.id)
-                    val regionsByCountry = regionsByCountryResponse.areas.map { areaDto ->
-                        Region(
-                            id = areaDto.id,
-                            name = areaDto.name ?: DEF,
-                            parentId = areaDto.parentId ?: DEF
-                        )
-                    }
-                    regionsList.addAll(regionsByCountry)
-                }
-
-                if (regionsList.isNotEmpty()) {
-                    emit(Resource.Success(data = regionsList, found = regionsList.size, page = null, pages = null))
-                } else {
-                    emit(Resource.ServerError("No regions found"))
-                }
-            } catch (e: IOException) {
-                emit(Resource.ServerError("Network error: ${e.localizedMessage}"))
-            } catch (e: HttpException) {
-                emit(Resource.ServerError("HTTP error: ${e.localizedMessage}"))
-            }
-        } else {
-            emit(Resource.NoInternetError("Network not available"))
-        }
-    }.flowOn(Dispatchers.IO)
-
     override fun getSelectedRegion(): Region? {
-        val id = sharedPreferences.getString(REGION_ID, null)
-        val name = sharedPreferences.getString(REGION_NAME, null)
-        val parentId = sharedPreferences.getString(PARENT_ID, null)
-
+        val id = getString(REGION_ID)
+        val name = getString(REGION_NAME)
+        val parentId = getString(PARENT_ID)
         return if (id != null && name != null) {
             Region(id, name, parentId)
         } else {
             null
         }
     }
+
+    override suspend fun getAllRegions(): Flow<Resource<MutableList<Region>>> = flow {
+        emit(safeNetworkCall {
+            val regionsList = api.getAreas()
+                .filter { it.parentId == null }
+                .flatMap { country ->
+                    api.getRegions(country.id).areas.map { areaDto ->
+                        Region(
+                            id = areaDto.id,
+                            name = areaDto.name ?: DEF,
+                            parentId = areaDto.parentId ?: DEF
+                        )
+                    }
+                }.toMutableList()
+
+            if (regionsList.isEmpty()) {
+                throw IOException("No regions found")
+            }
+
+            regionsList
+        })
+    }.flowOn(Dispatchers.IO)
 
     override fun clearSavedCountry() {
         sharedPreferences.edit()
