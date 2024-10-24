@@ -40,6 +40,7 @@ class SearchFragment : Fragment() {
         }
     )
     companion object {
+        const val KEY_VACANCY = "vacancyId"
         private const val TOAST_DELAY_MS = 2000L
     }
     private val filterInteractor: FilterInteractor by inject()
@@ -196,9 +197,6 @@ class SearchFragment : Fragment() {
         _binding = null
     }
 
-    companion object {
-        const val KEY_VACANCY = "vacancyId"
-    }
 
     private fun openFilterFragment() {
         findNavController().navigate(R.id.action_searchFragment_to_filterFragment)
