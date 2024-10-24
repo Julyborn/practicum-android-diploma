@@ -28,7 +28,7 @@ class WorkplaceInteractorImpl(private val repository: WorkplaceRepository) : Wor
         return repository.getSelectedCountry()
     }
 
-    override suspend fun getAllRegions(): Flow<Resource<MutableList<Region>>>{
+    override suspend fun getAllRegions(): Flow<Resource<MutableList<Region>>> {
         return repository.getAllRegions()
     }
 

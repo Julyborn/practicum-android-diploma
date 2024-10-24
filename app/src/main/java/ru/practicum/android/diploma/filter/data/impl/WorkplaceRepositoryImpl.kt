@@ -88,7 +88,6 @@ class WorkplaceRepositoryImpl(
         }
     }
 
-    @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
     override suspend fun getAllRegions(): Flow<Resource<MutableList<Region>>> = flow {
         if (NetworkUtils.isNetworkAvailable(context)) {
             try {
@@ -126,7 +125,7 @@ class WorkplaceRepositoryImpl(
                 }
             } catch (e: IOException) {
                 emit(Resource.ServerError("Network error: ${e.localizedMessage}"))
-            } catch (e:  HttpException) {
+            } catch (e: HttpException) {
                 emit(Resource.ServerError("HTTP error: ${e.localizedMessage}"))
             }
         } else {

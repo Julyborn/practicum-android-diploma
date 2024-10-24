@@ -2,7 +2,6 @@ package ru.practicum.android.diploma.filter.presentation
 
 import ru.practicum.android.diploma.filter.domain.models.Country
 import ru.practicum.android.diploma.filter.domain.models.Region
-import ru.practicum.android.diploma.search.presentation.models.UiScreenState
 
 sealed class WorkplaceState {
     data object Loading : WorkplaceState()
