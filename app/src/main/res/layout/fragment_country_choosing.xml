@@ -78,7 +78,6 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_0"
             android:layout_marginHorizontal="@dimen/dp_16"
-            android:layout_marginTop="@dimen/dp_135"
             android:background="@drawable/img_no_internet"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="328:223"
@@ -105,8 +104,8 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
     <ProgressBar
         android:id="@+id/loadingIndicator"
-        android:layout_width="@dimen/dp_36"
-        android:layout_height="@dimen/dp_36"
+        android:layout_width="@dimen/dp_48"
+        android:layout_height="@dimen/dp_48"
         android:layout_gravity="center"
         android:indeterminate="true"
         android:indeterminateTint="@color/blue"
