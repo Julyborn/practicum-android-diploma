@@ -242,14 +242,18 @@ class SearchFragment : Fragment() {
 
     private fun handleError() {
         viewModel.errorEvent.observe(viewLifecycleOwner) { error ->
-            when (error) {
-                "no_internet" -> {
-                    binding.pbLoading.visibility = View.GONE
-                    Toast.makeText(requireContext(), getString(R.string.no_internet_toast), Toast.LENGTH_SHORT).show()
-                }
-                "server_error" -> {
-                    binding.pbLoading.visibility = View.GONE
-                    Toast.makeText(requireContext(), getString(R.string.error_toast), Toast.LENGTH_SHORT).show()
+            val isPaginating = viewModel.isNextPageLoading.value == true
+
+            if (isPaginating) {
+                when (error) {
+                    "no_internet" -> {
+                        binding.pbLoading.visibility = View.GONE
+                        Toast.makeText(requireContext(), getString(R.string.no_internet_toast), Toast.LENGTH_SHORT).show()
+                    }
+                    "server_error" -> {
+                        binding.pbLoading.visibility = View.GONE
+                        Toast.makeText(requireContext(), getString(R.string.error_toast), Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }
