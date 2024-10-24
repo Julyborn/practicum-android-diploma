@@ -59,7 +59,6 @@ class WorkplaceRepositoryImpl(
         }
     }
 
-    // Упрощение методов записи/чтения данных из SharedPreferences
     private fun putString(key: String, value: String?) {
         sharedPreferences.edit().putString(key, value).apply()
     }
@@ -101,26 +100,47 @@ class WorkplaceRepositoryImpl(
     }
 
     override suspend fun getAllRegions(): Flow<Resource<MutableList<Region>>> = flow {
-        emit(safeNetworkCall {
-            val regionsList = api.getAreas()
-                .filter { it.parentId == null }
-                .flatMap { country ->
-                    api.getRegions(country.id).areas.map { areaDto ->
-                        Region(
-                            id = areaDto.id,
-                            name = areaDto.name ?: DEF,
-                            parentId = areaDto.parentId ?: DEF
-                        )
-                    }
-                }.toMutableList()
-
-            if (regionsList.isEmpty()) {
-                throw IOException("No regions found")
-            }
-
-            regionsList
-        })
+        emit(safeNetworkCall { fetchAllRegions() })
     }.flowOn(Dispatchers.IO)
+
+    private suspend fun fetchAllRegions(): MutableList<Region> {
+        val countries = fetchCountries()
+        if (countries.isEmpty()) {
+            throw IOException("No countries found")
+        }
+
+        val regionsList = mutableListOf<Region>()
+        countries.forEach { country ->
+            regionsList.addAll(fetchRegionsForCountry(country.id))
+        }
+
+        if (regionsList.isEmpty()) {
+            throw IOException("No regions found")
+        }
+
+        return regionsList
+    }
+
+    private suspend fun fetchCountries(): List<Country> {
+        return api.getAreas()
+            .filter { it.parentId == null }
+            .map { areaDto ->
+                Country(
+                    id = areaDto.id,
+                    name = areaDto.name ?: DEF
+                )
+            }
+    }
+
+    private suspend fun fetchRegionsForCountry(countryId: String): List<Region> {
+        return api.getRegions(countryId).areas.map { areaDto ->
+            Region(
+                id = areaDto.id,
+                name = areaDto.name ?: DEF,
+                parentId = areaDto.parentId ?: DEF
+            )
+        }
+    }
 
     override fun clearSavedCountry() {
         sharedPreferences.edit()
