@@ -14,6 +14,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
@@ -27,6 +29,7 @@ import ru.practicum.android.diploma.util.debounce
 class SearchFragment : Fragment() {
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
+    private var canShowToast = true
     private val viewModel by viewModel<SearchViewModel>()
     private var searchItemAdapter: SearchItemAdapter? = null
     private val debounceSearch = debounce<String>(
@@ -244,25 +247,29 @@ class SearchFragment : Fragment() {
         viewModel.errorEvent.observe(viewLifecycleOwner) { error ->
             val isPaginating = viewModel.isNextPageLoading.value == true
 
-            if (isPaginating) {
+            if (isPaginating && canShowToast) {
                 when (error) {
                     "no_internet" -> {
                         binding.pbLoading.visibility = View.GONE
-                        Toast.makeText(
-                            requireContext(),
-                            getString(R.string.no_internet_toast),
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        showToastWithDelay(getString(R.string.no_internet_toast))
                     }
                     "server_error" -> {
                         binding.pbLoading.visibility = View.GONE
-                        Toast.makeText(
-                            requireContext(),
-                            getString(R.string.error_toast),
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        showToastWithDelay(getString(R.string.error_toast))
                     }
                 }
+            }
+        }
+    }
+
+    private fun showToastWithDelay(message: String) {
+        if (canShowToast) {
+            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+            canShowToast = false
+            // Устанавливаем задержку перед возможностью повторного показа тоста
+            lifecycleScope.launch {
+                delay(2000L) // Задержка в 2 секунды
+                canShowToast = true
             }
         }
     }
