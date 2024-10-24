@@ -113,29 +113,32 @@
         android:id="@+id/pbLoading"
         android:layout_width="48dp"
         android:layout_height="48dp"
+        android:layout_marginBottom="57dp"
+        android:layout_marginTop="136dp"
         android:layout_marginHorizontal="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:indeterminateTint = "@color/blue"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardView"
+        app:layout_constraintTop_toTopOf="parent"
         android:visibility="gone"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clNoInternet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="57dp"
+        android:layout_marginTop="136dp"
         android:visibility="gone">
 
         <ImageView
             android:id="@+id/ivImgNoInternet"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="135dp"
+            app:layout_constraintDimensionRatio="328:223"
+            android:layout_marginHorizontal="@dimen/dp_16"
             android:background="@drawable/img_no_internet"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="328:223"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -157,7 +160,6 @@
             app:layout_constraintTop_toBottomOf="@+id/ivImgNoInternet"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 
     <TextView
@@ -183,22 +185,22 @@
         android:id="@+id/clEmptyList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="57dp"
+        android:layout_marginTop="136dp"
         android:visibility="gone">
 
         <ImageView
             android:id="@+id/ivImgNoList"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="135dp"
-            android:background="@drawable/no_list"
-            android:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="328:223"
+            android:layout_marginHorizontal="@dimen/dp_16"
+            android:background="@drawable/no_list"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:contentDescription="@string/no_vacancies_text"/>
+            android:contentDescription="@string/No_internet"/>
 
         <TextView
             style="@style/night_text"
@@ -213,12 +215,9 @@
             android:layout_marginHorizontal="30dp"
             app:layout_constraintEnd_toEndOf="@+id/ivImgNoList"
             app:layout_constraintStart_toStartOf="@+id/ivImgNoList"
-            app:layout_constraintTop_toBottomOf="@+id/ivImgNoList"
-            android:visibility="visible"/>
+            app:layout_constraintTop_toBottomOf="@+id/ivImgNoList"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/vacancyList"

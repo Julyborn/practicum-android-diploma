@@ -30,57 +30,96 @@
         tools:listitem="@layout/item_country" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/noCountryPlaceholder"
+        android:id="@+id/placeholderError"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="match_parent"
+        android:layout_marginBottom="57dp"
+        android:layout_marginTop="64dp"
+        android:visibility="gone">
 
         <ImageView
-            android:id="@+id/ivPlaceholder"
-            android:layout_width="wrap_content"
+            android:id="@+id/ivPlaceholderError"
+            android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginStart="@dimen/dp_16"
-            android:layout_marginEnd="@dimen/dp_16"
-            android:scaleType="fitCenter"
-            android:src="@drawable/img_no_list_country"
             app:layout_constraintDimensionRatio="328:223"
+            android:layout_marginHorizontal="@dimen/dp_16"
+            android:background="@drawable/img_no_list_country"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="@string/No_internet"/>
 
         <TextView
-            style="@style/TextMedium22"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_16"
-            android:gravity="center_horizontal"
-            android:paddingStart="@dimen/dp_48"
-            android:paddingEnd="@dimen/dp_48"
+            style="@style/night_text"
+            android:layout_width="268dp"
+            android:layout_height="52dp"
             android:text="@string/no_list_country"
-            app:layout_constraintEnd_toEndOf="@+id/ivPlaceholder"
-            app:layout_constraintStart_toStartOf="@+id/ivPlaceholder"
-            app:layout_constraintTop_toBottomOf="@+id/ivPlaceholder" />
+            android:gravity="center"
+            android:fontFamily="@font/ys_display_medium"
+            android:textSize="22sp"
+            android:layout_marginTop="16dp"
+            android:layout_marginHorizontal="30dp"
+            app:layout_constraintEnd_toEndOf="@+id/ivPlaceholderError"
+            app:layout_constraintStart_toStartOf="@+id/ivPlaceholderError"
+            app:layout_constraintTop_toBottomOf="@+id/ivPlaceholderError"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/noCountryPlaceholder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="57dp"
+        android:layout_marginTop="64dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/ivPlaceholderNoList"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="328:223"
+            android:layout_marginHorizontal="@dimen/dp_16"
+            android:background="@drawable/no_list"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="@string/No_internet"/>
+
+        <TextView
+            style="@style/night_text"
+            android:id="@+id/no_region"
+            android:layout_width="268dp"
+            android:layout_height="26dp"
+            android:text="@string/no_region"
+            android:gravity="center"
+            android:fontFamily="@font/ys_display_medium"
+            android:textSize="22sp"
+            android:layout_marginTop="16dp"
+            android:layout_marginHorizontal="30dp"
+            app:layout_constraintEnd_toEndOf="@+id/ivPlaceholderNoList"
+            app:layout_constraintStart_toStartOf="@+id/ivPlaceholderNoList"
+            app:layout_constraintTop_toBottomOf="@+id/ivPlaceholderNoList"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/countryNoInternet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="57dp"
+        android:layout_marginTop="64dp"
         android:visibility="gone">
 
         <ImageView
-            android:id="@+id/conImgNoInternet"
+            android:id="@+id/regImgNoInternet"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_0"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="328:223"
             android:layout_marginHorizontal="@dimen/dp_16"
             android:background="@drawable/img_no_internet"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="328:223"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -97,22 +136,26 @@
             android:textSize="22sp"
             android:layout_marginTop="16dp"
             android:layout_marginHorizontal="30dp"
-            app:layout_constraintEnd_toEndOf="@+id/conImgNoInternet"
-            app:layout_constraintStart_toStartOf="@+id/conImgNoInternet"
-            app:layout_constraintTop_toBottomOf="@+id/conImgNoInternet"/>
+            app:layout_constraintEnd_toEndOf="@+id/regImgNoInternet"
+            app:layout_constraintStart_toStartOf="@+id/regImgNoInternet"
+            app:layout_constraintTop_toBottomOf="@+id/regImgNoInternet"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
     <ProgressBar
         android:id="@+id/loadingIndicator"
-        android:layout_width="@dimen/dp_48"
-        android:layout_height="@dimen/dp_48"
-        android:layout_gravity="center"
-        android:indeterminate="true"
-        android:indeterminateTint="@color/blue"
-        android:visibility="gone"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="57dp"
+        android:layout_marginTop="64dp"
+        android:layout_marginHorizontal="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:indeterminateTint = "@color/blue"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"/>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
