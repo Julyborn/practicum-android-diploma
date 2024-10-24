@@ -248,11 +248,19 @@ class SearchFragment : Fragment() {
                 when (error) {
                     "no_internet" -> {
                         binding.pbLoading.visibility = View.GONE
-                        Toast.makeText(requireContext(), getString(R.string.no_internet_toast), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            requireContext(),
+                            getString(R.string.no_internet_toast),
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                     "server_error" -> {
                         binding.pbLoading.visibility = View.GONE
-                        Toast.makeText(requireContext(), getString(R.string.error_toast), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            requireContext(),
+                            getString(R.string.error_toast),
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             }

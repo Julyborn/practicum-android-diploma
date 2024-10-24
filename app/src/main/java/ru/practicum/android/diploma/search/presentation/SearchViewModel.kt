@@ -156,12 +156,13 @@ class SearchViewModel(
         return if (isFirstSearch) {
             UiScreenState.NoInternetError
         } else {
-            _isNextPageLoading.value = false
             _errorEvent.value = "no_internet"
+            _isNextPageLoading.value = false
             UiScreenState.Success(
                 vacancies = _vacanciesList.value ?: emptyList(),
                 found = totalVacanciesFound
             )
+
         }
     }
 
