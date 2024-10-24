@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import org.koin.android.ext.android.inject
 import ru.practicum.android.diploma.databinding.FragmentIndustryBinding
 import ru.practicum.android.diploma.filter.domain.models.IndustryViewModel
@@ -79,22 +78,6 @@ class IndustryFragment : Fragment() {
             parentFragmentManager.popBackStack()
         }
 
-        binding.industryList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                if (dy > 0) {
-                    val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-                    val visibleItemCount = layoutManager.childCount
-                    val totalItemCount = layoutManager.itemCount
-                    val pastVisibleItems = layoutManager.findFirstVisibleItemPosition()
-
-                    if (visibleItemCount + pastVisibleItems >= totalItemCount) {
-                        viewModel.onLastItemReached()
-                    }
-                }
-            }
-        })
-
         binding.buttonChoose.setOnClickListener {
             val selectedIndustry = industryAdapter.getSelectedIndustry()
             if (selectedIndustry != null) {
@@ -117,8 +100,14 @@ class IndustryFragment : Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val query = s.toString().trim()
                 viewModel.onSearchQueryChanged(query)
-                binding.imageButtonIndustrySearch.visibility = View.GONE
-                binding.imageButtonFilterIndustryClear.visibility = View.VISIBLE
+                if (query.isEmpty()) {
+                    binding.imageButtonIndustrySearch.visibility = View.VISIBLE
+                    binding.imageButtonFilterIndustryClear.visibility = View.GONE
+                } else {
+                    binding.imageButtonIndustrySearch.visibility = View.GONE
+                    binding.imageButtonFilterIndustryClear.visibility = View.VISIBLE
+                }
+
             }
 
             @Suppress("EmptyFunctionBlock")
@@ -140,7 +129,6 @@ class IndustryFragment : Fragment() {
     private fun setFilterIndustryClear() {
         binding.imageButtonFilterIndustryClear.setOnClickListener {
             binding.editIndustry.text.clear()
-            viewModel.loadAllIndustries()
             binding.imageButtonFilterIndustryClear.visibility = View.GONE
             binding.imageButtonIndustrySearch.visibility = View.VISIBLE
         }
@@ -185,7 +173,7 @@ class IndustryFragment : Fragment() {
                 }
 
                 is UiScreenState.Empty -> {
-                    viewModel.loadAllIndustries()
+                    showNoListIndustry()
                 }
 
                 is UiScreenState.NoInternetError -> {

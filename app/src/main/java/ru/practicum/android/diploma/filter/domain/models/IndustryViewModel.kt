@@ -32,28 +32,18 @@ class IndustryViewModel(private val industryInteractor: IndustryInteractor) : Vi
     private var isNextPageLoading = false
     private var isFirstSearch = true
 
-    fun onSearchQueryChanged(query: String) {
-        currentPage = 0
-        maxPages = Int.MAX_VALUE
-        _industriesList.value = emptyList()
-        _searchQuery.value = query
+    private var allIndustriesList: List<IndustryDto> = emptyList()
 
+    fun onSearchQueryChanged(query: String) {
+        _searchQuery.value = query
         if (query.isEmpty()) {
-            loadAllIndustries()
+            _industriesList.value = allIndustriesList
             return
         }
-
-        searchJob?.cancel()
         _uiState.value = UiScreenState.Loading
-        searchRequest(buildSearchParams(query))
-    }
-
-    fun onLastItemReached() {
-        if (isNextPageLoading || currentPage >= maxPages - 1) return
-        isNextPageLoading = true
-        val query = _searchQuery.value ?: return
-        val params = buildSearchParams(query = query, page = currentPage + 1)
-        searchRequest(params)
+        val filteredIndustries = filterResults(allIndustriesList, query)
+        _uiState.value = UiScreenState.Default
+        _industriesList.value = filteredIndustries
     }
 
     private fun buildSearchParams(query: String, page: Int = 0): IndustrySearchParams {
@@ -86,10 +76,10 @@ class IndustryViewModel(private val industryInteractor: IndustryInteractor) : Vi
                 if (result.data.isEmpty()) {
                     _uiState.value = UiScreenState.Empty
                 } else {
-                    val filteredList = filterResults(result.data, _searchQuery.value ?: "")
+                    allIndustriesList = result.data.toList()
                     currentPage = result.page ?: currentPage
                     maxPages = result.pages ?: maxPages
-                    _industriesList.value = _industriesList.value?.plus(filteredList)
+                    _industriesList.value = allIndustriesList
                     _uiState.value = UiScreenState.Default
 
                     isFirstSearch = false
