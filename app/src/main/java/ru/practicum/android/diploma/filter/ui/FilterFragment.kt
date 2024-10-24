@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
@@ -38,6 +39,7 @@ class FilterFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.arrowBack.setOnClickListener {
+            filterViewModel.restoreWorkplace()
             parentFragmentManager.popBackStack()
         }
 
@@ -96,7 +98,15 @@ class FilterFragment : Fragment() {
         binding.imageButtonFilterSalaryClear.setOnClickListener {
             clearSalaryFilter()
         }
-
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    filterViewModel.restoreWorkplace()
+                    findNavController().popBackStack()
+                }
+            }
+        )
         setSalaryFocusChangeListener()
         setResetFilters()
 

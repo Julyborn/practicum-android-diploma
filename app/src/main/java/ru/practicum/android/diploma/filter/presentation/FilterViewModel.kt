@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import ru.practicum.android.diploma.filter.data.dto.FilterSettings
 import ru.practicum.android.diploma.filter.domain.api.FilterInteractor
 import ru.practicum.android.diploma.filter.domain.api.WorkplaceInteractor
+import ru.practicum.android.diploma.filter.domain.models.Country
+import ru.practicum.android.diploma.filter.domain.models.Region
 
 class FilterViewModel(
     private val filterInteractor: FilterInteractor,
@@ -13,6 +15,9 @@ class FilterViewModel(
 ) : ViewModel() {
 
     private var initialFilterSettings: FilterSettings? = null
+
+    private var initialCountry: Country? = null
+    private var initialRegion: Region? = null
 
     private val _hideWithoutSalary = MutableLiveData<Boolean>()
     val hideWithoutSalary: LiveData<Boolean> get() = _hideWithoutSalary
@@ -53,6 +58,8 @@ class FilterViewModel(
             hideWithoutSalary = settings.hideWithoutSalary,
             area = settings.area.orEmpty()
         )
+        initialCountry = workplaceInteractor.getSelectedCountry()
+        initialRegion = workplaceInteractor.getSelectedRegion()
 
         _hideWithoutSalary.value = settings.hideWithoutSalary
         _salary.value = settings.salary ?: ""
@@ -160,7 +167,10 @@ class FilterViewModel(
         checkApplyButtonVisibility()
         checkResetButtonVisibility()
     }
-
+    fun restoreWorkplace() {
+        workplaceInteractor.saveSelectedCountry(initialCountry)
+        workplaceInteractor.saveSelectedRegion(initialRegion)
+    }
     fun clearJobFilter() {
         clearLocation()
         setArea(null)
