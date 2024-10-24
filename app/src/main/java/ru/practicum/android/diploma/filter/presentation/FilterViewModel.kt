@@ -5,8 +5,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import ru.practicum.android.diploma.filter.data.dto.FilterSettings
 import ru.practicum.android.diploma.filter.domain.api.FilterInteractor
+import ru.practicum.android.diploma.filter.domain.api.WorkplaceInteractor
 
-class FilterViewModel(private val filterInteractor: FilterInteractor) : ViewModel() {
+class FilterViewModel(
+    private val filterInteractor: FilterInteractor,
+    private val workplaceInteractor: WorkplaceInteractor
+) : ViewModel() {
 
     private var initialFilterSettings: FilterSettings? = null
 
@@ -162,5 +166,7 @@ class FilterViewModel(private val filterInteractor: FilterInteractor) : ViewMode
         setArea(null)
         checkApplyButtonVisibility()
         checkResetButtonVisibility()
+        workplaceInteractor.clearSavedCountry()
+        workplaceInteractor.clearSavedRegion()
     }
 }

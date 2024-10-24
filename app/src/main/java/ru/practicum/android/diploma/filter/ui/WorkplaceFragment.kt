@@ -33,7 +33,7 @@ class WorkplaceFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        viewModel.loadSavedWorkplaceSettings()
         viewModel.selectedCountry.observe(viewLifecycleOwner) { country ->
             binding.countryEditText.setText(country?.name ?: DEF)
             changeHintColor(binding.countryTextInputLayout, country != null)
@@ -54,7 +54,7 @@ class WorkplaceFragment : Fragment() {
             viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    viewModel.clearCountry()
+                    viewModel.restoreWorkplace()
                     findNavController().popBackStack()
                 }
             }
@@ -87,7 +87,7 @@ class WorkplaceFragment : Fragment() {
             findNavController().navigate(R.id.action_workplaceFragment_to_regionChoosingFragment)
         }
         binding.backButton.setOnClickListener {
-            viewModel.clearCountry()
+            viewModel.restoreWorkplace()
             findNavController().popBackStack()
         }
         binding.icCountryClear.setOnClickListener { viewModel.clearCountry() }

@@ -3,6 +3,8 @@ package ru.practicum.android.diploma.filter.ui
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,6 +46,21 @@ class FilterFragment : Fragment() {
         binding.editSalary.addTextChangedListener { salary ->
             filterViewModel.updateSalary(salary.toString())
         }
+        binding.editSalary.addTextChangedListener(object : TextWatcher {
+            @Suppress("EmptyFunctionBlock")
+            override fun afterTextChanged(s: Editable?) {
+            }
+            @Suppress("EmptyFunctionBlock")
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (s.isNullOrEmpty()) {
+                    binding.imageButtonFilterSalaryClear.visibility = View.GONE
+                } else {
+                    binding.imageButtonFilterSalaryClear.visibility = View.VISIBLE
+                }
+            }
+        })
 
         binding.checkBox2.setOnCheckedChangeListener { _, isChecked ->
             filterViewModel.updateHideWithoutSalary(isChecked)
@@ -250,7 +267,11 @@ class FilterFragment : Fragment() {
     }
 
     private fun openIndustryFragment() {
-        findNavController().navigate(R.id.action_filterFragment_to_industryFragment)
+        val selectedIndustryId: String? = filterViewModel.industryId.value
+        val bundle = Bundle().apply {
+            putString(SELECTED_INDUSTRY_ID, selectedIndustryId)
+        }
+        findNavController().navigate(R.id.action_filterFragment_to_industryFragment, bundle)
     }
 
     private fun openWorkplaceFragment() {
@@ -261,4 +282,9 @@ class FilterFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    companion object {
+        const val SELECTED_INDUSTRY_ID = "selectedIndustryId"
+    }
+
 }
