@@ -43,30 +43,27 @@ class FilterFragment : Fragment() {
             parentFragmentManager.popBackStack()
         }
 
-        observeViewModel()
-
-        binding.editSalary.addTextChangedListener { salary ->
-            filterViewModel.updateSalary(salary.toString())
-        }
+        // Добавляем TextWatcher для editSalary
         binding.editSalary.addTextChangedListener(object : TextWatcher {
-            @Suppress("EmptyFunctionBlock")
             override fun afterTextChanged(s: Editable?) {
+                filterViewModel.updateSalary(s.toString())
+                updateClearButtonVisibility()
             }
-            @Suppress("EmptyFunctionBlock")
+
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // Ничего не делаем
             }
+
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (s.isNullOrEmpty()) {
-                    binding.imageButtonFilterSalaryClear.visibility = View.GONE
-                } else {
-                    binding.imageButtonFilterSalaryClear.visibility = View.VISIBLE
-                }
+                // Ничего не делаем
             }
         })
 
         binding.checkBox2.setOnCheckedChangeListener { _, isChecked ->
             filterViewModel.updateHideWithoutSalary(isChecked)
         }
+
+        observeViewModel()
 
         setApplyButtonListener()
         setFragmentResultListeners()
@@ -98,6 +95,7 @@ class FilterFragment : Fragment() {
         binding.imageButtonFilterSalaryClear.setOnClickListener {
             clearSalaryFilter()
         }
+
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
@@ -107,6 +105,7 @@ class FilterFragment : Fragment() {
                 }
             }
         )
+
         setSalaryFocusChangeListener()
         setResetFilters()
 
@@ -124,9 +123,6 @@ class FilterFragment : Fragment() {
         binding.filterSalary.setOnClickListener {
             binding.editSalary.requestFocus()
             showKeyboard(binding.editSalary)
-            binding.editSalary.addTextChangedListener { salary ->
-                filterViewModel.updateSalary(salary.toString())
-            }
         }
     }
 
@@ -134,7 +130,6 @@ class FilterFragment : Fragment() {
     private fun showKeyboard(view: View) {
         val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
-
     }
 
     private fun observeViewModel() {
@@ -192,12 +187,14 @@ class FilterFragment : Fragment() {
             val selectedIndustry = bundle.getString("selectedIndustry")
             val selectedIndustryId = bundle.getString("selectedIndustryId")
             if (selectedIndustry != null && selectedIndustryId != null) {
-                filterViewModel.updateIndustry(industryId = selectedIndustryId, industry = selectedIndustry)
+                filterViewModel.updateIndustry(
+                    industryId = selectedIndustryId,
+                    industry = selectedIndustry
+                )
                 binding.editIndustry.visibility = View.GONE
                 binding.imageButtonIndustry.visibility = View.GONE
                 binding.addFilterIndustryLinearLayout.visibility = View.VISIBLE
                 binding.imageButtonIndustryClear.visibility = View.VISIBLE
-
             }
         }
         parentFragmentManager.setFragmentResultListener("workplaceRequestKey", this) { _, bundle ->
@@ -234,6 +231,9 @@ class FilterFragment : Fragment() {
             binding.editIndustry.visibility = View.VISIBLE
             binding.imageButtonIndustry.visibility = View.VISIBLE
             binding.imageButtonJobClear.visibility = View.GONE
+            // Очищаем поле зарплаты
+            binding.editSalary.setText("")
+            updateClearButtonVisibility()
         }
     }
 
@@ -256,22 +256,30 @@ class FilterFragment : Fragment() {
 
     private fun clearSalaryFilter() {
         filterViewModel.clearSalary()
+        binding.editSalary.setText("")
         binding.editSalary.clearFocus()
         val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(binding.editSalary.windowToken, 0)
-        binding.expectedSalary.setTextColor(ContextCompat.getColor(requireContext(), R.color.salary_text))
-        binding.imageButtonFilterSalaryClear.visibility = View.GONE
+        binding.expectedSalary.setTextColor(
+            ContextCompat.getColor(requireContext(), R.color.salary_text)
+        )
+        updateClearButtonVisibility()
     }
 
     private fun setSalaryFocusChangeListener() {
         binding.editSalary.setOnFocusChangeListener { _, hasFocus ->
+            updateClearButtonVisibility()
             if (!hasFocus) {
-                binding.imageButtonFilterSalaryClear.visibility = View.GONE
-                binding.expectedSalary.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+                binding.expectedSalary.setTextColor(
+                    ContextCompat.getColor(requireContext(), R.color.black)
+                )
             } else {
-                binding.editSalary.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
-                binding.expectedSalary.setTextColor(ContextCompat.getColor(requireContext(), R.color.blue))
-                binding.imageButtonFilterSalaryClear.visibility = View.VISIBLE
+                binding.editSalary.setTextColor(
+                    ContextCompat.getColor(requireContext(), R.color.black)
+                )
+                binding.expectedSalary.setTextColor(
+                    ContextCompat.getColor(requireContext(), R.color.blue)
+                )
             }
         }
     }
@@ -281,11 +289,21 @@ class FilterFragment : Fragment() {
         val bundle = Bundle().apply {
             putString(SELECTED_INDUSTRY_ID, selectedIndustryId)
         }
-        findNavController().navigate(R.id.action_filterFragment_to_industryFragment, bundle)
+        findNavController().navigate(
+            R.id.action_filterFragment_to_industryFragment,
+            bundle
+        )
     }
 
     private fun openWorkplaceFragment() {
         findNavController().navigate(R.id.action_filterFragment_to_workplaceFragment)
+    }
+
+    private fun updateClearButtonVisibility() {
+        val hasFocus = binding.editSalary.hasFocus()
+        val isNotEmpty = !binding.editSalary.text.isNullOrEmpty()
+        binding.imageButtonFilterSalaryClear.visibility =
+            if (hasFocus && isNotEmpty) View.VISIBLE else View.GONE
     }
 
     override fun onDestroyView() {
@@ -296,5 +314,4 @@ class FilterFragment : Fragment() {
     companion object {
         const val SELECTED_INDUSTRY_ID = "selectedIndustryId"
     }
-
 }
