@@ -39,6 +39,9 @@ class SearchFragment : Fragment() {
             viewModel.onSearchQueryChanged(query)
         }
     )
+    companion object {
+        private const val TOAST_DELAY_MS = 2000L
+    }
     private val filterInteractor: FilterInteractor by inject()
 
     override fun onCreateView(
@@ -268,7 +271,7 @@ class SearchFragment : Fragment() {
             canShowToast = false
             // Устанавливаем задержку перед возможностью повторного показа тоста
             lifecycleScope.launch {
-                delay(2000L) // Задержка в 2 секунды
+                delay(TOAST_DELAY_MS) // Задержка в 2 секунды
                 canShowToast = true
             }
         }
