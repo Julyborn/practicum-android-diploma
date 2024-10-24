@@ -44,12 +44,14 @@ class CountryChoosingFragment : Fragment() {
                     binding.loadingIndicator.visibility = View.VISIBLE
                     binding.noCountryPlaceholder.visibility = View.GONE
                     binding.countryRV.visibility = View.GONE
+                    binding.countryNoInternet.visibility = View.GONE
                 }
 
                 is WorkplaceState.Success -> {
                     binding.loadingIndicator.visibility = View.GONE
                     binding.noCountryPlaceholder.visibility = View.GONE
                     binding.countryRV.visibility = View.VISIBLE
+                    binding.countryNoInternet.visibility = View.GONE
                     adapter.update(state.countries)
                 }
 
@@ -57,12 +59,22 @@ class CountryChoosingFragment : Fragment() {
                     binding.loadingIndicator.visibility = View.GONE
                     binding.noCountryPlaceholder.visibility = View.VISIBLE
                     binding.countryRV.visibility = View.GONE
+                    binding.countryNoInternet.visibility = View.GONE
+                }
+
+                is WorkplaceState.NoInternet -> {
+                    binding.loadingIndicator.visibility = View.GONE
+                    binding.noCountryPlaceholder.visibility = View.GONE
+                    binding.countryRV.visibility = View.GONE
+                    binding.countryNoInternet.visibility = View.VISIBLE
                 }
 
                 else -> {
                     binding.loadingIndicator.visibility = View.GONE
                     binding.noCountryPlaceholder.visibility = View.VISIBLE
                     binding.countryRV.visibility = View.GONE
+                    binding.countryNoInternet.visibility = View.GONE
+
                 }
             }
         }
