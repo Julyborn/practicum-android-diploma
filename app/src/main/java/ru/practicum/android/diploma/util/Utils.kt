@@ -1,6 +1,16 @@
 package ru.practicum.android.diploma.util
 
 import ru.practicum.android.diploma.search.domain.models.Salary
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.util.Locale
+
+fun formatSalary(salary: Int): String {
+    val symbols = DecimalFormatSymbols(Locale("ru", "RU"))
+    symbols.groupingSeparator = ' '
+    val formatter = DecimalFormat("#,###", symbols)
+    return formatter.format(salary)
+}
 
 fun Salary?.formatSalary(): String {
     if (this == null) {
@@ -24,9 +34,13 @@ fun Salary?.formatSalary(): String {
     }
 
     return when {
-        fromSalary != null && toSalary != null -> "от $fromSalary до $toSalary $currencySymbol"
-        fromSalary != null -> "от $fromSalary $currencySymbol"
-        toSalary != null -> "до $toSalary $currencySymbol"
+        fromSalary != null && toSalary != null -> "от ${
+            formatSalary(fromSalary)
+        } до ${formatSalary(toSalary)} " +
+            "$currencySymbol"
+
+        fromSalary != null -> "от ${formatSalary(fromSalary)} $currencySymbol"
+        toSalary != null -> "до ${formatSalary(toSalary)} $currencySymbol"
         else -> "Зарплата не указана"
     }
 }

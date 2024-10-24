@@ -23,11 +23,7 @@ class RegionChoosingFragment : Fragment() {
 
     private val regionAdapter: RegionAdapter = RegionAdapter { region -> onRegionSelected(region) }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentRegionChoosingBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -35,46 +31,64 @@ class RegionChoosingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupRecyclerView()
+        setupObservers()
+        setupSearchEditText()
+
+        binding.icClear.setOnClickListener {
+            binding.regionsEditText.text?.clear()
+            viewModel.retryLoadingData() // Перезагружаем данные при очистке
+        }
+
+        binding.backButton.setOnClickListener { findNavController().popBackStack() }
+    }
+
+    private fun setupRecyclerView() {
         binding.regionsRecyclerView.layoutManager = LinearLayoutManager(context)
         binding.regionsRecyclerView.adapter = regionAdapter
-        binding.regionsRecyclerView.layoutManager = LinearLayoutManager(context)
+    }
 
-        viewModel.loadRegions()
-        viewModel.state.observe(viewLifecycleOwner) { state ->
+    private fun setupObservers() {
+        // Наблюдение за состоянием экрана
+        viewModel.uiState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is WorkplaceState.Loading -> showLoadingIndicator()
                 is WorkplaceState.Success -> showSuccess(state.regions ?: emptyList())
                 is WorkplaceState.FetchError -> showFetchError()
                 is WorkplaceState.NoRegionsError -> showNoRegionsError()
+                is WorkplaceState.NoInternet -> showNoInternetError()
             }
-
         }
+
+        // Наблюдение за списком регионов
+        viewModel.regionsList.observe(viewLifecycleOwner) { regions ->
+            regionAdapter.update(regions)
+        }
+    }
+
+    private fun setupSearchEditText() {
         binding.regionsEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                viewModel.filterRegions(s.toString())
-                if (s.isNullOrEmpty()) {
-                    binding.icSearch.visibility = View.VISIBLE
-                    binding.icClear.visibility = View.GONE
-                } else {
-                    binding.icSearch.visibility = View.GONE
-                    binding.icClear.visibility = View.VISIBLE
-                }
+                val query = s.toString()
+
+                // Отправляем новый запрос поиска, если строка не пустая
+                viewModel.filterRegions(query)
+
+                binding.icSearch.visibility = if (query.isEmpty()) View.VISIBLE else View.GONE
+                binding.icClear.visibility = if (query.isEmpty()) View.GONE else View.VISIBLE
             }
+
             override fun afterTextChanged(s: Editable?) = Unit
         })
-
-        binding.icClear.setOnClickListener {
-            binding.regionsEditText.text?.clear()
-        }
-
-        binding.backButton.setOnClickListener { findNavController().popBackStack() }
     }
 
     private fun showLoadingIndicator() {
         binding.placeholderError.visibility = View.GONE
         binding.placeholderNoList.visibility = View.GONE
         binding.loadingIndicator.visibility = View.VISIBLE
+        binding.regionsNoInternet.visibility = View.GONE
         binding.regionsRecyclerView.visibility = View.GONE
     }
 
@@ -82,6 +96,7 @@ class RegionChoosingFragment : Fragment() {
         binding.loadingIndicator.visibility = View.GONE
         binding.placeholderError.visibility = View.GONE
         binding.placeholderNoList.visibility = View.GONE
+        binding.regionsNoInternet.visibility = View.GONE
         regionAdapter.update(regions)
         binding.regionsRecyclerView.visibility = View.VISIBLE
     }
@@ -89,7 +104,7 @@ class RegionChoosingFragment : Fragment() {
     private fun showNoRegionsError() {
         binding.loadingIndicator.visibility = View.GONE
         binding.regionsRecyclerView.visibility = View.GONE
-        binding.placeholderError.visibility = View.GONE
+        binding.regionsNoInternet.visibility = View.GONE
         binding.placeholderNoList.visibility = View.VISIBLE
     }
 
@@ -97,7 +112,16 @@ class RegionChoosingFragment : Fragment() {
         binding.loadingIndicator.visibility = View.GONE
         binding.regionsRecyclerView.visibility = View.GONE
         binding.placeholderNoList.visibility = View.GONE
+        binding.regionsNoInternet.visibility = View.GONE
         binding.placeholderError.visibility = View.VISIBLE
+    }
+
+    private fun showNoInternetError() {
+        binding.loadingIndicator.visibility = View.GONE
+        binding.regionsRecyclerView.visibility = View.GONE
+        binding.placeholderNoList.visibility = View.GONE
+        binding.placeholderError.visibility = View.GONE
+        binding.regionsNoInternet.visibility = View.VISIBLE
     }
 
     private fun onRegionSelected(region: Region) {

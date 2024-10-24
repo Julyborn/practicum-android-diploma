@@ -1,18 +1,18 @@
 package ru.practicum.android.diploma.filter.ui
 
 import android.os.Bundle
-import android.util.Log
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import org.koin.android.ext.android.inject
 import ru.practicum.android.diploma.databinding.FragmentIndustryBinding
 import ru.practicum.android.diploma.filter.domain.models.IndustryViewModel
+import ru.practicum.android.diploma.filter.ui.FilterFragment.Companion.SELECTED_INDUSTRY_ID
 import ru.practicum.android.diploma.search.presentation.models.UiScreenState
 
 class IndustryFragment : Fragment() {
@@ -24,7 +24,6 @@ class IndustryFragment : Fragment() {
 
     private val industryAdapter: IndustryAdapter by lazy {
         IndustryAdapter { industryId, position ->
-            Log.d("IndustryFragment", "Industry selected: $industryId at position $position")
             binding.buttonChoose.visibility = View.VISIBLE
             binding.industryList.smoothScrollToPosition(position)
         }
@@ -42,70 +41,42 @@ class IndustryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val selectedIndustryId = arguments?.getString(SELECTED_INDUSTRY_ID).toString()
+
         addListeners()
 
         binding.industryList.adapter = industryAdapter
         binding.industryList.layoutManager = LinearLayoutManager(requireContext())
 
         viewModel.industriesList.observe(viewLifecycleOwner) { industries ->
-            industryAdapter.update(industries)
-        }
-
-        viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
-            when (uiState) {
-                is UiScreenState.Loading -> {
-                    binding.progressBar.visibility = View.VISIBLE
+            if (viewModel.isLoadingAllIndustries.value == true) {
+                industryAdapter.update(industries)
+                binding.industryList.visibility = View.VISIBLE
+                binding.placeholderNoListIndustry.visibility = View.GONE
+                binding.industryNoInternet.visibility = View.GONE
+                viewModel.onIndustriesLoaded()
+            } else if (industries.isNullOrEmpty()) {
+                showNoListIndustry()
+            } else {
+                industryAdapter.update(industries)
+                binding.industryList.visibility = View.VISIBLE
+                binding.placeholderNoListIndustry.visibility = View.GONE
+                binding.industryNoInternet.visibility = View.GONE
+                selectedIndustryId.let {
+                    industryAdapter.setSelectedIndustryId(it)
                 }
-
-                is UiScreenState.Default -> {
-                    binding.progressBar.visibility = View.GONE
-                }
-
-                is UiScreenState.Empty -> {
-                    binding.progressBar.visibility = View.GONE
-                    Toast.makeText(requireContext(), "No industries found", Toast.LENGTH_SHORT).show()
-                }
-
-                is UiScreenState.NoInternetError -> {
-                    binding.progressBar.visibility = View.GONE
-                    Toast.makeText(requireContext(), "No internet connection", Toast.LENGTH_SHORT).show()
-                }
-
-                is UiScreenState.ServerError -> {
-                    binding.progressBar.visibility = View.GONE
-                    Toast.makeText(requireContext(), "Server error", Toast.LENGTH_SHORT).show()
-                }
-
-                is UiScreenState.Success -> TODO()
             }
         }
-
-        viewModel.onSearchQueryChanged("")
-
+        observeUiState()
+        viewModel.loadAllIndustries()
     }
 
     private fun addListeners() {
-        setSearchButtonListeners()
+        setFilterIndustryClear()
 
         binding.arrowBack.setOnClickListener {
             parentFragmentManager.popBackStack()
         }
-
-        binding.industryList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                if (dy > 0) {
-                    val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-                    val visibleItemCount = layoutManager.childCount
-                    val totalItemCount = layoutManager.itemCount
-                    val pastVisibleItems = layoutManager.findFirstVisibleItemPosition()
-
-                    if (visibleItemCount + pastVisibleItems >= totalItemCount) {
-                        viewModel.onLastItemReached()
-                    }
-                }
-            }
-        })
 
         binding.buttonChoose.setOnClickListener {
             val selectedIndustry = industryAdapter.getSelectedIndustry()
@@ -121,6 +92,29 @@ class IndustryFragment : Fragment() {
             }
         }
 
+        binding.editIndustry.addTextChangedListener(object : TextWatcher {
+            @Suppress("EmptyFunctionBlock")
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val query = s.toString().trim()
+                viewModel.onSearchQueryChanged(query)
+                if (query.isEmpty()) {
+                    binding.imageButtonIndustrySearch.visibility = View.VISIBLE
+                    binding.imageButtonFilterIndustryClear.visibility = View.GONE
+                } else {
+                    binding.imageButtonIndustrySearch.visibility = View.GONE
+                    binding.imageButtonFilterIndustryClear.visibility = View.VISIBLE
+                }
+
+            }
+
+            @Suppress("EmptyFunctionBlock")
+            override fun afterTextChanged(s: Editable?) {
+            }
+        })
+
         binding.editIndustry.setOnFocusChangeListener { _, hasFocus ->
             if (!hasFocus) {
                 binding.imageButtonFilterIndustryClear.visibility = View.GONE
@@ -132,23 +126,67 @@ class IndustryFragment : Fragment() {
         }
     }
 
-    private fun setSearchButtonListeners() {
-        binding.imageButtonIndustrySearch.setOnClickListener {
-            val query = binding.editIndustry.text.toString().trim()
-            if (query.isNotEmpty()) {
-                viewModel.onSearchQueryChanged(query)
-                binding.imageButtonFilterIndustryClear.visibility = View.VISIBLE
-                binding.imageButtonIndustrySearch.visibility = View.GONE
-            } else {
-                viewModel.onSearchQueryChanged("")
-            }
-        }
-
+    private fun setFilterIndustryClear() {
         binding.imageButtonFilterIndustryClear.setOnClickListener {
             binding.editIndustry.text.clear()
-            viewModel.onSearchQueryChanged("")
             binding.imageButtonFilterIndustryClear.visibility = View.GONE
             binding.imageButtonIndustrySearch.visibility = View.VISIBLE
+        }
+    }
+
+    private fun showErrorIndustry() {
+        binding.progressBar.visibility = View.GONE
+        binding.industryList.visibility = View.GONE
+        binding.placeholderErrorIndustry.visibility = View.VISIBLE
+        binding.placeholderNoListIndustry.visibility = View.GONE
+        binding.industryNoInternet.visibility = View.GONE
+    }
+
+    private fun showNoInternetIndustry() {
+        binding.progressBar.visibility = View.GONE
+        binding.industryList.visibility = View.GONE
+        binding.placeholderErrorIndustry.visibility = View.GONE
+        binding.placeholderNoListIndustry.visibility = View.GONE
+        binding.industryNoInternet.visibility = View.VISIBLE
+    }
+
+    private fun showNoListIndustry() {
+        binding.progressBar.visibility = View.GONE
+        binding.industryList.visibility = View.GONE
+        binding.placeholderNoListIndustry.visibility = View.VISIBLE
+        binding.placeholderErrorIndustry.visibility = View.GONE
+        binding.industryNoInternet.visibility = View.GONE
+    }
+
+    private fun observeUiState() {
+        viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
+            when (uiState) {
+                is UiScreenState.Loading -> {
+                    binding.progressBar.visibility = View.VISIBLE
+                    binding.placeholderNoListIndustry.visibility = View.GONE
+                    binding.placeholderErrorIndustry.visibility = View.GONE
+                    binding.industryNoInternet.visibility = View.GONE
+                }
+
+                is UiScreenState.Default -> {
+                    binding.progressBar.visibility = View.GONE
+                }
+
+                is UiScreenState.Empty -> {
+                    showNoListIndustry()
+                }
+
+                is UiScreenState.NoInternetError -> {
+                    showNoInternetIndustry()
+
+                }
+
+                is UiScreenState.ServerError -> {
+                    showErrorIndustry()
+                }
+
+                is UiScreenState.Success -> TODO()
+            }
         }
     }
 

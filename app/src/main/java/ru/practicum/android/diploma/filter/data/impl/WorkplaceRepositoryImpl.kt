@@ -1,64 +1,86 @@
 package ru.practicum.android.diploma.filter.data.impl
 
+import android.content.Context
 import android.content.SharedPreferences
+import android.net.http.HttpException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import ru.practicum.android.diploma.filter.domain.api.WorkplaceRepository
 import ru.practicum.android.diploma.filter.domain.models.Country
 import ru.practicum.android.diploma.filter.domain.models.Region
 import ru.practicum.android.diploma.search.data.network.HeadHunterAPI
+import ru.practicum.android.diploma.search.data.network.NetworkUtils
+import ru.practicum.android.diploma.search.domain.models.Resource
 import java.io.IOException
 
 class WorkplaceRepositoryImpl(
     private val api: HeadHunterAPI,
-    private val sharedPreferences: SharedPreferences
+    private val sharedPreferences: SharedPreferences,
+    private val context: Context
 ) : WorkplaceRepository {
-    override suspend fun getCountries(): List<Country> {
-        return try {
-            api.getAreas().filter { it.parentId == null }.map { areaDto ->
-                Country(
-                    id = areaDto.id,
-                    name = areaDto.name.toString()
-                )
+
+    private suspend fun <T> safeNetworkCall(
+        networkCall: suspend () -> T
+    ): Resource<T> {
+        return if (NetworkUtils.isNetworkAvailable(context)) {
+            try {
+                Resource.Success(networkCall(), found = null, page = null, pages = null)
+            } catch (e: IOException) {
+                Resource.ServerError(e.message ?: "Server error")
+            } catch (e: HttpException) {
+                Resource.ServerError("HTTP error: ${e.localizedMessage}")
             }
-        } catch (e: IOException) {
-            throw e
-            emptyList()
+        } else {
+            Resource.NoInternetError("No internet connection")
         }
     }
 
-    override suspend fun getRegionsByCountry(countryId: String): List<Region> {
-        return try {
-            val response = api.getRegions(countryId)
-            response.areas.map { areaDto ->
+    override suspend fun getCountries(): Resource<List<Country>> {
+        return safeNetworkCall {
+            api.getAreas()
+                .filter { it.parentId == null }
+                .map { areaDto ->
+                    Country(id = areaDto.id, name = areaDto.name ?: DEF)
+                }
+        }
+    }
+
+    override suspend fun getRegionsByCountry(countryId: String): Resource<List<Region>> {
+        return safeNetworkCall {
+            api.getRegions(countryId).areas.map { areaDto ->
                 Region(
                     id = areaDto.id,
                     name = areaDto.name ?: DEF,
                     parentId = areaDto.parentId ?: DEF
                 )
             }
-        } catch (e: IOException) {
-            throw e
-            emptyList()
         }
     }
 
+    private fun putString(key: String, value: String?) {
+        sharedPreferences.edit().putString(key, value).apply()
+    }
+
+    private fun getString(key: String): String? {
+        return sharedPreferences.getString(key, null)
+    }
+
     override fun saveSelectedCountry(country: Country?) {
-        sharedPreferences.edit()
-            .putString(COUNTRY_ID, country?.id)
-            .putString(COUNTRY_NAME, country?.name)
-            .apply()
+        putString(COUNTRY_ID, country?.id)
+        putString(COUNTRY_NAME, country?.name)
     }
 
     override fun saveSelectedRegion(region: Region?) {
-        sharedPreferences.edit()
-            .putString(REGION_ID, region?.id)
-            .putString(REGION_NAME, region?.name)
-            .putString(PARENT_ID, region?.parentId)
-            .apply()
+        putString(REGION_ID, region?.id)
+        putString(REGION_NAME, region?.name)
+        putString(PARENT_ID, region?.parentId)
     }
 
     override fun getSelectedCountry(): Country? {
-        val id = sharedPreferences.getString(COUNTRY_ID, null)
-        val name = sharedPreferences.getString(COUNTRY_NAME, null)
+        val id = getString(COUNTRY_ID)
+        val name = getString(COUNTRY_NAME)
         return if (id != null && name != null) {
             Country(id, name)
         } else {
@@ -66,25 +88,57 @@ class WorkplaceRepositoryImpl(
         }
     }
 
-    override suspend fun getAllRegions(): List<Region> {
-        val countries = getCountries()
-        val regionsList = mutableListOf<Region>()
-        countries.forEach { country ->
-            val regionsByCountry = getRegionsByCountry(country.id)
-            regionsList.addAll(regionsByCountry)
-        }
-        return regionsList
-    }
-
     override fun getSelectedRegion(): Region? {
-        val id = sharedPreferences.getString(REGION_ID, null)
-        val name = sharedPreferences.getString(REGION_NAME, null)
-        val parentId = sharedPreferences.getString(PARENT_ID, null)
-
+        val id = getString(REGION_ID)
+        val name = getString(REGION_NAME)
+        val parentId = getString(PARENT_ID)
         return if (id != null && name != null) {
             Region(id, name, parentId)
         } else {
             null
+        }
+    }
+
+    override suspend fun getAllRegions(): Flow<Resource<MutableList<Region>>> = flow {
+        emit(safeNetworkCall { fetchAllRegions() })
+    }.flowOn(Dispatchers.IO)
+
+    private suspend fun fetchAllRegions(): MutableList<Region> {
+        val countries = fetchCountries()
+        if (countries.isEmpty()) {
+            throw IOException("No countries found")
+        }
+
+        val regionsList = mutableListOf<Region>()
+        countries.forEach { country ->
+            regionsList.addAll(fetchRegionsForCountry(country.id))
+        }
+
+        if (regionsList.isEmpty()) {
+            throw IOException("No regions found")
+        }
+
+        return regionsList
+    }
+
+    private suspend fun fetchCountries(): List<Country> {
+        return api.getAreas()
+            .filter { it.parentId == null }
+            .map { areaDto ->
+                Country(
+                    id = areaDto.id,
+                    name = areaDto.name ?: DEF
+                )
+            }
+    }
+
+    private suspend fun fetchRegionsForCountry(countryId: String): List<Region> {
+        return api.getRegions(countryId).areas.map { areaDto ->
+            Region(
+                id = areaDto.id,
+                name = areaDto.name ?: DEF,
+                parentId = areaDto.parentId ?: DEF
+            )
         }
     }
 

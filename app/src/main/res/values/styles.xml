@@ -30,9 +30,14 @@
         <item name="android:fontFamily">@font/ys_display_regular</item>
         <item name="android:textColor">?attr/colorOnPrimary</item>
     </style>
-
     <style name="search_et">
         <item name="android:textColorHint">@color/grey</item>
+        <item name="android:background">@color/light_grey</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+    </style>
+    <style name="filter_et">
+        <item name="android:textColorHint">@color/grey</item>
+        <item name="android:background">@color/white_universal</item>
         <item name="android:fontFamily">@font/ys_display_regular</item>
     </style>
     <style name="search_filter">
@@ -52,7 +57,10 @@
         <item name="android:textColor">@color/black_universal</item>
         <item name="android:fontFamily">@font/ys_display_medium</item>
     </style>
-
+    <style name="no_salary_text">
+        <item name="android:textColor">@color/black_universal</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+    </style>
     <style name="night_text_regular">
         <item name="android:textColor">@color/black_universal</item>
         <item name="android:fontFamily">@font/ys_display_regular</item>
@@ -97,6 +105,7 @@
         <item name="android:src">@drawable/arrow_back</item>
     </style>
     <style name="expected_salary">
+        <item name="android:background">@color/light_grey</item>
         <item name="android:textColor">@color/grey</item>
         <item name="android:fontFamily">@font/ys_display_regular</item>
     </style>

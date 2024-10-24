@@ -1,16 +1,18 @@
 package ru.practicum.android.diploma.filter.domain.impl
 
+import kotlinx.coroutines.flow.Flow
 import ru.practicum.android.diploma.filter.domain.api.WorkplaceInteractor
 import ru.practicum.android.diploma.filter.domain.api.WorkplaceRepository
 import ru.practicum.android.diploma.filter.domain.models.Country
 import ru.practicum.android.diploma.filter.domain.models.Region
+import ru.practicum.android.diploma.search.domain.models.Resource
 
 class WorkplaceInteractorImpl(private val repository: WorkplaceRepository) : WorkplaceInteractor {
-    override suspend fun getCountries(): List<Country> {
+    override suspend fun getCountries(): Resource<List<Country>> {
         return repository.getCountries()
     }
 
-    override suspend fun getRegionsByCountry(countryId: String): List<Region> {
+    override suspend fun getRegionsByCountry(countryId: String): Resource<List<Region>> {
         return repository.getRegionsByCountry(countryId)
     }
 
@@ -26,7 +28,7 @@ class WorkplaceInteractorImpl(private val repository: WorkplaceRepository) : Wor
         return repository.getSelectedCountry()
     }
 
-    override suspend fun getAllRegions(): List<Region> {
+    override suspend fun getAllRegions(): Flow<Resource<MutableList<Region>>> {
         return repository.getAllRegions()
     }
 

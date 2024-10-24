@@ -24,7 +24,7 @@
     <LinearLayout
         android:id="@+id/countryLinerLayout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_60"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp_24"
         android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@+id/screenTitle">
@@ -49,10 +49,12 @@
                 android:layout_gravity="center_vertical"
                 android:background="?selectableItemBackground"
                 android:backgroundTint="?attr/colorPrimary"
-                android:drawableTint="?attr/colorOnPrimary"
                 android:focusable="false"
-                android:gravity="center_vertical"
-                android:inputType="none" />
+                android:focusableInTouchMode="false"
+                android:clickable="false"
+                android:cursorVisible="false"
+                android:inputType="none"
+                android:gravity="center_vertical" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <ImageView
@@ -61,8 +63,21 @@
             android:layout_height="@dimen/dp_40"
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="@dimen/dp_8"
+            android:background="?selectableItemBackground"
             android:scaleType="centerInside"
             android:src="@drawable/ic_right_arrow"
+            app:tint="?attr/colorOnPrimary" />
+
+        <ImageView
+            android:id="@+id/icCountryClear"
+            android:layout_width="@dimen/dp_40"
+            android:layout_height="@dimen/dp_40"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="@dimen/dp_8"
+            android:background="?selectableItemBackground"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_button_clear"
+            android:visibility="gone"
             app:tint="?attr/colorOnPrimary" />
     </LinearLayout>
 
@@ -94,8 +109,11 @@
                 android:background="?selectableItemBackground"
                 android:backgroundTint="?attr/colorPrimary"
                 android:focusable="false"
-                android:inputType="none"
+                android:focusableInTouchMode="false"
                 android:paddingEnd="@dimen/dp_24"
+                android:clickable="false"
+                android:cursorVisible="false"
+                android:inputType="none"
                 android:paddingBottom="@dimen/dp_16" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -105,8 +123,22 @@
             android:layout_height="@dimen/dp_40"
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="@dimen/dp_8"
+            android:background="?selectableItemBackground"
+            android:duplicateParentState="true"
             android:scaleType="centerInside"
             android:src="@drawable/ic_right_arrow"
+            app:tint="?attr/colorOnPrimary" />
+
+        <ImageView
+            android:id="@+id/icRegionClear"
+            android:layout_width="@dimen/dp_40"
+            android:layout_height="@dimen/dp_40"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="@dimen/dp_8"
+            android:background="?selectableItemBackground"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_button_clear"
+            android:visibility="gone"
             app:tint="?attr/colorOnPrimary" />
     </LinearLayout>
 

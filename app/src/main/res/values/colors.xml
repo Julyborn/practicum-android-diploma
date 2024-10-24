@@ -10,4 +10,5 @@
     <color name="light_grey">#E6E8EB</color>
     <color name="background">#801A1B22</color>
     <color name="black_for_hint">#1A1B22</color>
+    <color name="salary_text">#AEAFB4</color>
 </resources>

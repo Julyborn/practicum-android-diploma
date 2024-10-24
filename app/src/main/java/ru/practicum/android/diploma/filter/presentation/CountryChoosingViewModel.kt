@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.filter.domain.api.WorkplaceInteractor
 import ru.practicum.android.diploma.filter.domain.models.Country
-import java.io.IOException
+import ru.practicum.android.diploma.search.domain.models.Resource
 
 class CountryChoosingViewModel(private val interactor: WorkplaceInteractor) : ViewModel() {
 
@@ -21,16 +21,10 @@ class CountryChoosingViewModel(private val interactor: WorkplaceInteractor) : Vi
     fun loadCountries() {
         _state.value = WorkplaceState.Loading
         viewModelScope.launch {
-            try {
-                val contries = interactor.getCountries()
-                if (contries.isEmpty()) {
-                    _state.value = WorkplaceState.FetchError
-                } else {
-                    _state.value = WorkplaceState.Success(contries, emptyList())
-                }
-            } catch (e: IOException) {
-                _state.value = WorkplaceState.FetchError
-                throw e
+            when (val result = interactor.getCountries()) {
+                is Resource.Success -> _state.value = WorkplaceState.Success(result.data, emptyList())
+                is Resource.NoInternetError -> _state.value = WorkplaceState.NoInternet
+                is Resource.ServerError -> _state.value = WorkplaceState.FetchError
             }
         }
     }

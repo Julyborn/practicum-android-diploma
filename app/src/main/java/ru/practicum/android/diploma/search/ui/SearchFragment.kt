@@ -14,9 +14,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSearchBinding
+import ru.practicum.android.diploma.filter.domain.api.FilterInteractor
 import ru.practicum.android.diploma.search.presentation.SearchViewModel
 import ru.practicum.android.diploma.search.presentation.models.UiScreenState
 import ru.practicum.android.diploma.search.presentation.models.VacancyUi
@@ -25,6 +29,7 @@ import ru.practicum.android.diploma.util.debounce
 class SearchFragment : Fragment() {
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
+    private var canShowToast = true
     private val viewModel by viewModel<SearchViewModel>()
     private var searchItemAdapter: SearchItemAdapter? = null
     private val debounceSearch = debounce<String>(
@@ -34,6 +39,11 @@ class SearchFragment : Fragment() {
             viewModel.onSearchQueryChanged(query)
         }
     )
+    companion object {
+        const val KEY_VACANCY = "vacancyId"
+        private const val TOAST_DELAY_MS = 2000L
+    }
+    private val filterInteractor: FilterInteractor by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,38 +61,9 @@ class SearchFragment : Fragment() {
             renderUiState(it)
         }
 
-        searchItemAdapter = SearchItemAdapter { vacancyId ->
-            val bundle = Bundle().apply {
-                putString(KEY_VACANCY, vacancyId)
-            }
-            findNavController().navigate(R.id.action_searchFragment_to_vacanciesFragment, bundle)
-        }
-
-        binding.vacancyList.apply {
-            layoutManager = LinearLayoutManager(requireContext())
-            adapter = searchItemAdapter
-        }
-
         binding.searchEditText.addTextChangedListener { query ->
             debounceSearch(query.toString())
         }
-
-        binding.vacancyList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-
-                if (dy > 0) {
-                    val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-                    val visibleItemCount = layoutManager.childCount
-                    val totalItemCount = layoutManager.itemCount
-                    val pastVisibleItems = layoutManager.findFirstVisibleItemPosition()
-
-                    if (visibleItemCount + pastVisibleItems >= totalItemCount) {
-                        viewModel.onLastItemReached()
-                    }
-                }
-            }
-        })
 
         binding.searchEditText.setOnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -102,7 +83,6 @@ class SearchFragment : Fragment() {
         binding.searchEditText.addTextChangedListener(object : TextWatcher {
             @Suppress("EmptyFunctionBlock")
             override fun afterTextChanged(s: Editable?) {
-                // Не используется в данном случае
             }
             @Suppress("EmptyFunctionBlock")
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -111,6 +91,8 @@ class SearchFragment : Fragment() {
                 if (s.isNullOrEmpty()) {
                     binding.searchIcon.visibility = View.VISIBLE
                     binding.clearIcon.visibility = View.GONE
+                    debounceSearch.cancel()
+                    viewModel.onSearchQueryChanged("")
                 } else {
                     binding.searchIcon.visibility = View.GONE
                     binding.clearIcon.visibility = View.VISIBLE
@@ -121,6 +103,15 @@ class SearchFragment : Fragment() {
         binding.filterButton.setOnClickListener {
             openFilterFragment()
         }
+
+        handleError()
+        setupRecyclerView()
+        observePaginationLoading()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        highlightFilterButton(hasActiveFilters())
     }
 
     private fun renderUiState(state: UiScreenState) {
@@ -129,12 +120,14 @@ class SearchFragment : Fragment() {
             UiScreenState.Empty -> showEmptyState()
             UiScreenState.Loading -> showLoadingState()
             UiScreenState.NoInternetError -> {
-                showNoInternetErrorState()
-                Toast.makeText(requireContext(), getString(R.string.no_internet_toast), Toast.LENGTH_SHORT).show()
+                if (viewModel.isFirstSearch) {
+                    showNoInternetErrorState()
+                }
             }
             UiScreenState.ServerError -> {
-                showServerErrorState()
-                Toast.makeText(requireContext(), getString(R.string.error_toast), Toast.LENGTH_SHORT).show()
+                if (viewModel.isFirstSearch) {
+                    showServerErrorState()
+                }
             }
             is UiScreenState.Success -> showSuccessState(state.vacancies, state.found)
         }
@@ -170,7 +163,7 @@ class SearchFragment : Fragment() {
     private fun showSuccessState(vacancies: List<VacancyUi>, found: Int) {
         hideAllState()
         searchItemAdapter?.update(vacancies)
-        binding.tvCountList.text = getString(R.string.found_vacancies_count, found)
+        binding.tvCountList.text = resources.getQuantityString(R.plurals.found_vacancies_count, found, found)
         binding.tvCountList.visibility = View.VISIBLE
         binding.vacancyList.visibility = View.VISIBLE
     }
@@ -184,16 +177,101 @@ class SearchFragment : Fragment() {
         binding.clNoInternet.visibility = View.GONE
     }
 
+    private fun highlightFilterButton(isHighlighted: Boolean) {
+        binding.filterButton.setImageResource(
+            if (isHighlighted) R.drawable.ic_filter_on else R.drawable.ic_filter
+        )
+    }
+
+    private fun hasActiveFilters(): Boolean {
+        val filterSettings = filterInteractor.loadFilterSettings()
+        return !filterSettings.location.isNullOrBlank() ||
+            !filterSettings.salary.isNullOrBlank() ||
+            !filterSettings.industry.isNullOrBlank() ||
+            !filterSettings.area.isNullOrBlank() ||
+            filterSettings.hideWithoutSalary
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 
-    companion object {
-        const val KEY_VACANCY = "vacancyId"
-    }
 
     private fun openFilterFragment() {
         findNavController().navigate(R.id.action_searchFragment_to_filterFragment)
+    }
+
+    private fun observePaginationLoading() {
+        viewModel.isNextPageLoading.observe(viewLifecycleOwner) { isLoading ->
+            if (isLoading) {
+                binding.nextPageLoading.visibility = View.VISIBLE
+            } else {
+                binding.nextPageLoading.visibility = View.GONE
+            }
+        }
+    }
+
+    private fun setupRecyclerView() {
+        searchItemAdapter = SearchItemAdapter { vacancyId ->
+            val bundle = Bundle().apply {
+                putString(KEY_VACANCY, vacancyId)
+            }
+            findNavController().navigate(R.id.action_searchFragment_to_vacanciesFragment, bundle)
+        }
+
+        binding.vacancyList.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = searchItemAdapter
+        }
+
+        binding.vacancyList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                if (dy > 0) {
+                    val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                    val visibleItemCount = layoutManager.childCount
+                    val totalItemCount = layoutManager.itemCount
+                    val pastVisibleItems = layoutManager.findFirstVisibleItemPosition()
+
+                    if (visibleItemCount + pastVisibleItems >= totalItemCount) {
+                        viewModel.onLastItemReached()
+                    }
+                }
+            }
+        })
+
+    }
+
+    private fun handleError() {
+        viewModel.errorEvent.observe(viewLifecycleOwner) { error ->
+            val isPaginating = viewModel.isNextPageLoading.value == true
+
+            if (isPaginating && canShowToast) {
+                when (error) {
+                    "no_internet" -> {
+                        binding.pbLoading.visibility = View.GONE
+                        showToastWithDelay(getString(R.string.no_internet_toast))
+                    }
+                    "server_error" -> {
+                        binding.pbLoading.visibility = View.GONE
+                        showToastWithDelay(getString(R.string.error_toast))
+                    }
+                }
+            }
+        }
+    }
+
+    private fun showToastWithDelay(message: String) {
+        if (canShowToast) {
+            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+            canShowToast = false
+            // Устанавливаем задержку перед возможностью повторного показа тоста
+            lifecycleScope.launch {
+                delay(TOAST_DELAY_MS) // Задержка в 2 секунды
+                canShowToast = true
+            }
+        }
     }
 }

@@ -24,6 +24,13 @@ class SearchViewModel(
         get() = _uiState
 
     private val _vacanciesList = MutableLiveData<List<VacancyUi>>(emptyList())
+    val vacanciesList: LiveData<List<VacancyUi>>
+        get() = _vacanciesList
+
+    private val _errorEvent = MutableLiveData<String>()
+    val errorEvent: LiveData<String>
+        get() = _errorEvent
+
     private val _searchQuery = MutableLiveData<String>("")
 
     private var searchJob: Job? = null
@@ -31,7 +38,7 @@ class SearchViewModel(
     // Переменные для фильтра
     private var filterLocation: String? = null
 
-//    private var filterIndustry: String? = null
+    //    private var filterIndustry: String? = null
     private var filterSalary: String? = null
     private var hideWithoutSalary: Boolean = false
     private var filterIndustryId: String? = null
@@ -40,7 +47,11 @@ class SearchViewModel(
     // Переменные пагинации
     private var currentPage = 0
     private var maxPages = Int.MAX_VALUE
-    private var isNextPageLoading = false
+    var isFirstSearch = false
+    private val _isNextPageLoading = MutableLiveData<Boolean>(false)
+    val isNextPageLoading: LiveData<Boolean>
+        get() = _isNextPageLoading
+    private var totalVacanciesFound: Int = 0
 
     init {
         filterInteractor.loadFilterSettings()
@@ -57,10 +68,14 @@ class SearchViewModel(
     }
 
     fun onSearchQueryChanged(query: String) {
+        if (_searchQuery.value == query && !isFiltersChanged()) {
+            return
+        }
         currentPage = 0
         maxPages = Int.MAX_VALUE
         _vacanciesList.value = emptyList()
         _searchQuery.value = query
+        isFirstSearch = true
 
         loadSavedFilters()
 
@@ -85,8 +100,8 @@ class SearchViewModel(
     }
 
     fun onLastItemReached() {
-        if (isNextPageLoading || currentPage >= maxPages - 1) return
-        isNextPageLoading = true
+        if (_isNextPageLoading.value == true || currentPage >= maxPages - 1) return
+        _isNextPageLoading.value = true
         val query = _searchQuery.value ?: return
         val params = buildSearchParams(query = query, page = currentPage + 1)
         searchRequest(params)
@@ -109,15 +124,15 @@ class SearchViewModel(
         searchJob = viewModelScope.launch {
             searchInteractor.searchVacancies(params).collect { result ->
                 renderState(result)
-                isNextPageLoading = false
+                _isNextPageLoading.value = false
             }
         }
     }
 
     private fun renderState(result: Resource<List<Vacancy>>) {
         when (result) {
-            is Resource.NoInternetError -> _uiState.value = UiScreenState.NoInternetError
-            is Resource.ServerError -> _uiState.value = UiScreenState.ServerError
+            is Resource.NoInternetError -> _uiState.value = handleNoInternetError()
+            is Resource.ServerError -> _uiState.value = handleServerError()
             is Resource.Success -> if (result.data.isEmpty()) {
                 _uiState.value = UiScreenState.Empty
             } else {
@@ -127,11 +142,40 @@ class SearchViewModel(
                 currentPage = result.page ?: currentPage
                 maxPages = result.pages ?: maxPages
                 _vacanciesList.value = _vacanciesList.value?.plus(vacanciesUi)
+                isFirstSearch = false
+                totalVacanciesFound = result.found ?: totalVacanciesFound
                 _uiState.value = UiScreenState.Success(
                     vacancies = _vacanciesList.value ?: emptyList(),
-                    found = result.found ?: 0
+                    found = totalVacanciesFound
                 )
             }
+        }
+    }
+
+    private fun handleNoInternetError(): UiScreenState {
+        return if (isFirstSearch) {
+            UiScreenState.NoInternetError
+        } else {
+            _errorEvent.value = "no_internet"
+            _isNextPageLoading.value = false
+            UiScreenState.Success(
+                vacancies = _vacanciesList.value ?: emptyList(),
+                found = totalVacanciesFound
+            )
+
+        }
+    }
+
+    private fun handleServerError(): UiScreenState {
+        return if (isFirstSearch) {
+            UiScreenState.ServerError
+        } else {
+            _isNextPageLoading.value = false
+            _errorEvent.value = "server_error"
+            UiScreenState.Success(
+                vacancies = _vacanciesList.value ?: emptyList(),
+                found = totalVacanciesFound
+            )
         }
     }
 
@@ -151,6 +195,15 @@ class SearchViewModel(
         } else {
             "$name, $areaName"
         }
+    }
+
+    private fun isFiltersChanged(): Boolean {
+        val savedFilters = filterInteractor.loadFilterSettings()
+
+        return filterLocation != savedFilters.location ||
+            filterIndustryId != savedFilters.industryId ||
+            filterSalary != savedFilters.salary ||
+            hideWithoutSalary != savedFilters.hideWithoutSalary
     }
 
 }

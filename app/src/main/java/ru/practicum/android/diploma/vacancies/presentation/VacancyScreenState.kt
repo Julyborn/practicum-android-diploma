@@ -8,6 +8,7 @@ sealed class VacancyScreenState {
     data class Error(val errorType: ErrorType) : VacancyScreenState()
     enum class ErrorType {
         NOT_FOUND,
-        SERVER_ERROR
+        SERVER_ERROR,
+        NO_INTERNET
     }
 }

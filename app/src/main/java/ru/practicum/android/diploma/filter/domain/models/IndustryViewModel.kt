@@ -1,6 +1,5 @@
 package ru.practicum.android.diploma.filter.domain.models
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -15,8 +14,10 @@ import ru.practicum.android.diploma.search.presentation.models.UiScreenState
 class IndustryViewModel(private val industryInteractor: IndustryInteractor) : ViewModel() {
 
     private val _uiState = MutableLiveData<UiScreenState>(UiScreenState.Default)
-    val uiState: LiveData<UiScreenState>
-        get() = _uiState
+    val uiState: LiveData<UiScreenState> get() = _uiState
+
+    private val _isLoadingAllIndustries = MutableLiveData<Boolean>(false)
+    val isLoadingAllIndustries: LiveData<Boolean> get() = _isLoadingAllIndustries
 
     private val _industriesList = MutableLiveData<List<IndustryDto>>(emptyList())
     val industriesList: LiveData<List<IndustryDto>> get() = _industriesList
@@ -26,28 +27,23 @@ class IndustryViewModel(private val industryInteractor: IndustryInteractor) : Vi
     private var searchJob: Job? = null
 
     private var filterIndustry: String? = null
-
     private var currentPage = 0
     private var maxPages = Int.MAX_VALUE
     private var isNextPageLoading = false
+    private var isFirstSearch = true
+
+    private var allIndustriesList: List<IndustryDto> = emptyList()
 
     fun onSearchQueryChanged(query: String) {
-        currentPage = 0
-        maxPages = Int.MAX_VALUE
-        _industriesList.value = emptyList()
         _searchQuery.value = query
-        Log.d("onSearchQueryChanged", "query: $query")
-        val params = buildSearchParams(query)
+        if (query.isEmpty()) {
+            _industriesList.value = allIndustriesList
+            return
+        }
         _uiState.value = UiScreenState.Loading
-        searchRequest(params)
-    }
-
-    fun onLastItemReached() {
-        if (isNextPageLoading || currentPage >= maxPages - 1) return
-        isNextPageLoading = true
-        val query = _searchQuery.value ?: return
-        val params = buildSearchParams(query = query, page = currentPage + 1)
-        searchRequest(params)
+        val filteredIndustries = filterResults(allIndustriesList, query)
+        _uiState.value = UiScreenState.Default
+        _industriesList.value = filteredIndustries
     }
 
     private fun buildSearchParams(query: String, page: Int = 0): IndustrySearchParams {
@@ -57,6 +53,7 @@ class IndustryViewModel(private val industryInteractor: IndustryInteractor) : Vi
             page = page
         )
     }
+
     private fun filterResults(industries: List<IndustryDto>, query: String): List<IndustryDto> {
         return industries.filter { it.name.contains(query, ignoreCase = true) }
     }
@@ -65,23 +62,42 @@ class IndustryViewModel(private val industryInteractor: IndustryInteractor) : Vi
         searchJob?.cancel()
         searchJob = viewModelScope.launch {
             industryInteractor.searchIndustries(params).collect { result ->
-                when (result) {
-                    is Resource.NoInternetError -> _uiState.value = UiScreenState.NoInternetError
-                    is Resource.ServerError -> _uiState.value = UiScreenState.ServerError
-                    is Resource.Success -> {
-                        val filteredList = filterResults(result.data, _searchQuery.value ?: "")
-                        if (filteredList.isEmpty()) {
-                            _uiState.value = UiScreenState.Empty
-                        } else {
-                            currentPage = result.page ?: currentPage
-                            maxPages = result.pages ?: maxPages
-                            _industriesList.value = _industriesList.value?.plus(filteredList)
-                            _uiState.value = UiScreenState.Default
-                        }
-                    }
-                }
+                renderState(result)
                 isNextPageLoading = false
             }
         }
+    }
+
+    private fun renderState(result: Resource<List<IndustryDto>>) {
+        when (result) {
+            is Resource.NoInternetError -> _uiState.value = UiScreenState.NoInternetError
+            is Resource.ServerError -> _uiState.value = UiScreenState.ServerError
+            is Resource.Success -> {
+                if (result.data.isEmpty()) {
+                    _uiState.value = UiScreenState.Empty
+                } else {
+                    allIndustriesList = result.data.toList()
+                    currentPage = result.page ?: currentPage
+                    maxPages = result.pages ?: maxPages
+                    _industriesList.value = allIndustriesList
+                    _uiState.value = UiScreenState.Default
+
+                    isFirstSearch = false
+                    _isLoadingAllIndustries.value = false
+                }
+            }
+        }
+    }
+
+    fun loadAllIndustries() {
+        currentPage = 0
+        maxPages = Int.MAX_VALUE
+        _uiState.value = UiScreenState.Loading
+        _isLoadingAllIndustries.value = true
+        searchRequest(buildSearchParams(query = ""))
+    }
+
+    fun onIndustriesLoaded() {
+        _isLoadingAllIndustries.value = false
     }
 }

@@ -4,81 +4,105 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.filter.domain.api.WorkplaceInteractor
 import ru.practicum.android.diploma.filter.domain.models.Country
 import ru.practicum.android.diploma.filter.domain.models.Region
-import java.io.IOException
+import ru.practicum.android.diploma.search.domain.models.Resource
 
 class RegionChoosingViewModel(private val interactor: WorkplaceInteractor) : ViewModel() {
 
-    private val _state = MutableLiveData<WorkplaceState>()
-    val state: LiveData<WorkplaceState> = _state
+    private val _uiState = MutableLiveData<WorkplaceState>(WorkplaceState.Loading)
+    val uiState: LiveData<WorkplaceState> get() = _uiState
+
+    private val _regionsList = MutableLiveData<List<Region>>(emptyList())
+    val regionsList: LiveData<List<Region>> get() = _regionsList
+
+    private var allRegions: List<Region> = emptyList()
+    private var searchJob: Job? = null
+    var isNoInternet: Boolean = false
 
     private var countryCache: List<Country>? = null
-    private var allRegions: List<Region> = emptyList()
 
     init {
-        loadRegions()
+        loadCountries()
+    }
+
+    fun retryLoadingData() {
+        loadCountries()
+    }
+
+    private fun loadCountries() {
+        _uiState.value = WorkplaceState.Loading
         viewModelScope.launch {
-            countryCache = interactor.getCountries()
+            val result = interactor.getCountries()
+            handleCountriesResult(result)
         }
     }
 
-    fun loadRegions() {
-        _state.value = WorkplaceState.Loading
-        val country = interactor.getSelectedCountry()
-        if (country != null) {
-            loadRegionsByCountry(country.id)
-        } else {
-            loadAllRegions()
-        }
-    }
+    private suspend fun handleCountriesResult(result: Resource<List<Country>>) {
+        when (result) {
+            is Resource.Success -> {
+                isNoInternet = false
+                countryCache = result.data
+                allRegions = countryCache?.flatMap { country ->
+                    val regionsResult = interactor.getRegionsByCountry(country.id)
+                    if (regionsResult is Resource.Success) {
+                        regionsResult.data
+                    } else {
+                        emptyList()
+                    }
+                } ?: emptyList()
 
-    private fun loadAllRegions() {
-        viewModelScope.launch {
-            try {
-                val regions = interactor.getAllRegions()
-                allRegions = regions
-                if (regions.isEmpty()) {
-                    _state.value = WorkplaceState.FetchError
+                _uiState.value = if (allRegions.isEmpty()) {
+                    WorkplaceState.NoRegionsError
                 } else {
-                    _state.value = WorkplaceState.Success(emptyList(), regions)
+                    WorkplaceState.Success(countryCache ?: emptyList(), allRegions)
                 }
-            } catch (e: IOException) {
-                _state.value = WorkplaceState.FetchError
-                throw e
             }
-        }
-    }
 
-    private fun loadRegionsByCountry(countryId: String) {
-        viewModelScope.launch {
-            try {
-                val regions = interactor.getRegionsByCountry(countryId)
-                allRegions = regions
-                if (regions.isEmpty()) {
-                    _state.value = WorkplaceState.FetchError
-                } else {
-                    _state.value = WorkplaceState.Success(emptyList(), regions)
-                }
-            } catch (e: IOException) {
-                _state.value = WorkplaceState.FetchError
-                throw e
+            is Resource.NoInternetError -> {
+                isNoInternet = true
+                _uiState.value = WorkplaceState.NoInternet
+            }
+
+            is Resource.ServerError -> {
+                _uiState.value = WorkplaceState.FetchError
             }
         }
     }
 
     fun filterRegions(query: String) {
-        val filteredRegions = if (query.isEmpty()) {
-            allRegions
-        } else {
-            allRegions.filter { it.name.contains(query, ignoreCase = true) }
+        if (query.isEmpty()) {
+            _regionsList.value = allRegions
+            _uiState.value = if (allRegions.isEmpty()) {
+                WorkplaceState.NoRegionsError
+            } else {
+                WorkplaceState.Success(countryCache ?: emptyList(), allRegions)
+            }
         }
-        _state.value = if (filteredRegions.isEmpty()) {
-            WorkplaceState.NoRegionsError
-        } else {
-            WorkplaceState.Success(emptyList(), filteredRegions)
+
+        if (isNoInternet) {
+            _uiState.value = WorkplaceState.NoInternet
+
+            if (!isNoInternet) {
+                isNoInternet = false
+                retryLoadingData()
+            }
+            return
+        }
+        _uiState.value = WorkplaceState.Loading
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
+            val filteredRegions = allRegions.filter { it.name.contains(query, ignoreCase = true) }
+            _regionsList.value = filteredRegions
+
+            _uiState.value = if (filteredRegions.isEmpty()) {
+                WorkplaceState.NoRegionsError
+            } else {
+                WorkplaceState.Success(countryCache ?: emptyList(), filteredRegions)
+            }
         }
     }
 
@@ -90,11 +114,12 @@ class RegionChoosingViewModel(private val interactor: WorkplaceInteractor) : Vie
     private fun getCountryById(countryId: String?) {
         viewModelScope.launch {
             if (countryCache == null) {
-                countryCache = interactor.getCountries()
+                val result = interactor.getCountries()
+                handleCountriesResult(result)
             }
-            val country = countryCache?.find { it.id == countryId }
-            if (country != null) {
-                interactor.saveSelectedCountry(country)
+
+            countryCache?.find { it.id == countryId }?.let {
+                interactor.saveSelectedCountry(it)
             }
         }
     }

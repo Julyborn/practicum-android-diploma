@@ -13,4 +13,6 @@ object NetworkUtils {
         val networkCapabilities = connectivityManager.getNetworkCapabilities(network)
         return networkCapabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true
     }
+
+    class NoInternetException(message: String) : Exception(message)
 }
