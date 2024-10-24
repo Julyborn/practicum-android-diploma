@@ -110,7 +110,7 @@
         android:contentDescription="@string/search"/>
 
     <ProgressBar
-            android:id="@+id/pbLoading"
+        android:id="@+id/pbLoading"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginHorizontal="16dp"

@@ -30,6 +30,6 @@ val repositoryModule = module {
         VacanciesRepositoryImpl(get(), get())
     }
     single<WorkplaceRepository> {
-        WorkplaceRepositoryImpl(get(), get())
+        WorkplaceRepositoryImpl(get(), get(), get())
     }
 }
